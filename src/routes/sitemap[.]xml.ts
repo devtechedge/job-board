@@ -6,7 +6,10 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const { listOpenJobIds } = await import("@/lib/search");
         const jobs = await listOpenJobIds(5000);
-        const origin = process.env.VITE_SITE_URL ?? "https://jobrow.example";
+        const origin =
+          process.env.VITE_SITE_URL ??
+          process.env.APP_URL ??
+          "https://job-board-devtechedge1.vercel.app";
         const urls = [
           "",
           "/jobs",

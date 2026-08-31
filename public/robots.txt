@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Sitemap: /sitemap.xml
+Sitemap: https://job-board-devtechedge1.vercel.app/sitemap.xml
