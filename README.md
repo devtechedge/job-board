@@ -78,13 +78,32 @@ Do not scrape career marketing HTML when the board JSON exists.
 
 ---
 
+## Persist the index (Neon)
+
+Public Vercel is still PGLite until `DATABASE_URL` is on the project. I cannot create a Neon account or write Vercel env from this sandbox.
+
+1. Create a free project at [console.neon.tech](https://console.neon.tech) (GitHub login). Name it `jobrow`. Region: AWS US East.
+2. Copy the **pooled** URI (`-pooler` in the host, `sslmode=require`).
+3. Vercel → `job-board` → Settings → Environment Variables, Production + Preview:
+   - `DATABASE_URL` = that URI
+   - `ADMIN_PASSWORD` = a password you pick
+   - `CRON_SECRET` = `openssl rand -hex 24`
+   - `APP_URL` = `https://job-board-devtechedge1.vercel.app`
+   - `VITE_SITE_URL` = same
+4. Redeploy. Hit `/api/health` — `db` should be `"neon"`.
+5. GitHub → `job-board` → Settings → Secrets and variables → Actions: `APP_URL` and `CRON_SECRET`.
+
+Then leave `/companies` open once. The index survives cold starts, and the twice-daily Action can write to the same database.
+
+---
+
 ## Remaining
 
 | Item | Status |
 |------|--------|
 | Custom domain / final brand | Working name is Jobrow. Buy a domain later. |
-| Neon `DATABASE_URL` | Not set. Public Vercel uses PGLite and reseeds on cold start. |
-| GitHub Action secrets `APP_URL` + `CRON_SECRET` | Not set. Twice-daily crawl is a no-op until both secrets and a persistent database exist. |
+| Neon `DATABASE_URL` | Flagged on. Public Vercel still needs the connection string in project env. |
+| GitHub Action secrets `APP_URL` + `CRON_SECRET` | Token cannot write Actions secrets. Set them in the repo after Neon. |
 | Counsel | Terms / privacy / sourcing are drafts. |
 | Alerts / Plus / featured listings | Out of v1. |
 

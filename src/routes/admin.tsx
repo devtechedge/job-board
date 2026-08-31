@@ -91,6 +91,9 @@ function AdminPage() {
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Admin</h1>
         <p className="mt-2 text-sm text-muted">{hint}</p>
+        <p className="mt-1 text-sm tabular-nums text-muted">
+          Database: {initial.db === "neon" ? "Neon (persistent)" : "PGLite (ephemeral demo)"}
+        </p>
         {!unlocked ? (
           <form
             className="mt-6 max-w-md space-y-3"

@@ -7,7 +7,7 @@ const authFields = z.object({
 
 export const adminStatusFn = createServerFn({ method: "GET" }).handler(async () => {
   const { expectedAdminPassword, previewAdminFallback } = await import("@/lib/admin");
-  const { getSql } = await import("@/lib/db");
+  const { getSql, dbSource } = await import("@/lib/db");
   const sql = await getSql();
   const companies = await sql.query<{
     id: string;
@@ -47,6 +47,7 @@ export const adminStatusFn = createServerFn({ method: "GET" }).handler(async () 
   return {
     configured: Boolean(expectedAdminPassword()),
     previewHint: previewAdminFallback(),
+    db: dbSource,
     companies: companies.map((row) => ({
       ...row,
       last_crawled_at: iso(row.last_crawled_at),
