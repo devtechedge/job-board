@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Wordmark } from "@/components/mark";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { listWatched } from "@/lib/watchlist";
 
 const NAV = [
@@ -44,9 +45,8 @@ export function SiteHeader({ current }: { current?: string }) {
               {item.label}
             </Link>
           ))}
-          <span className="text-muted">
-            Watched {watched}
-          </span>
+          <span className="text-muted">Watched {watched}</span>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

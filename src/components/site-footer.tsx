@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-rule bg-inset">
+    <footer className="border-t border-rule bg-inset">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div className="max-w-md space-y-1">
           <p>Indexed from public Greenhouse, Ashby, and Lever boards. Not an employer.</p>

@@ -5,6 +5,8 @@ import appCss from "../styles.css?url";
 
 const APP_NAME = "Jobrow";
 
+const THEME_BOOT = `(function(){try{var t=localStorage.getItem("jobrow-theme");if(t!=="dark"&&t!=="light")t="light";document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.setAttribute("data-theme","light");document.documentElement.style.colorScheme="light";}})();`;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -34,6 +36,7 @@ export const Route = createRootRoute({
   component: () => (
     <html lang="en" className="antialiased" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <HeadContent />
       </head>
       <body className="bg-paper text-ink">
