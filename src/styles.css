@@ -1,16 +1,45 @@
 @import "tailwindcss";
 
+:root,
+[data-theme="light"] {
+  --paper: #f6f1e8;
+  --ink: #0b0f14;
+  --pine: #1f6b4a;
+  --pine-fg: #f6f1e8;
+  --rule: #d4cbbd;
+  --rule-strong: #b9ae9e;
+  --muted: #5c5852;
+  --inset: #efe8dc;
+  --danger: #8b2e2e;
+  --chip: #e7dfd1;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --paper: #14181d;
+  --ink: #ebe4d6;
+  --pine: #6ec89a;
+  --pine-fg: #14181d;
+  --rule: #2c333c;
+  --rule-strong: #3d4650;
+  --muted: #a39c92;
+  --inset: #1c2229;
+  --danger: #c97878;
+  --chip: #252c34;
+  color-scheme: dark;
+}
+
 @theme {
-  --color-ink: #0b0f14;
-  --color-paper: #f6f1e8;
-  --color-pine: #1f6b4a;
-  --color-pine-fg: #f6f1e8;
-  --color-rule: #d4cbbd;
-  --color-rule-strong: #b9ae9e;
-  --color-muted: #5c5852;
-  --color-inset: #efe8dc;
-  --color-danger: #8b2e2e;
-  --color-chip: #e7dfd1;
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-pine: var(--pine);
+  --color-pine-fg: var(--pine-fg);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-muted: var(--muted);
+  --color-inset: var(--inset);
+  --color-danger: var(--danger);
+  --color-chip: var(--chip);
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, ui-serif, serif;
   --font-mono: "IBM Plex Sans", ui-monospace, "SFMono-Regular", monospace;
@@ -22,15 +51,15 @@
 
 @layer base {
   html {
-    background: var(--color-paper);
-    color: var(--color-ink);
+    background: var(--paper);
+    color: var(--ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background: var(--color-paper);
-    color: var(--color-ink);
+    background: var(--paper);
+    color: var(--ink);
     font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.5;
@@ -56,6 +85,22 @@
   a {
     color: inherit;
   }
+
+  /* Document bars stay hidden. Never reveal on html/body hover. */
+  html,
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 @layer components {
@@ -63,9 +108,9 @@
   .ledger-select {
     height: 2.75rem;
     width: 100%;
-    border: 1px solid var(--color-rule);
-    background: var(--color-paper);
-    color: var(--color-ink);
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
     padding: 0 0.75rem;
     font-size: 0.875rem;
     border-radius: 0.25rem;
@@ -73,8 +118,8 @@
 
   .ledger-select {
     appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
-      linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
     background-position:
       calc(100% - 16px) 50%,
       calc(100% - 11px) 50%;
@@ -87,14 +132,14 @@
 
   .ledger-input:focus,
   .ledger-select:focus {
-    outline: 2px solid var(--color-pine);
+    outline: 2px solid var(--pine);
     outline-offset: 1px;
   }
 
   .job-prose {
     font-size: 0.975rem;
     line-height: 1.65;
-    color: var(--color-ink);
+    color: var(--ink);
   }
 
   .job-prose p + p {
@@ -111,7 +156,7 @@
   }
 
   .job-prose a {
-    color: var(--color-pine);
+    color: var(--pine);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -123,6 +168,49 @@
     font-family: var(--font-serif);
     font-weight: 600;
   }
+}
+
+/* Overlay hover-reveal on inner panes only. */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto,
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.overflow-auto:hover,
+.overflow-auto:focus-within,
+.overflow-y-auto:hover,
+.overflow-y-auto:focus-within,
+.overflow-x-auto:hover,
+.overflow-x-auto:focus-within,
+pre:hover,
+pre:focus-within {
+  scrollbar-color: var(--rule-strong) transparent;
+}
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 99px;
+}
+.overflow-auto:hover::-webkit-scrollbar-thumb,
+.overflow-auto:focus-within::-webkit-scrollbar-thumb,
+.overflow-y-auto:hover::-webkit-scrollbar-thumb,
+.overflow-y-auto:focus-within::-webkit-scrollbar-thumb,
+.overflow-x-auto:hover::-webkit-scrollbar-thumb,
+.overflow-x-auto:focus-within::-webkit-scrollbar-thumb,
+pre:hover::-webkit-scrollbar-thumb,
+pre:focus-within::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
 }
 
 @media (prefers-reduced-motion: reduce) {
