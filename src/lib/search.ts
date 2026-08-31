@@ -244,3 +244,87 @@ export async function listOpenJobIds(limit = 5000): Promise<Array<{ id: string; 
 }
 
 export { mapJob };
+
+export type HomeDigest = {
+  openCount: number;
+  companyCount: number;
+  lastOkAt: string | null;
+  closedCount: number;
+  freshCount: number;
+  lastWindowOpened: number;
+  lastWindowClosed: number;
+  lastWindowAt: string | null;
+  functions: Array<{ fn: string; n: number }>;
+  boards: Array<{ slug: string; name: string; ats: Ats; open_count: number }>;
+  editionAt: string;
+};
+
+export async function homeDigest(): Promise<HomeDigest> {
+  const sql = await getSql();
+  const [stats] = await sql.query<{
+    openCount: number;
+    companyCount: number;
+    lastOkAt: unknown;
+    closedCount: number;
+    freshCount: number;
+  }>(
+    `select
+      (select count(*)::int from jobs where status = 'open' and us_eligible and tech_eligible) as "openCount",
+      (select count(*)::int from companies where enabled) as "companyCount",
+      (select max(last_ok_at) from companies) as "lastOkAt",
+      (select count(*)::int from jobs where status = 'closed') as "closedCount",
+      (select count(*)::int from jobs
+        where status = 'open' and us_eligible and tech_eligible
+          and first_seen_at >= now() - interval '1 day') as "freshCount"`,
+  );
+  const [windowRow] = await sql.query<{
+    jobs_opened: number;
+    jobs_closed: number;
+    finished_at: unknown;
+  }>(
+    `select coalesce(jobs_opened, 0)::int as jobs_opened,
+            coalesce(jobs_closed, 0)::int as jobs_closed,
+            finished_at
+     from crawl_runs
+     where finished_at is not null
+     order by finished_at desc
+     limit 1`,
+  );
+  const functions = await sql.query<{ fn: string; n: number }>(
+    `select coalesce(nullif(function, ''), 'engineering') as fn, count(*)::int as n
+     from jobs
+     where status = 'open' and us_eligible and tech_eligible
+     group by 1
+     order by n desc, fn asc`,
+  );
+  const boards = await sql.query<{
+    slug: string;
+    name: string;
+    ats: Ats;
+    open_count: number;
+  }>(
+    `select c.slug, c.name, c.ats,
+            count(j.id) filter (
+              where j.status = 'open' and j.us_eligible and j.tech_eligible
+            )::int as open_count
+     from companies c
+     left join jobs j on j.company_id = c.id
+     where c.enabled = true
+     group by c.id
+     order by open_count desc, c.name asc
+     limit 12`,
+  );
+  return {
+    openCount: stats?.openCount ?? 0,
+    companyCount: stats?.companyCount ?? 0,
+    lastOkAt: iso(stats?.lastOkAt),
+    closedCount: stats?.closedCount ?? 0,
+    freshCount: stats?.freshCount ?? 0,
+    lastWindowOpened: windowRow?.jobs_opened ?? 0,
+    lastWindowClosed: windowRow?.jobs_closed ?? 0,
+    lastWindowAt: iso(windowRow?.finished_at),
+    functions,
+    boards,
+    editionAt: new Date().toISOString(),
+  };
+}

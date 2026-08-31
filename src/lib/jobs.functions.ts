@@ -13,6 +13,18 @@ export const listJobsFn = createServerFn({ method: "GET" })
     return { ...result, indexing: boot.indexing };
   });
 
+export const homePageFn = createServerFn({ method: "GET" })
+  .validator((data: unknown) =>
+    parseJobQuery((data ?? {}) as Record<string, unknown>),
+  )
+  .handler(async ({ data }) => {
+    const { ensureIndex } = await import("@/lib/crawl");
+    const { searchJobs, homeDigest } = await import("@/lib/search");
+    const boot = await ensureIndex();
+    const [result, digest] = await Promise.all([searchJobs(data), homeDigest()]);
+    return { ...result, indexing: boot.indexing, digest };
+  });
+
 export const getJobFn = createServerFn({ method: "GET" })
   .validator((data: unknown) => {
     const id = typeof data === "string" ? data : String((data as { id?: string })?.id ?? "");
