@@ -1,54 +1,70 @@
 # Jobrow
 
-Public ATS register of **still-open US tech roles**.
+Searchable register of still-open US tech roles, read from public employer ATS boards.
 
-Working product name. Repo: [`devtechedge/job-board`](https://github.com/devtechedge/job-board). Brand and domain are not locked.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://job-board-devtechedge1.vercel.app)
+[![TanStack Start](https://img.shields.io/badge/TanStack%20Start-black)](https://tanstack.com/start)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-Jobrow reads the same public JSON the employer’s careers page already uses (Greenhouse, Ashby, Lever). When a successful crawl no longer sees a posting, the row is closed the same run. A failed fetch does **not** close that company’s jobs.
+---
 
-Independent index. Not an employer, recruiter, or agency. Apply on the company board.
+## Live Demo
 
-## What v1 does
+**https://job-board-devtechedge1.vercel.app**
 
-- Search + structured filters over still-open US tech roles
-- Register / table UI (title, company, pay, workplace, posted, source)
+> **Status:** Public Vercel Hobby. No `DATABASE_URL` is set, so the index runs on embedded PGLite and reseeds from public Greenhouse / Ashby / Lever JSON on cold start. Apply always leaves the site for the employer board. Independent index — not an employer, recruiter, or agency.
+
+---
+
+## Screenshots
+
+| Register | About |
+|----------|--------|
+| ![Register](docs/screenshots/01-register.png) | ![About](docs/screenshots/02-about.png) |
+
+| Role | Companies |
+|------|-----------|
+| ![Job detail](docs/screenshots/03-job-detail.png) | ![Companies](docs/screenshots/04-companies.png) |
+
+---
+
+## Features
+
+- Table-first register: title, company, pay, workplace, posted, source
+- Structured filters plus a free-text box
+- Same-run close when a successful board fetch no longer lists the role
 - Company pages, original legal drafts, localStorage watchlist
-- Admin password to add a board and trigger a crawl
-- Twice-daily crawl via GitHub Actions hitting `POST /api/cron/crawl`
+- Admin password to add a board token and trigger a crawl
+- Twice-daily crawl Action hitting `POST /api/cron/crawl` (needs `APP_URL` + `CRON_SECRET`)
 
-## Stack
+---
 
-TanStack Start, React 19, TypeScript, Tailwind v4, Postgres (Neon in production, embedded PGLite in preview).
+## Tech Stack
 
-## Data sources (public JSON only)
+| Layer | Technology |
+|-------|------------|
+| App | TanStack Start, React 19, TypeScript, Tailwind v4 |
+| Data | Postgres. Neon when `DATABASE_URL` is set; embedded PGLite on the public Vercel demo |
+| Sources | Greenhouse, Ashby, Lever public JSON APIs |
+| Hosting | Vercel |
+| Crawl | GitHub Action, twice daily |
 
-| ATS | Endpoint |
-|---|---|
-| Greenhouse | `https://boards-api.greenhouse.io/v1/boards/{token}/jobs` |
-| Ashby | `https://api.ashbyhq.com/posting-api/job-board/{org}?includeCompensation=true` |
-| Lever | `https://api.lever.co/v0/postings/{site}?mode=json` |
+---
 
-No scraping of aggregators. No login walls. Apply URLs are allowlisted to the employer / ATS host.
+## Quick Start
 
-## Add a company
+```bash
+npm install
+npm run dev
+```
 
-In Admin (`ADMIN_PASSWORD`, or `jobrow-preview` in the sandbox preview):
+Optional env: see [.env.example](.env.example).
 
-1. Name, slug, ATS type, board token
-2. Careers URL + website (allowlists the apply host)
-3. Save, then **Crawl** that row
+Add a board in `/admin` (password from `ADMIN_PASSWORD`, or `jobrow-preview` in the sandbox).
 
-## GitHub Action
+---
 
-Repo secrets:
+## License
 
-- `APP_URL` — deployed origin
-- `CRON_SECRET` — same value as the app env `CRON_SECRET`
-
-Schedule: 01:20 and 13:20 UTC.
-
-## Remaining TODOs
-
-- Final brand, logo, domain
-- Counsel review of terms / privacy / venue
-- Email alerts, accounts, paid placement — out of v1 on purpose
+MIT. See [LICENSE](LICENSE).
