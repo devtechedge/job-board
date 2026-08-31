@@ -1,5 +1,5 @@
 {
-  "name": "jobrow",
+  "name": "job-board",
   "private": true,
   "sideEffects": false,
   "type": "module",
