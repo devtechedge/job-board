@@ -29,8 +29,8 @@ Thumbs.db
 .idea/
 .vscode/
 
-# local db / wasm dumps
-*.data
+# local db dumps (do not glob *.data — that strips PGLite's fs bundle from Vercel)
+/pglite.data
 
 # live-preview captures (product shots live in docs/screenshots)
 screenshots/app-builder-preview*
