@@ -7,7 +7,7 @@ import {
   leverListUrl,
   workableListUrl,
 } from "./urls.ts";
-import { isAllowedApplyUrl } from "./apply-url.ts";
+import { canonicalizeApplyUrl, isAllowedApplyUrl } from "./apply-url.ts";
 import { missingSourceIds } from "../close.ts";
 import { parseWorkplace, isUsEligible, isTechRole } from "../classify.ts";
 import { parseSalaryFromText, dollarsToCents, formatPay } from "../salary.ts";
@@ -52,10 +52,24 @@ describe("apply URL allowlist", () => {
       true,
     );
   });
-  it("rejects aggregators and http", () => {
-    assert.equal(isAllowedApplyUrl("http://jobs.ashbyhq.com/x"), false);
+  it("upgrades http on allowed hosts and matches apex vs www", () => {
+    assert.equal(canonicalizeApplyUrl("http://block.xyz/careers/jobs/1"), "https://block.xyz/careers/jobs/1");
+    assert.equal(
+      isAllowedApplyUrl("http://block.xyz/careers/jobs/1", ["https://block.xyz"]),
+      true,
+    );
+    assert.equal(
+      isAllowedApplyUrl("https://databricks.com/company/careers/job?gh_jid=1", [
+        "https://www.databricks.com",
+      ]),
+      true,
+    );
+    assert.equal(isAllowedApplyUrl("https://app.careerpuck.com/job-board/lyft/job/1"), true);
+  });
+  it("rejects aggregators and non-https schemes", () => {
     assert.equal(isAllowedApplyUrl("https://www.indeed.com/viewjob?jk=1"), false);
     assert.equal(isAllowedApplyUrl("https://hotfix.jobs/x"), false);
+    assert.equal(isAllowedApplyUrl("ftp://jobs.ashbyhq.com/x"), false);
   });
 });
 

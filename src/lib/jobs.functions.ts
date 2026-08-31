@@ -35,7 +35,9 @@ export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async (
   const rows = await listCompanies();
   return {
     indexing: boot.indexing,
-    pending: rows.filter((row) => !row.last_ok_at).length,
+    pending: boot.indexing
+      ? Math.max(1, rows.filter((row) => !row.last_ok_at || Number(row.open_count) === 0).length)
+      : rows.filter((row) => !row.last_ok_at).length,
     companies: rows.map((row) => ({
       ...row,
       last_ok_at:

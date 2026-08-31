@@ -1,5 +1,5 @@
 import type { CompanyRow, RawJob, Workplace } from "@/lib/ats/types";
-import { isAllowedApplyUrl } from "@/lib/ats/apply-url";
+import { canonicalizeApplyUrl, isAllowedApplyUrl } from "@/lib/ats/apply-url";
 import {
   classifyFunction,
   classifySeniority,
@@ -42,7 +42,8 @@ export type NormalizedJob = {
 
 export function normalizeJob(raw: RawJob, company: CompanyRow): NormalizedJob | null {
   if (!raw.sourceId || !raw.title) return null;
-  if (!isAllowedApplyUrl(raw.applyUrl, [company.website, company.careers_url])) {
+  const applyUrl = canonicalizeApplyUrl(raw.applyUrl);
+  if (!isAllowedApplyUrl(applyUrl, [company.website, company.careers_url])) {
     return null;
   }
   const locationRaw = raw.locationRaw || raw.locations.join(" · ");
@@ -85,7 +86,7 @@ export function normalizeJob(raw: RawJob, company: CompanyRow): NormalizedJob | 
     sourceId: raw.sourceId,
     title: raw.title.trim(),
     slug: `${slugify(raw.title)}-${raw.sourceId}`.slice(0, 120),
-    applyUrl: raw.applyUrl,
+    applyUrl,
     locationRaw,
     locations: raw.locations.length ? raw.locations : locationRaw ? [locationRaw] : [],
     workplace,

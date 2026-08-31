@@ -93,6 +93,8 @@ export const ATS_HOST_SUFFIXES = [
   "workable.com",
   "rippling.com",
   "gem.com",
+  // Greenhouse white-label used by Lyft and others
+  "careerpuck.com",
 ];
 
 export const AGGREGATOR_HOSTS = [

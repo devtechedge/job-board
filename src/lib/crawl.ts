@@ -1,8 +1,8 @@
 import { getAdapter } from "@/lib/ats";
-import type { Ats, CompanyRow, RawJob } from "@/lib/ats/types";
+import type { Ats, CompanyRow } from "@/lib/ats/types";
 import { getSql, type Sql } from "@/lib/db";
 import { isTechRole } from "@/lib/classify";
-import { missingSourceIds, normalizeJob } from "@/lib/normalize";
+import { missingSourceIds, normalizeJob, type NormalizedJob } from "@/lib/normalize";
 import { SEED_COMPANIES, STARTER_SLUGS } from "@/lib/seed-companies";
 import { iso } from "@/lib/utils";
 
@@ -88,31 +88,48 @@ async function mapPool<T, R>(items: T[], n: number, fn: (item: T) => Promise<R>)
   return out;
 }
 
-async function upsertJob(
+function chunk<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
+
+function valuePlaceholders(rows: number, cols: number): string {
+  const groups: string[] = [];
+  let n = 1;
+  for (let r = 0; r < rows; r += 1) {
+    const cells: string[] = [];
+    for (let c = 0; c < cols; c += 1) {
+      cells.push(`$${n}`);
+      n += 1;
+    }
+    groups.push(`(${cells.join(",")})`);
+  }
+  return groups.join(",");
+}
+
+async function upsertNormalizedJobs(
   sql: Sql,
   company: CompanyRow,
-  raw: RawJob,
+  norms: NormalizedJob[],
   now: string,
-): Promise<"opened" | "updated" | "skipped"> {
-  const norm = normalizeJob(raw, company);
-  if (!norm || !norm.usEligible || !norm.techEligible) return "skipped";
-  const existing = await sql.query<{ id: string; first_seen_at: unknown }>(
-    `select id, first_seen_at from jobs where source_ats = $1 and source_id = $2`,
-    [company.ats, norm.sourceId],
+): Promise<{ upserted: number; opened: number }> {
+  if (!norms.length) return { upserted: 0, opened: 0 };
+  const existing = await sql.query<{ source_id: string }>(
+    `select source_id from jobs where company_id = $1`,
+    [company.id],
   );
-  if (existing[0]) {
-    await sql.query(
-      `update jobs set
-        title = $1, slug = $2, apply_url = $3, location_raw = $4, locations = $5,
-        workplace = $6, salary_min_cents = $7, salary_max_cents = $8, salary_currency = $9,
-        salary_source = $10, yoe_min = $11, function = $12, seniority = $13, skills = $14,
-        description_html = coalesce(nullif($15, ''), description_html),
-        description_text = coalesce(nullif($16, ''), description_text),
-        summary = $17, posted_at = coalesce($18::timestamptz, posted_at),
-        last_seen_at = $19::timestamptz, closed_at = null, status = 'open',
-        us_eligible = $20, tech_eligible = $21, raw_json = $22, search_text = $23
-       where id = $24`,
-      [
+  const had = new Set(existing.map((row) => row.source_id));
+  let opened = 0;
+  for (const group of chunk(norms, 40)) {
+    const params: unknown[] = [];
+    for (const norm of group) {
+      if (!had.has(norm.sourceId)) opened += 1;
+      params.push(
+        newId(),
+        company.id,
+        company.ats,
+        norm.sourceId,
         norm.title,
         norm.slug,
         norm.applyUrl,
@@ -132,59 +149,51 @@ async function upsertJob(
         norm.summary,
         norm.postedAt,
         now,
+        now,
+        "open",
         norm.usEligible,
         norm.techEligible,
         norm.rawJson,
         norm.searchText,
-        existing[0].id,
-      ],
+      );
+    }
+    await sql.query(
+      `insert into jobs (
+        id, company_id, source_ats, source_id, title, slug, apply_url, location_raw, locations,
+        workplace, salary_min_cents, salary_max_cents, salary_currency, salary_source, yoe_min,
+        function, seniority, skills, description_html, description_text, summary, posted_at,
+        first_seen_at, last_seen_at, status, us_eligible, tech_eligible, raw_json, search_text
+      ) values ${valuePlaceholders(group.length, 29)}
+      on conflict (source_ats, source_id) do update set
+        title = excluded.title,
+        slug = excluded.slug,
+        apply_url = excluded.apply_url,
+        location_raw = excluded.location_raw,
+        locations = excluded.locations,
+        workplace = excluded.workplace,
+        salary_min_cents = excluded.salary_min_cents,
+        salary_max_cents = excluded.salary_max_cents,
+        salary_currency = excluded.salary_currency,
+        salary_source = excluded.salary_source,
+        yoe_min = excluded.yoe_min,
+        function = excluded.function,
+        seniority = excluded.seniority,
+        skills = excluded.skills,
+        description_html = coalesce(nullif(excluded.description_html, ''), jobs.description_html),
+        description_text = coalesce(nullif(excluded.description_text, ''), jobs.description_text),
+        summary = excluded.summary,
+        posted_at = coalesce(excluded.posted_at, jobs.posted_at),
+        last_seen_at = excluded.last_seen_at,
+        closed_at = null,
+        status = 'open',
+        us_eligible = excluded.us_eligible,
+        tech_eligible = excluded.tech_eligible,
+        raw_json = excluded.raw_json,
+        search_text = excluded.search_text`,
+      params,
     );
-    return "updated";
   }
-  await sql.query(
-    `insert into jobs (
-      id, company_id, source_ats, source_id, title, slug, apply_url, location_raw, locations,
-      workplace, salary_min_cents, salary_max_cents, salary_currency, salary_source, yoe_min,
-      function, seniority, skills, description_html, description_text, summary, posted_at,
-      first_seen_at, last_seen_at, status, us_eligible, tech_eligible, raw_json, search_text
-    ) values (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,
-      $10,$11,$12,$13,$14,$15,
-      $16,$17,$18,$19,$20,$21,$22::timestamptz,
-      $23::timestamptz,$24::timestamptz,'open',$25,$26,$27,$28
-    )`,
-    [
-      newId(),
-      company.id,
-      company.ats,
-      norm.sourceId,
-      norm.title,
-      norm.slug,
-      norm.applyUrl,
-      norm.locationRaw,
-      norm.locations,
-      norm.workplace,
-      norm.salaryMinCents,
-      norm.salaryMaxCents,
-      norm.salaryCurrency,
-      norm.salarySource,
-      norm.yoeMin,
-      norm.function,
-      norm.seniority,
-      norm.skills,
-      norm.descriptionHtml,
-      norm.descriptionText,
-      norm.summary,
-      norm.postedAt,
-      now,
-      now,
-      norm.usEligible,
-      norm.techEligible,
-      norm.rawJson,
-      norm.searchText,
-    ],
-  );
-  return "opened";
+  return { upserted: norms.length, opened };
 }
 
 export async function crawlCompany(sql: Sql, company: CompanyRow): Promise<CrawlCompanyResult> {
@@ -197,14 +206,13 @@ export async function crawlCompany(sql: Sql, company: CompanyRow): Promise<Crawl
     const adapter = getAdapter(company.ats);
     const listed = await adapter.list(company.board_token);
     const listedIds = listed.map((job) => job.sourceId).filter(Boolean);
-    let upserted = 0;
-    let opened = 0;
+    const norms: NormalizedJob[] = [];
     for (const raw of listed) {
-      const action = await upsertJob(sql, company, raw, now);
-      if (action === "skipped") continue;
-      upserted += 1;
-      if (action === "opened") opened += 1;
+      const norm = normalizeJob(raw, company);
+      if (!norm || !norm.usEligible || !norm.techEligible) continue;
+      norms.push(norm);
     }
+    const { upserted, opened } = await upsertNormalizedJobs(sql, company, norms, now);
     const openRows = await sql.query<{ source_id: string }>(
       `select source_id from jobs where company_id = $1 and status = 'open'`,
       [company.id],
@@ -382,16 +390,29 @@ export async function ensureIndex(): Promise<{ companies: number; jobs: number; 
 async function crawlPendingSlice(budgetMs: number): Promise<number> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(
-    `select * from companies
-     where enabled = true and last_ok_at is null
-     order by case when last_crawled_at is null then 0 else 1 end,
-              case ats
+    `select * from companies c
+     where c.enabled = true
+       and (
+         c.last_ok_at is null
+         or (
+           not exists (
+             select 1 from jobs j
+             where j.company_id = c.id
+               and j.status = 'open'
+               and j.us_eligible
+               and j.tech_eligible
+           )
+           and (c.last_crawled_at is null or c.last_crawled_at < now() - interval '3 minutes')
+         )
+       )
+     order by case when c.last_ok_at is null then 0 else 1 end,
+              case c.ats
                 when 'greenhouse' then 0
                 when 'workable' then 1
                 when 'lever' then 2
                 else 3
               end,
-              name asc`,
+              c.name asc`,
   );
   const start = Date.now();
   let crawled = 0;
@@ -402,7 +423,21 @@ async function crawlPendingSlice(budgetMs: number): Promise<number> {
     if (crawled >= 2) break;
   }
   const [{ pending }] = await sql.query<{ pending: number }>(
-    `select count(*)::int as pending from companies where enabled = true and last_ok_at is null`,
+    `select count(*)::int as pending from companies c
+     where c.enabled = true
+       and (
+         c.last_ok_at is null
+         or (
+           not exists (
+             select 1 from jobs j
+             where j.company_id = c.id
+               and j.status = 'open'
+               and j.us_eligible
+               and j.tech_eligible
+           )
+           and (c.last_crawled_at is null or c.last_crawled_at < now() - interval '3 minutes')
+         )
+       )`,
   );
   return pending;
 }
