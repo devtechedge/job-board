@@ -1,0 +1,36 @@
+# deps & build
+node_modules/
+dist/
+.output/
+.nitro/
+.vercel/
+.tanstack/
+.wrangler/
+
+# grok sandbox / local only
+.grok/
+artifacts/
+AGENTS.md
+AGENTS.project.md
+.project_id
+.node_modules.lock
+public/__grok/
+
+# env
+.env
+.env.*
+!.env.example
+*.local
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# local db / wasm dumps
+*.data
+
+# live-preview captures (product shots live in docs/screenshots)
+screenshots/app-builder-preview*
