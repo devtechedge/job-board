@@ -63,6 +63,31 @@ Optional env: see [.env.example](.env.example).
 
 Add a board in `/admin` (password from `ADMIN_PASSWORD`, or `jobrow-preview` in the sandbox).
 
+The company registry (the real asset) lives in [data/companies.csv](data/companies.csv) and is seeded from [src/lib/seed-companies.ts](src/lib/seed-companies.ts).
+
+### Add a 21st company
+
+1. Confirm the public board JSON exists:
+   - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{token}/jobs`
+   - Ashby: `https://api.ashbyhq.com/posting-api/job-board/{token}?includeCompensation=true`
+   - Lever: `https://api.lever.co/v0/postings/{token}?mode=json`
+2. Open `/admin`, unlock, fill name / slug / ATS / board token / careers URL, save, crawl that row.
+3. Or append a line to `data/companies.csv` and a matching object in `SEED_COMPANIES`, then restart so seed runs.
+
+Do not scrape career marketing HTML when the board JSON exists.
+
+---
+
+## Remaining
+
+| Item | Status |
+|------|--------|
+| Custom domain / final brand | Working name is Jobrow. Buy a domain later. |
+| Neon `DATABASE_URL` | Not set. Public Vercel uses PGLite and reseeds on cold start. |
+| GitHub Action secrets `APP_URL` + `CRON_SECRET` | Not set. Twice-daily crawl is a no-op until both secrets and a persistent database exist. |
+| Counsel | Terms / privacy / sourcing are drafts. |
+| Alerts / Plus / featured listings | Out of v1. |
+
 ---
 
 ## License
