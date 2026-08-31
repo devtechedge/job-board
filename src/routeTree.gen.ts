@@ -12,7 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EmployersRouteImport } from './routes/employers'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ApiDeskRouteImport } from './routes/api/desk'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
 import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
@@ -38,9 +41,24 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployersRoute = EmployersRouteImport.update({
+  id: '/employers',
+  path: '/employers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDeskRoute = ApiDeskRouteImport.update({
+  id: '/api/desk',
+  path: '/api/desk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
@@ -93,7 +111,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/employers': typeof EmployersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
@@ -108,7 +129,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/employers': typeof EmployersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
@@ -124,7 +148,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/employers': typeof EmployersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
@@ -141,7 +168,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/contact'
+    | '/employers'
     | '/sitemap.xml'
+    | '/api/desk'
     | '/api/health'
     | '/companies/$slug'
     | '/jobs/$id'
@@ -156,7 +186,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/contact'
+    | '/employers'
     | '/sitemap.xml'
+    | '/api/desk'
     | '/api/health'
     | '/companies/$slug'
     | '/jobs/$id'
@@ -171,7 +204,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/contact'
+    | '/employers'
     | '/sitemap.xml'
+    | '/api/desk'
     | '/api/health'
     | '/companies/$slug'
     | '/jobs/$id'
@@ -187,7 +223,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
+  ContactRoute: typeof ContactRoute
+  EmployersRoute: typeof EmployersRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiDeskRoute: typeof ApiDeskRoute
   ApiHealthRoute: typeof ApiHealthRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
   JobsIdRoute: typeof JobsIdRoute
@@ -222,11 +261,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employers': {
+      id: '/employers'
+      path: '/employers'
+      fullPath: '/employers'
+      preLoaderRoute: typeof EmployersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/desk': {
+      id: '/api/desk'
+      path: '/api/desk'
+      fullPath: '/api/desk'
+      preLoaderRoute: typeof ApiDeskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/health': {
@@ -299,7 +359,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
+  ContactRoute: ContactRoute,
+  EmployersRoute: EmployersRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiDeskRoute: ApiDeskRoute,
   ApiHealthRoute: ApiHealthRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
   JobsIdRoute: JobsIdRoute,

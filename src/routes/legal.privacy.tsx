@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/privacy")({
@@ -32,8 +32,12 @@ function PrivacyPage() {
             subprocessors to keep the site online.
           </p>
           <p>
-            Contact: privacy@jobrow.example (placeholder). To delete logs we control, email that
-            address. Browser watchlists are deleted by clearing site data.
+            Contact: use{" "}
+            <Link to="/contact" className="text-pine underline underline-offset-4">
+              write the desk
+            </Link>
+            . To delete logs we control, say so there. Browser watchlists are deleted by clearing
+            site data.
           </p>
         </div>
       </main>

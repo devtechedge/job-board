@@ -31,6 +31,14 @@ function AboutPage() {
             browser. Working brand name may change.
           </p>
           <p>
+            <Link to="/contact" className="text-pine underline underline-offset-4">
+              Write the desk
+            </Link>
+            {" · "}
+            <Link to="/employers" className="text-pine underline underline-offset-4">
+              Request a crawl slot
+            </Link>
+            {" · "}
             <Link to="/legal/sourcing" className="text-pine underline underline-offset-4">
               How we source jobs
             </Link>

@@ -14,6 +14,12 @@ export function SiteFooter() {
           <Link to="/legal/sourcing" className="hover:text-ink">
             How we source
           </Link>
+          <Link to="/employers" className="hover:text-ink">
+            Crawl slot
+          </Link>
+          <Link to="/contact" className="hover:text-ink">
+            Desk
+          </Link>
           <Link to="/legal/terms" className="hover:text-ink">
             Terms
           </Link>
