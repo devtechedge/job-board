@@ -1,7 +1,7 @@
 import type { Workplace } from "./ats/types.ts";
 
 const KEEP_TITLE =
-  /\b(engineer|developer|software|designer|product manager|product design|data scien|data engineer|data analyst|research analyst|security analyst|quant|scientist|machine learning|ios|android|devops|\bsre\b|infrastructure|platform|frontend|front-end|backend|back-end|full[- ]?stack|quality assurance|\bqa\b|technical program|\btpm\b|prototyp|mobile|applied sci|\bmle\b|\betl\b|analytics engineer|growth engineer|solutions architect|architect|site reliability|developer relations|devrel|\bux\b|\bui\/ux\b|research engineer|security engineer)\b/i;
+  /\b(engineer|engineering|developer|software|designer|product manager|product design|data scien|data engineer|data analyst|research analyst|security analyst|quant|scientist|machine learning|ios|android|devops|\bsre\b|infrastructure|platform|frontend|front-end|backend|back-end|full[- ]?stack|quality assurance|\bqa\b|technical program|\btpm\b|prototyp|mobile|applied sci|\bmle\b|\betl\b|analytics engineer|growth engineer|solutions architect|architect|site reliability|developer relations|devrel|\bux\b|\bui\/ux\b|research engineer|security engineer)\b/i;
 
 const DROP_TITLE =
   /\b(nurse|nursing|warehouse|cashier|driver|cook|therapist|retail associate|bartender|recruiter|recruiting|account executive|account manager|sales development|\bsdr\b|attorney|paralegal|customer support|customer success(?! engineer)|success manager|barista|janitor|security guard|medical assistant|pharmacist|physician|registered nurse|store manager|field technician|accountant|bookkeeper|copywriter|fp&a|financial analyst|client services|representative|coordinator|receptionist|office manager|executive assistant|chief of staff|recruiter)\b/i;

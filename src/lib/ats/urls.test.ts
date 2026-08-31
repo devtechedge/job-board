@@ -132,6 +132,8 @@ describe("US eligibility", () => {
 describe("tech filter", () => {
   it("keeps engineering and drops retail", () => {
     assert.equal(isTechRole("Staff Software Engineer", "Engineering"), true);
+    assert.equal(isTechRole("Senior Manager, Data Engineering", null), true);
+    assert.equal(isTechRole("Engineering Manager", null), true);
     assert.equal(isTechRole("Warehouse Associate", "Operations"), false);
     assert.equal(isTechRole("Account Executive, AI Sales", "Sales"), false);
     assert.equal(isTechRole("FP&A Analyst", "Finance"), false);

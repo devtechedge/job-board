@@ -191,9 +191,12 @@ export async function listCompanies() {
     last_error: string | null;
     enabled: boolean;
     open_count: number;
+    listed_count: number | null;
+    classifier_rev: number;
   }>(
     `select c.id, c.slug, c.name, c.ats, c.careers_url, c.website, c.hq_country,
             c.last_ok_at, c.last_error, c.enabled,
+            c.listed_count, coalesce(c.classifier_rev, 0)::int as classifier_rev,
             count(j.id) filter (
               where j.status = 'open' and j.us_eligible and j.tech_eligible
             )::int as open_count

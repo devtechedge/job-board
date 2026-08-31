@@ -28,6 +28,8 @@ export type CrawlRunResult = {
   errorSample: string | null;
 };
 
+const CLASSIFIER_REV = 2;
+
 function newId(): string {
   return crypto.randomUUID();
 }
@@ -232,8 +234,10 @@ export async function crawlCompany(sql: Sql, company: CompanyRow): Promise<Crawl
       closed = closedRows.length;
     }
     await sql.query(
-      `update companies set last_ok_at = $1::timestamptz, last_error = null, updated_at = $1::timestamptz where id = $2`,
-      [now, company.id],
+      `update companies set last_ok_at = $1::timestamptz, last_error = null,
+              listed_count = $2, classifier_rev = $3, updated_at = $1::timestamptz
+       where id = $4`,
+      [now, listed.length, CLASSIFIER_REV, company.id],
     );
     return {
       slug: company.slug,
@@ -394,6 +398,7 @@ async function crawlPendingSlice(budgetMs: number): Promise<number> {
      where c.enabled = true
        and (
          c.last_ok_at is null
+         or coalesce(c.classifier_rev, 0) < ${CLASSIFIER_REV}
          or (
            not exists (
              select 1 from jobs j
@@ -427,6 +432,7 @@ async function crawlPendingSlice(budgetMs: number): Promise<number> {
      where c.enabled = true
        and (
          c.last_ok_at is null
+         or coalesce(c.classifier_rev, 0) < ${CLASSIFIER_REV}
          or (
            not exists (
              select 1 from jobs j

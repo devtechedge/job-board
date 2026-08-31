@@ -28,9 +28,10 @@ function CompaniesPage() {
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Companies</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Boards we read directly. Open counts are US tech roles still present on the latest
-          successful crawl. Zero with no “last ok” means that board has not been fetched yet — not
-          that the employer has no roles.
+          Boards we read directly from public Greenhouse, Ashby, and Lever JSON. The open
+          column is the US tech slice we keep — not every requisition on the careers page.
+          Sales, finance, and non-US postings stay off the register. “Listed” is how many
+          rows the employer JSON returned on the last successful fetch.
         </p>
         {pending > 0 ? (
           <p className="mt-4 border border-rule bg-inset px-3 py-2 text-sm">
@@ -43,7 +44,8 @@ function CompaniesPage() {
             <thead className="bg-inset text-[11px] uppercase tracking-[0.14em] text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">Company</th>
-                <th className="px-3 py-2 font-medium">Open</th>
+                <th className="px-3 py-2 font-medium">US tech</th>
+                <th className="px-3 py-2 font-medium">Listed</th>
                 <th className="px-3 py-2 font-medium">Board</th>
                 <th className="px-3 py-2 font-medium">Last ok</th>
               </tr>
@@ -61,6 +63,9 @@ function CompaniesPage() {
                     </Link>
                   </td>
                   <td className="px-3 py-3 tabular-nums">{company.open_count}</td>
+                  <td className="px-3 py-3 tabular-nums text-muted">
+                    {company.listed_count == null ? "—" : company.listed_count}
+                  </td>
                   <td className="px-3 py-3">
                     <SourceBadge ats={company.ats} />
                   </td>

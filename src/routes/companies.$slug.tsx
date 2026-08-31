@@ -32,7 +32,10 @@ function CompanyPage() {
         <h1 className="mt-2 font-serif text-4xl font-semibold">{company.name}</h1>
         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
           <SourceBadge ats={company.ats} />
-          <span>{company.open_count} still open</span>
+          <span>{company.open_count} US tech on the register</span>
+          {company.listed_count != null ? (
+            <span>{company.listed_count} on the public board</span>
+          ) : null}
           <span>Last ok {ago(company.last_ok_at)}</span>
         </div>
         <dl className="mt-6 grid gap-3 border border-rule bg-inset p-4 text-sm sm:grid-cols-3">

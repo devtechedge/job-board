@@ -48,8 +48,16 @@ export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async (
   return {
     indexing: boot.indexing,
     pending: boot.indexing
-      ? Math.max(1, rows.filter((row) => !row.last_ok_at || Number(row.open_count) === 0).length)
-      : rows.filter((row) => !row.last_ok_at).length,
+      ? Math.max(
+          1,
+          rows.filter(
+            (row) =>
+              !row.last_ok_at ||
+              Number(row.classifier_rev ?? 0) < 2 ||
+              Number(row.open_count) === 0,
+          ).length,
+        )
+      : rows.filter((row) => !row.last_ok_at || Number(row.classifier_rev ?? 0) < 2).length,
     companies: rows.map((row) => ({
       ...row,
       last_ok_at:
@@ -94,6 +102,8 @@ export const getCompanyFn = createServerFn({ method: "GET" })
         last_error: company.last_error ? String(company.last_error) : null,
         enabled: Boolean(company.enabled),
         open_count: Number(company.open_count ?? 0),
+        listed_count:
+          company.listed_count == null ? null : Number(company.listed_count),
         board_token: String(company.board_token ?? ""),
       },
       jobs,
