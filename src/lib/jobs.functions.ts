@@ -10,7 +10,7 @@ export const listJobsFn = createServerFn({ method: "GET" })
     const { searchJobs } = await import("@/lib/search");
     const boot = await ensureIndex();
     const result = await searchJobs(data);
-    return { ...result, indexing: boot.indexing && result.jobs.length < 8 };
+    return { ...result, indexing: boot.indexing };
   });
 
 export const getJobFn = createServerFn({ method: "GET" })
@@ -31,17 +31,21 @@ export const getJobFn = createServerFn({ method: "GET" })
 export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async () => {
   const { ensureIndex } = await import("@/lib/crawl");
   const { listCompanies } = await import("@/lib/search");
-  await ensureIndex();
+  const boot = await ensureIndex();
   const rows = await listCompanies();
-  return rows.map((row) => ({
-    ...row,
-    last_ok_at:
-      row.last_ok_at instanceof Date
-        ? row.last_ok_at.toISOString()
-        : row.last_ok_at
-          ? String(row.last_ok_at)
-          : null,
-  }));
+  return {
+    indexing: boot.indexing,
+    pending: rows.filter((row) => !row.last_ok_at).length,
+    companies: rows.map((row) => ({
+      ...row,
+      last_ok_at:
+        row.last_ok_at instanceof Date
+          ? row.last_ok_at.toISOString()
+          : row.last_ok_at
+            ? String(row.last_ok_at)
+            : null,
+    })),
+  };
 });
 
 export const getCompanyFn = createServerFn({ method: "GET" })

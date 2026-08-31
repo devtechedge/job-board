@@ -1,7 +1,7 @@
 /** Public board JSON endpoints. HTML career-page scraping is not the happy path. */
 
 export function greenhouseListUrl(token: string): string {
-  return `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs`;
+  return `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs?content=false`;
 }
 
 export function greenhouseDetailUrl(token: string, id: string): string {

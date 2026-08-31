@@ -43,7 +43,8 @@ function Home() {
         </p>
         {data.indexing ? (
           <p className="mt-3 border border-rule bg-inset px-3 py-2 text-sm">
-            Reading starter boards now. The register fills in as listings arrive.
+            Reading remaining employer boards now. Open counts fill in as each board returns —
+            the public demo crawls a couple of boards per page load.
           </p>
         ) : null}
         <div className="mt-8">

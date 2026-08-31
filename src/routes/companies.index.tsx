@@ -1,4 +1,5 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { AppShell } from "@/components/site-footer";
 import { SourceBadge } from "@/components/source-badge";
 import { listCompaniesFn } from "@/lib/jobs.functions";
@@ -11,15 +12,32 @@ export const Route = createFileRoute("/companies/")({
 });
 
 function CompaniesPage() {
-  const companies = Route.useLoaderData();
+  const { companies, indexing, pending } = Route.useLoaderData();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!indexing && pending === 0) return;
+    const timer = window.setTimeout(() => {
+      void router.invalidate();
+    }, 2500);
+    return () => window.clearTimeout(timer);
+  }, [indexing, pending, router]);
+
   return (
     <AppShell current="/companies">
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Companies</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Boards we read directly. Open counts are US tech roles still present on the latest
-          successful crawl.
+          successful crawl. Zero with no “last ok” means that board has not been fetched yet — not
+          that the employer has no roles.
         </p>
+        {pending > 0 ? (
+          <p className="mt-4 border border-rule bg-inset px-3 py-2 text-sm">
+            Still reading {pending} board{pending === 1 ? "" : "s"}. This page reloads itself and
+            pulls the next couple of employer APIs each time.
+          </p>
+        ) : null}
         <div className="mt-6 overflow-x-auto border border-rule">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-inset text-[11px] uppercase tracking-[0.14em] text-muted">
@@ -46,7 +64,13 @@ function CompaniesPage() {
                   <td className="px-3 py-3">
                     <SourceBadge ats={company.ats} />
                   </td>
-                  <td className="px-3 py-3 text-muted">{ago(company.last_ok_at)}</td>
+                  <td className="px-3 py-3 text-muted">
+                    {company.last_ok_at
+                      ? ago(company.last_ok_at)
+                      : company.last_error
+                        ? `failed — ${company.last_error.slice(0, 120)}`
+                        : "queued"}
+                  </td>
                 </tr>
               ))}
             </tbody>

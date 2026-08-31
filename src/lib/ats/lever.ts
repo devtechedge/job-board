@@ -71,6 +71,13 @@ export const leverAdapter: BoardAdapter = {
       throw new Error(`Lever ${token} HTTP ${result.status}: ${result.body}`);
     }
     const jobs = Array.isArray(result.data) ? result.data : [];
-    return jobs.map(toRaw);
+    return jobs.map((job) => {
+      job.description = undefined;
+      job.descriptionBody = undefined;
+      if (job.descriptionPlain && job.descriptionPlain.length > 2500) {
+        job.descriptionPlain = job.descriptionPlain.slice(0, 2500);
+      }
+      return toRaw(job);
+    });
   },
 };

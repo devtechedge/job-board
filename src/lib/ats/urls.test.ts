@@ -17,7 +17,7 @@ describe("adapter URL builders", () => {
   it("builds Greenhouse list and detail URLs", () => {
     assert.equal(
       greenhouseListUrl("stripe"),
-      "https://boards-api.greenhouse.io/v1/boards/stripe/jobs",
+      "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=false",
     );
     assert.equal(
       greenhouseDetailUrl("stripe", "123"),

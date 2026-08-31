@@ -1,6 +1,6 @@
 import { getAdapter } from "@/lib/ats";
 import type { Ats, CompanyRow, RawJob } from "@/lib/ats/types";
-import { dbSource, getSql, type Sql } from "@/lib/db";
+import { getSql, type Sql } from "@/lib/db";
 import { isTechRole } from "@/lib/classify";
 import { missingSourceIds, normalizeJob } from "@/lib/normalize";
 import { SEED_COMPANIES, STARTER_SLUGS } from "@/lib/seed-companies";
@@ -345,7 +345,6 @@ export async function crawlOne(slugOrId: string): Promise<CrawlCompanyResult> {
 
 const bootRef = globalThis as typeof globalThis & {
   __jobrowBoot__?: Promise<void>;
-  __jobrowFull__?: Promise<void>;
 };
 
 export async function ensureIndex(): Promise<{ companies: number; jobs: number; indexing: boolean }> {
@@ -358,41 +357,54 @@ export async function ensureIndex(): Promise<{ companies: number; jobs: number; 
   const [{ jobs }] = await sql.query<{ jobs: number }>(
     `select count(*)::int as jobs from jobs where status = 'open'`,
   );
-  if (jobs > 0) {
-    if (dbSource === "pglite" && !bootRef.__jobrowFull__) {
-      bootRef.__jobrowFull__ = crawlRemaining().catch((error) => {
-        console.error("[jobrow] background crawl failed", error);
-      });
-    }
-    return { companies, jobs, indexing: false };
+
+  if (jobs === 0) {
+    bootRef.__jobrowBoot__ ??= (async () => {
+      const rows = await sql.query<Record<string, unknown>>(
+        `select * from companies where slug = any($1::text[]) and enabled = true`,
+        [STARTER_SLUGS],
+      );
+      await crawlCompanies(rows.map(asCompany), { shard: 0, shardOf: 1 });
+    })();
+    await bootRef.__jobrowBoot__;
   }
-  bootRef.__jobrowBoot__ ??= (async () => {
-    const rows = await sql.query<Record<string, unknown>>(
-      `select * from companies where slug = any($1::text[]) and enabled = true`,
-      [STARTER_SLUGS],
-    );
-    await crawlCompanies(rows.map(asCompany), { shard: 0, shardOf: 1 });
-    if (dbSource === "pglite") {
-      bootRef.__jobrowFull__ = crawlRemaining().catch((error) => {
-        console.error("[jobrow] background crawl failed", error);
-      });
-    }
-  })();
-  await bootRef.__jobrowBoot__;
+
+  // Vercel Hobby freezes the isolate when the response is sent. Do remaining
+  // boards in this request with a tight budget, GH first, never-tried first.
+  const budgetMs = jobs === 0 ? 2_500 : 6_500;
+  const pending = await crawlPendingSlice(budgetMs);
   const [{ jobsAfter }] = await sql.query<{ jobsAfter: number }>(
     `select count(*)::int as "jobsAfter" from jobs where status = 'open'`,
   );
-  return { companies, jobs: jobsAfter, indexing: Boolean(bootRef.__jobrowFull__) };
+  return { companies, jobs: jobsAfter, indexing: pending > 0 };
 }
 
-async function crawlRemaining(): Promise<void> {
+async function crawlPendingSlice(budgetMs: number): Promise<number> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(
     `select * from companies
-     where enabled = true and (last_ok_at is null or last_ok_at < now() - interval '6 hours')
-     order by last_ok_at nulls first`,
+     where enabled = true and last_ok_at is null
+     order by case when last_crawled_at is null then 0 else 1 end,
+              case ats
+                when 'greenhouse' then 0
+                when 'workable' then 1
+                when 'lever' then 2
+                else 3
+              end,
+              name asc`,
   );
-  if (rows.length) await crawlCompanies(rows.map(asCompany));
+  const start = Date.now();
+  let crawled = 0;
+  for (const row of rows) {
+    if (Date.now() - start > budgetMs) break;
+    await crawlCompany(sql, asCompany(row));
+    crawled += 1;
+    if (crawled >= 2) break;
+  }
+  const [{ pending }] = await sql.query<{ pending: number }>(
+    `select count(*)::int as pending from companies where enabled = true and last_ok_at is null`,
+  );
+  return pending;
 }
 
 export async function fillJobDescription(jobId: string): Promise<void> {

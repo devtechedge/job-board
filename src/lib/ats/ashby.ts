@@ -128,6 +128,14 @@ export const ashbyAdapter: BoardAdapter = {
       throw new Error(`Ashby ${token} HTTP ${result.status}: ${result.body}`);
     }
     const jobs = Array.isArray(result.data) ? result.data : (result.data.jobs ?? []);
-    return jobs.filter((job) => job.isListed !== false).map(toRaw);
+    return jobs
+      .filter((job) => job.isListed !== false)
+      .map((job) => {
+        job.descriptionHtml = undefined;
+        if (job.descriptionPlain && job.descriptionPlain.length > 2500) {
+          job.descriptionPlain = job.descriptionPlain.slice(0, 2500);
+        }
+        return toRaw(job);
+      });
   },
 };
