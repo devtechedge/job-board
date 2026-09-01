@@ -27,10 +27,13 @@ export function SiteHeader({ current }: { current?: string }) {
   return (
     <header className="border-b border-rule bg-paper">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link to="/" className="shrink-0" aria-label="Jobrow home">
+        <Link to="/" className="flex min-w-0 items-center gap-3" aria-label="Jobrow home">
           <Wordmark />
+          <span className="hidden h-4 w-px shrink-0 bg-rule-strong sm:block" aria-hidden="true" />
+          <span className="hidden truncate font-serif text-sm italic text-muted sm:inline">
+            Still open.
+          </span>
         </Link>
-        <p className="hidden font-serif text-sm italic text-muted sm:block">Still open.</p>
         <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
           {NAV.map((item) => (
             <Link
