@@ -1,10 +1,11 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, PointerEvent } from "react";
+import { onPressDrop } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-sm text-sm font-medium transition-opacity duration-150 disabled:pointer-events-none disabled:opacity-50 min-h-11 px-4",
+  "pressable inline-flex items-center justify-center gap-2 rounded-sm text-sm font-medium disabled:pointer-events-none disabled:opacity-50 min-h-11 px-4",
   {
     variants: {
       variant: {
@@ -27,9 +28,19 @@ export function Button({
   variant,
   size,
   asChild,
+  onPointerDown,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "button";
-  return <Comp className={cn(buttonVariants({ variant, size }), className)} {...props} />;
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size }), className)}
+      onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+        onPressDrop(event);
+        onPointerDown?.(event);
+      }}
+      {...props}
+    />
+  );
 }

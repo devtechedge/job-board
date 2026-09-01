@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { PageMotion } from "@/components/page-motion";
 import { SiteHeader } from "@/components/site-header";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-rule bg-inset">
+    <footer className="page-enter-footer border-t border-rule bg-inset">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div className="max-w-md">
           <p>Independent index. Not an employer.</p>
@@ -51,10 +52,12 @@ export function AppShell({
   current?: string;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-transparent text-ink">
-      <SiteHeader current={current} />
-      <div className="flex-1">{children}</div>
-      <SiteFooter />
-    </div>
+    <PageMotion>
+      <div className="flex min-h-screen flex-col bg-transparent text-ink">
+        <SiteHeader current={current} />
+        <div className="page-enter-main flex-1">{children}</div>
+        <SiteFooter />
+      </div>
+    </PageMotion>
   );
 }

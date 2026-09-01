@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { onPressDrop } from "@/lib/motion";
 
 type Theme = "light" | "dark";
 
@@ -34,8 +35,9 @@ export function ThemeToggle() {
         applyTheme(next);
         setTheme(next);
       }}
-      className="relative size-9 shrink-0 text-ink hover:text-pine"
+      className="pressable relative size-9 shrink-0 text-ink hover:text-pine"
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      onPointerDown={(event) => onPressDrop(event)}
     >
       <span
         className="absolute inset-0 grid place-items-center transition duration-300 ease-out"

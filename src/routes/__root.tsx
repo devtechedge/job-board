@@ -17,7 +17,7 @@ export const Route = createRootRoute({
         name: "description",
         content: "US tech roles still on the employer ATS board.",
       },
-      { name: "theme-color", content: "#F6F1E8" },
+      { name: "theme-color", content: "#E3E8EE" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
@@ -38,7 +38,7 @@ export const Route = createRootRoute({
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <HeadContent />
       </head>
-      <body className="bg-paper text-ink">
+      <body className="bg-transparent text-ink">
         <PreviewHostBridge />
         <AuthProvider>
           <Outlet />

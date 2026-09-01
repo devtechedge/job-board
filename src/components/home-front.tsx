@@ -11,7 +11,7 @@ function n(value: number): string {
 
 export function EditionMasthead({ digest }: { digest: HomeDigest }) {
   return (
-    <div className="border-y-2 border-ink py-3">
+    <div className="border-y-2 border-ink py-3" data-parallax="mid">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
           {editionDateLabel(digest.editionAt)}

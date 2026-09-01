@@ -230,9 +230,122 @@ pre:focus-within::-webkit-scrollbar-thumb {
   background: var(--rule-strong);
 }
 
+@keyframes page-settle {
+  from {
+    opacity: 0;
+    translate: 0 -14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    translate: 0 22px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes drop-spread {
+  0% {
+    transform: translate(-50%, -50%) scale(0.15);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(24);
+    opacity: 0;
+  }
+}
+
+.page-enter-header {
+  animation: page-settle 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-enter-main {
+  animation: page-rise 0.86s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+.page-enter-footer {
+  animation: page-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+[data-parallax="slow"] {
+  transform: translate3d(0, calc(var(--parallax-y, 0) * -0.12px), 0);
+  will-change: transform;
+}
+
+[data-parallax="mid"] {
+  transform: translate3d(0, calc(var(--parallax-y, 0) * 0.18px), 0);
+  will-change: transform;
+}
+
+.pressable {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.48s cubic-bezier(0.22, 1.45, 0.36, 1),
+    box-shadow 0.35s ease,
+    opacity 0.2s ease;
+}
+
+.pressable:hover {
+  transform: translateY(-1px);
+}
+
+.pressable:active {
+  transform: scale(0.965);
+  transition-duration: 0.08s;
+}
+
+.water-drop {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(31 107 74 / 0.22) 42%,
+    transparent 70%
+  );
+  mix-blend-mode: overlay;
+  animation: drop-spread 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+
+  .page-enter-header,
+  .page-enter-main,
+  .page-enter-footer {
+    animation: none !important;
+  }
+
+  [data-parallax="slow"],
+  [data-parallax="mid"] {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .pressable:hover,
+  .pressable:active {
+    transform: none;
+  }
+
+  .water-drop {
+    display: none !important;
   }
 }
