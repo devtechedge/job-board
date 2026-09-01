@@ -1,5 +1,6 @@
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { CompanyNameLink } from "@/components/company-mark";
 import { AppShell } from "@/components/site-footer";
 import { SourceBadge } from "@/components/source-badge";
 import { listCompaniesFn } from "@/lib/jobs.functions";
@@ -45,13 +46,12 @@ function CompaniesPage() {
               {companies.map((company) => (
                 <tr key={company.id} className="border-t border-rule">
                   <td className="px-3 py-3">
-                    <Link
-                      to="/companies/$slug"
-                      params={{ slug: company.slug }}
-                      className="font-medium hover:text-pine"
-                    >
-                      {company.name}
-                    </Link>
+                    <CompanyNameLink
+                      name={company.name}
+                      slug={company.slug}
+                      website={company.website}
+                      className="font-medium"
+                    />
                   </td>
                   <td className="px-3 py-3 tabular-nums">{company.open_count}</td>
                   <td className="px-3 py-3 tabular-nums text-muted">

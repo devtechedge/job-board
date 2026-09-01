@@ -43,6 +43,7 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 ## What you can do
 
 - **Register** (`/`) — date, open count, filters, latest rows, functions, boards
+- Company marks next to every listing (site icon, initials if the icon fails)
 - **Index** (`/jobs`) — full paginated table of the US tech slice
 - **Companies** (`/companies`) — 34 boards, US-tech count vs listed count, last successful fetch
 - **Role** (`/jobs/:id`) — summary, pay, workplace, posting HTML, Apply (leaves the site)

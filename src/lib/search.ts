@@ -6,6 +6,8 @@ import type { Ats, JobRow, SalarySource, Workplace } from "@/lib/ats/types";
 export type JobListItem = JobRow & {
   company_name: string;
   company_slug: string;
+  company_website: string | null;
+  company_logo_url: string | null;
 };
 
 export type SearchResult = {
@@ -52,6 +54,8 @@ function mapJob(row: Record<string, unknown>): JobListItem {
     tech_eligible: Boolean(row.tech_eligible),
     company_name: String(row.company_name ?? ""),
     company_slug: String(row.company_slug ?? ""),
+    company_website: row.company_website ? String(row.company_website) : null,
+    company_logo_url: row.company_logo_url ? String(row.company_logo_url) : null,
   };
 }
 
@@ -136,7 +140,8 @@ export async function searchJobs(query: JobQuery): Promise<SearchResult> {
   const offset = (page - 1) * PAGE_SIZE;
   const listParams = [...params, PAGE_SIZE, offset];
   const rows = await sql.query<Record<string, unknown>>(
-    `select j.*, c.name as company_name, c.slug as company_slug
+    `select j.*, c.name as company_name, c.slug as company_slug,
+            c.website as company_website, c.logo_url as company_logo_url
      from jobs j join companies c on c.id = j.company_id
      where ${whereSql}
      order by ${order}
@@ -169,7 +174,8 @@ export async function searchJobs(query: JobQuery): Promise<SearchResult> {
 export async function getJobById(id: string): Promise<JobListItem | null> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(
-    `select j.*, c.name as company_name, c.slug as company_slug
+    `select j.*, c.name as company_name, c.slug as company_slug,
+            c.website as company_website, c.logo_url as company_logo_url
      from jobs j join companies c on c.id = j.company_id
      where j.id = $1`,
     [id],
@@ -225,7 +231,8 @@ export async function getCompanyBySlug(slug: string) {
 export async function listCompanyJobs(companyId: string): Promise<JobListItem[]> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(
-    `select j.*, c.name as company_name, c.slug as company_slug
+    `select j.*, c.name as company_name, c.slug as company_slug,
+            c.website as company_website, c.logo_url as company_logo_url
      from jobs j join companies c on c.id = j.company_id
      where j.company_id = $1 and j.status = 'open' and j.us_eligible and j.tech_eligible
      order by j.last_seen_at desc
@@ -258,7 +265,14 @@ export type HomeDigest = {
   lastWindowClosed: number;
   lastWindowAt: string | null;
   functions: Array<{ fn: string; n: number }>;
-  boards: Array<{ slug: string; name: string; ats: Ats; open_count: number }>;
+  boards: Array<{
+    slug: string;
+    name: string;
+    ats: Ats;
+    open_count: number;
+    website: string | null;
+    logo_url: string | null;
+  }>;
   editionAt: string;
 };
 
@@ -305,8 +319,10 @@ export async function homeDigest(): Promise<HomeDigest> {
     name: string;
     ats: Ats;
     open_count: number;
+    website: string | null;
+    logo_url: string | null;
   }>(
-    `select c.slug, c.name, c.ats,
+    `select c.slug, c.name, c.ats, c.website, c.logo_url,
             count(j.id) filter (
               where j.status = 'open' and j.us_eligible and j.tech_eligible
             )::int as open_count

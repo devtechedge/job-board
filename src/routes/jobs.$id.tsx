@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ApplyLink } from "@/components/apply-link";
+import { CompanyMark, CompanyNameLink } from "@/components/company-mark";
 import { SourceBadge } from "@/components/source-badge";
 import { AppShell } from "@/components/site-footer";
 import { WatchButton } from "@/components/watch-button";
@@ -62,18 +63,23 @@ function JobPage() {
             Index
           </Link>
           <span className="text-rule-strong"> / </span>
-          <Link
-            to="/companies/$slug"
-            params={{ slug: job.company_slug }}
-            className="hover:text-pine"
-          >
-            {job.company_name}
-          </Link>
+          <CompanyNameLink
+            name={job.company_name}
+            slug={job.company_slug}
+            website={job.company_website}
+            logoUrl={job.company_logo_url}
+          />
         </p>
         <h1 className="mt-3 font-serif text-3xl font-semibold leading-tight sm:text-4xl">
           {job.title}
         </h1>
-        <p className="mt-2 text-muted">
+        <p className="mt-2 flex items-center gap-2 text-muted">
+          <CompanyMark
+            name={job.company_name}
+            website={job.company_website}
+            logoUrl={job.company_logo_url}
+            size={22}
+          />
           {job.company_name}
           {job.status === "closed" ? " · Closed" : ""}
         </p>

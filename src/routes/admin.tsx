@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/site-footer";
+import { CompanyMark } from "@/components/company-mark";
 import { Button } from "@/components/ui/button";
 import {
   adminBoardFn,
@@ -138,7 +139,12 @@ function AdminPage() {
                 <tbody>
                   {(board?.companies ?? []).map((company) => (
                     <tr key={company.id} className="border-t border-rule align-top">
-                      <td className="px-3 py-2 font-medium">{company.name}</td>
+                      <td className="px-3 py-2">
+                        <span className="inline-flex items-center gap-2 font-medium">
+                          <CompanyMark name={company.name} website={company.website} />
+                          {company.name}
+                        </span>
+                      </td>
                       <td className="px-3 py-2">{company.ats}</td>
                       <td className="px-3 py-2 font-mono text-xs">{company.board_token}</td>
                       <td className="px-3 py-2 tabular-nums">{company.open_count}</td>

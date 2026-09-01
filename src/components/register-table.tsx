@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { ApplyLink } from "@/components/apply-link";
+import { CompanyMark, CompanyNameLink } from "@/components/company-mark";
 import { SourceBadge } from "@/components/source-badge";
 import { WatchButton } from "@/components/watch-button";
 import { ago, workplaceLabel } from "@/lib/format";
@@ -74,19 +75,29 @@ function RegisterRow({ job }: { job: JobListItem }) {
               >
                 {job.title}
               </Link>
-              <p className="truncate text-xs text-muted md:hidden">
-                {job.company_name} · {pay} · {workplaceLabel(job.workplace)}
+              <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted md:hidden">
+                <CompanyMark
+                  name={job.company_name}
+                  website={job.company_website}
+                  logoUrl={job.company_logo_url}
+                  size={14}
+                />
+                <span className="truncate">
+                  {job.company_name} · {pay} · {workplaceLabel(job.workplace)}
+                </span>
               </p>
             </div>
           </div>
         </div>
-        <Link
-          to="/companies/$slug"
-          params={{ slug: job.company_slug }}
-          className="hidden truncate text-sm hover:text-pine md:block"
-        >
-          {job.company_name}
-        </Link>
+        <div className="hidden min-w-0 md:block">
+          <CompanyNameLink
+            name={job.company_name}
+            slug={job.company_slug}
+            website={job.company_website}
+            logoUrl={job.company_logo_url}
+            className="text-sm"
+          />
+        </div>
         <span className="hidden text-sm tabular-nums md:block">{pay}</span>
         <span className="hidden text-sm md:block">{workplaceLabel(job.workplace)}</span>
         <span className="hidden text-sm text-muted md:block">{ago(job.first_seen_at)}</span>

@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { CompanyMark } from "@/components/company-mark";
 import { RegisterTable } from "@/components/register-table";
 import { AppShell } from "@/components/site-footer";
 import { SourceBadge } from "@/components/source-badge";
@@ -29,7 +30,10 @@ function CompanyPage() {
             Companies
           </Link>
         </p>
-        <h1 className="mt-2 font-serif text-4xl font-semibold">{company.name}</h1>
+        <div className="mt-2 flex items-center gap-3">
+          <CompanyMark name={company.name} website={company.website} size={40} />
+          <h1 className="font-serif text-4xl font-semibold">{company.name}</h1>
+        </div>
         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
           <SourceBadge ats={company.ats} />
           <span>{company.open_count} US tech</span>

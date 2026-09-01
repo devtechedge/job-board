@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CompanyNameLink } from "@/components/company-mark";
 import { SourceBadge } from "@/components/source-badge";
 import { ago, editionDateLabel, functionLabel } from "@/lib/format";
 import { compactSearch, DEFAULT_QUERY } from "@/lib/query";
@@ -108,13 +109,13 @@ export function BoardStrip({ boards }: { boards: HomeDigest["boards"] }) {
               key={board.slug}
               className="grid grid-cols-[1fr_auto] items-center gap-3 border-t border-rule px-3 py-2.5 first:border-t-0 sm:grid-cols-[1fr_7rem_6rem]"
             >
-              <Link
-                to="/companies/$slug"
-                params={{ slug: board.slug }}
-                className="truncate font-medium hover:text-pine"
-              >
-                {board.name}
-              </Link>
+              <CompanyNameLink
+                name={board.name}
+                slug={board.slug}
+                website={board.website}
+                logoUrl={board.logo_url}
+                className="font-medium"
+              />
               <Link
                 to="/jobs"
                 search={compactSearch({ ...DEFAULT_QUERY, company: board.slug })}
