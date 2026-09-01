@@ -134,6 +134,9 @@
 
   .ledger-select {
     appearance: none;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
       linear-gradient(135deg, var(--muted) 50%, transparent 50%);
     background-position:
@@ -264,15 +267,20 @@ pre:focus-within::-webkit-scrollbar-thumb {
 }
 
 .page-enter-header {
-  animation: page-settle 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: page-settle 0.72s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .page-enter-main {
-  animation: page-rise 0.86s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+  animation: page-rise 0.86s cubic-bezier(0.22, 1, 0.36, 1) 0.05s backwards;
 }
 
 .page-enter-footer {
-  animation: page-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  animation: page-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards;
+}
+
+.page-enter-done {
+  animation: none !important;
+  translate: none !important;
 }
 
 [data-parallax="slow"] {
