@@ -178,3 +178,11 @@ export function sentenceToFilters(sentence: string): Partial<JobQuery> {
 }
 
 export const PAGE_SIZE = 40;
+
+export function jobQueryFromSearchParams(params: URLSearchParams): JobQuery {
+  const raw: Record<string, unknown> = {};
+  for (const [key, value] of params.entries()) {
+    raw[key] = value;
+  }
+  return parseJobQuery(raw);
+}

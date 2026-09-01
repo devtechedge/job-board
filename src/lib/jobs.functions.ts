@@ -39,7 +39,13 @@ export const getJobFn = createServerFn({ method: "GET" })
     await fillJobDescription(data.id).catch(() => undefined);
     const job = await getJobById(data.id);
     if (!job) throw new Error("Role not found");
-    return job;
+    const { sanitizeHtml, htmlToText } = await import("@/lib/sanitize");
+    const description_html = job.description_html ? sanitizeHtml(job.description_html) : null;
+    return {
+      ...job,
+      description_html,
+      description_text: job.description_text || htmlToText(description_html || job.description_html),
+    };
   });
 
 export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async () => {

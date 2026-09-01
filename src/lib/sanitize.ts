@@ -1,15 +1,62 @@
 const ALLOWED = new Set(["p", "br", "ul", "ol", "li", "strong", "em", "b", "i", "a", "h2", "h3", "h4"]);
 
-function decodeEntities(text: string): string {
+const NAMED: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  quot: '"',
+  lt: "<",
+  gt: ">",
+  apos: "'",
+  bull: "\u2022",
+  mdash: "\u2014",
+  ndash: "\u2013",
+  hellip: "\u2026",
+  rsquo: "\u2019",
+  lsquo: "\u2018",
+  rdquo: "\u201D",
+  ldquo: "\u201C",
+  copy: "\u00A9",
+  reg: "\u00AE",
+  trade: "\u2122",
+  times: "\u00D7",
+  divide: "\u00F7",
+  middot: "\u00B7",
+  deg: "\u00B0",
+  plusmn: "\u00B1",
+};
+
+function decodeEntitiesOnce(text: string): string {
   return text
-    .replace(/\u0026nbsp;/gi, " ")
-    .replace(/\u0026amp;/gi, "&")
-    .replace(/\u0026quot;/gi, '"')
-    .replace(/\u0026#39;|\u0026apos;/gi, "'")
-    .replace(/\u0026lt;/gi, "<")
-    .replace(/\u0026gt;/gi, ">")
-    .replace(/\u0026#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
-    .replace(/\u0026#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
+    .replace(/&([a-z]+);/gi, (full, name: string) => NAMED[name.toLowerCase()] ?? full)
+    .replace(/&#(\d+);/g, (full, n: string) => {
+      const code = Number(n);
+      if (!Number.isFinite(code) || code < 1 || code > 0x10ffff) return full;
+      try {
+        return String.fromCodePoint(code);
+      } catch {
+        return full;
+      }
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (full, n: string) => {
+      const code = parseInt(n, 16);
+      if (!Number.isFinite(code) || code < 1 || code > 0x10ffff) return full;
+      try {
+        return String.fromCodePoint(code);
+      } catch {
+        return full;
+      }
+    });
+}
+
+/** Unfold nested entities (`&amp;bull;` → `•`) so stored postings render as HTML, not literals. */
+export function decodeEntities(text: string): string {
+  let current = text;
+  for (let i = 0; i < 5; i += 1) {
+    const next = decodeEntitiesOnce(current);
+    if (next === current) break;
+    current = next;
+  }
+  return current;
 }
 
 export function escapeText(text: string): string {
@@ -22,17 +69,15 @@ export function escapeText(text: string): string {
 
 export function htmlToText(html: string | null | undefined): string {
   if (!html) return "";
-  return decodeEntities(
-    html
-      .replace(/<script[\s\S]*?<\/script>/gi, " ")
-      .replace(/<style[\s\S]*?<\/style>/gi, " ")
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<\/(p|div|h1|h2|h3|li|tr)>/gi, "\n")
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+\n/g, "\n")
-      .replace(/[ \t]{2,}/g, " ")
-      .trim(),
-  );
+  return decodeEntities(html)
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|h1|h2|h3|li|tr)>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+\n/g, "\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
 }
 
 function safeHref(raw: string): string | null {
@@ -50,7 +95,9 @@ function safeHref(raw: string): string | null {
 
 export function sanitizeHtml(input: string | null | undefined): string {
   if (!input) return "";
-  const stripped = input
+  // Decode first so `&lt;p&gt;` stored by a prior escape pass becomes real tags we can allowlist.
+  const source = decodeEntities(input);
+  const stripped = source
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<!--[\s\S]*?-->/g, "");

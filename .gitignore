@@ -34,3 +34,11 @@ Thumbs.db
 
 # live-preview captures (product shots live in docs/screenshots)
 screenshots/app-builder-preview*
+
+# Expo app (separate package; do not let Vercel compile it)
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/ios/
+mobile/android/
