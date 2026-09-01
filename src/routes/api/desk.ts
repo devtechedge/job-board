@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { clientIp } from "@/lib/security";
+
+const MAX_BODY = 16_384;
 
 export const Route = createFileRoute("/api/desk")({
   server: {
@@ -6,16 +9,26 @@ export const Route = createFileRoute("/api/desk")({
       POST: async ({ request }) => {
         const { deskRateOk, parseDeskPayload, saveDeskNote, validateDeskPayload } =
           await import("@/lib/desk");
-        const ip =
-          request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-          request.headers.get("x-real-ip") ||
-          "unknown";
+        const ip = clientIp(request);
         if (!deskRateOk(ip)) {
           return Response.json({ ok: false, error: "Too many notes from this network." }, { status: 429 });
         }
+        const length = Number(request.headers.get("content-length") ?? "0");
+        if (Number.isFinite(length) && length > MAX_BODY) {
+          return Response.json({ ok: false, error: "Note too large." }, { status: 413 });
+        }
+        let rawText: string;
+        try {
+          rawText = await request.text();
+        } catch {
+          return Response.json({ ok: false, error: "Unreadable note." }, { status: 400 });
+        }
+        if (rawText.length > MAX_BODY) {
+          return Response.json({ ok: false, error: "Note too large." }, { status: 413 });
+        }
         let body: unknown;
         try {
-          body = await request.json();
+          body = JSON.parse(rawText) as unknown;
         } catch {
           return Response.json({ ok: false, error: "Unreadable note." }, { status: 400 });
         }
@@ -23,7 +36,6 @@ export const Route = createFileRoute("/api/desk")({
         if ("error" in parsed) {
           return Response.json({ ok: false, error: parsed.error }, { status: 400 });
         }
-        // Honeypot: look successful, store nothing.
         if (parsed.fax) {
           return Response.json({ ok: true });
         }
@@ -33,9 +45,8 @@ export const Route = createFileRoute("/api/desk")({
         }
         try {
           await saveDeskNote(parsed);
-        } catch (error) {
-          const message = error instanceof Error ? error.message : "save failed";
-          return Response.json({ ok: false, error: message.slice(0, 200) }, { status: 500 });
+        } catch {
+          return Response.json({ ok: false, error: "Could not file the note." }, { status: 500 });
         }
         return Response.json({ ok: true });
       },

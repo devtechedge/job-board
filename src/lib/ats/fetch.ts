@@ -1,3 +1,5 @@
+import { assertAtsFetchUrl } from "../safe.ts";
+
 const USER_AGENT =
   "JobrowIndex/1.0 (+https://github.com/devtechedge/job-board; public employer ATS board index)";
 
@@ -9,6 +11,11 @@ export async function fetchJson<T>(
   url: string,
   init: RequestInit = {},
 ): Promise<{ ok: true; status: number; data: T } | { ok: false; status: number; body: string }> {
+  try {
+    assertAtsFetchUrl(url);
+  } catch {
+    return { ok: false, status: 0, body: "blocked url" };
+  }
   let lastStatus = 0;
   let lastBody = "";
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -17,6 +24,7 @@ export async function fetchJson<T>(
     try {
       const response = await fetch(url, {
         ...init,
+        redirect: "error",
         signal: controller.signal,
         headers: {
           accept: "application/json, text/plain;q=0.9, */*;q=0.1",

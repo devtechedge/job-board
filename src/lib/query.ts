@@ -80,18 +80,23 @@ export function parseJobQuery(raw: Record<string, unknown> | undefined): JobQuer
       : typeof pageRaw === "string" && pageRaw
         ? Number(pageRaw)
         : 1;
+  const fn = str(s.fn);
+  const seniority = str(s.seniority);
+  const workplace = str(s.workplace);
+  const ats = str(s.ats);
+  const company = str(s.company).toLowerCase();
   return {
     q: str(s.q).slice(0, 120),
-    fn: str(s.fn),
-    seniority: str(s.seniority),
-    workplace: str(s.workplace),
+    fn: (FUNCTIONS as readonly string[]).includes(fn) ? fn : "",
+    seniority: (SENIORITIES as readonly string[]).includes(seniority) ? seniority : "",
+    workplace: (WORKPLACES as readonly string[]).includes(workplace) ? workplace : "",
     location: str(s.location).slice(0, 80),
-    salaryMin: salaryMin && Number.isFinite(salaryMin) ? salaryMin : null,
-    posted: str(s.posted),
-    ats: str(s.ats),
-    company: str(s.company),
+    salaryMin: salaryMin && Number.isFinite(salaryMin) ? Math.min(Math.max(salaryMin, 0), 1_000_000) : null,
+    posted: (POSTED_WINDOWS as readonly string[]).includes(str(s.posted)) ? str(s.posted) : "",
+    ats: (ATS_FILTERS as readonly string[]).includes(ats) ? ats : "",
+    company: /^[a-z0-9-]{1,80}$/.test(company) ? company : "",
     sort,
-    page: Number.isFinite(page) && page > 0 ? Math.floor(page) : 1,
+    page: Number.isFinite(page) && page > 0 ? Math.min(Math.floor(page), 100) : 1,
   };
 }
 

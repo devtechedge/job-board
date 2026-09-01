@@ -7,6 +7,7 @@ import { WatchButton } from "@/components/watch-button";
 import { ago, workplaceLabel } from "@/lib/format";
 import { getJobFn } from "@/lib/jobs.functions";
 import { formatPay } from "@/lib/salary";
+import { jsonForScript } from "@/lib/safe";
 
 export const Route = createFileRoute("/jobs/$id")({
   loader: ({ params }) => getJobFn({ data: { id: params.id } }),
@@ -55,7 +56,7 @@ function JobPage() {
   return (
     <AppShell current="/jobs">
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonForScript(jsonLd) }} />
         <p className="text-sm">
           <Link to="/jobs" className="text-muted hover:text-pine">
             Index

@@ -28,7 +28,9 @@ export const homePageFn = createServerFn({ method: "GET" })
 export const getJobFn = createServerFn({ method: "GET" })
   .validator((data: unknown) => {
     const id = typeof data === "string" ? data : String((data as { id?: string })?.id ?? "");
-    if (!id) throw new Error("Missing job id");
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+      throw new Error("Missing job id");
+    }
     return { id };
   })
   .handler(async ({ data }) => {
@@ -74,7 +76,7 @@ export const getCompanyFn = createServerFn({ method: "GET" })
   .validator((data: unknown) => {
     const slug =
       typeof data === "string" ? data : String((data as { slug?: string })?.slug ?? "");
-    if (!slug) throw new Error("Missing company");
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 80) throw new Error("Missing company");
     return { slug };
   })
   .handler(async ({ data }) => {
@@ -99,12 +101,11 @@ export const getCompanyFn = createServerFn({ method: "GET" })
             : company.last_ok_at
               ? String(company.last_ok_at)
               : null,
-        last_error: company.last_error ? String(company.last_error) : null,
+        last_error: company.last_error ? "crawl failed" : null,
         enabled: Boolean(company.enabled),
         open_count: Number(company.open_count ?? 0),
         listed_count:
           company.listed_count == null ? null : Number(company.listed_count),
-        board_token: String(company.board_token ?? ""),
       },
       jobs,
     };

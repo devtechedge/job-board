@@ -59,9 +59,15 @@ npm install
 npm run dev
 ```
 
-Optional env: see [.env.example](.env.example).
+Optional env: see [.env.example](.env.example). Never commit secrets.
 
-Add a board in `/admin` (password from `ADMIN_PASSWORD`, or `jobrow-preview` in the sandbox).
+Add a board in `/admin` using `ADMIN_PASSWORD`.
+
+---
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for reporting, secrets, and what is in scope. Do not file public issues for vulnerabilities.
 
 The company registry (the real asset) lives in [data/companies.csv](data/companies.csv) and is seeded from [src/lib/seed-companies.ts](src/lib/seed-companies.ts).
 

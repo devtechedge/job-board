@@ -1,29 +1,32 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 import {
+  adminBoardFn,
   adminCrawlFn,
   adminDeleteCompanyFn,
+  adminMetaFn,
   adminSaveCompanyFn,
-  adminStatusFn,
   adminUnlockFn,
 } from "@/lib/admin.functions";
 import { ago } from "@/lib/format";
 
 export const Route = createFileRoute("/admin")({
-  loader: () => adminStatusFn(),
+  loader: () => adminMetaFn(),
   head: () => ({ meta: [{ title: "Admin — Jobrow" }] }),
   component: AdminPage,
 });
 
+type Board = Awaited<ReturnType<typeof adminBoardFn>>;
+
 function AdminPage() {
-  const initial = Route.useLoaderData();
-  const router = useRouter();
+  const meta = Route.useLoaderData();
   const [password, setPassword] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [board, setBoard] = useState<Board | null>(null);
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -33,20 +36,16 @@ function AdminPage() {
     website: "",
   });
 
-  const hint = useMemo(
-    () =>
-      initial.previewHint
-        ? `Preview password: ${initial.previewHint}`
-        : initial.configured
-          ? "Enter ADMIN_PASSWORD."
-          : "Set ADMIN_PASSWORD to enable admin on this deploy.",
-    [initial.configured, initial.previewHint],
-  );
+  async function loadBoard() {
+    const data = await adminBoardFn({ data: { password } });
+    setBoard(data);
+  }
 
   async function unlock() {
     setError(null);
     try {
       await adminUnlockFn({ data: { password } });
+      await loadBoard();
       setUnlocked(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not unlock");
@@ -58,7 +57,7 @@ function AdminPage() {
     setError(null);
     try {
       await adminCrawlFn({ data: { password, slug, all: !slug } });
-      await router.invalidate();
+      await loadBoard();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Crawl failed");
     } finally {
@@ -74,11 +73,11 @@ function AdminPage() {
         data: {
           password,
           ...form,
-          ats: form.ats as "greenhouse" | "ashby" | "lever" | "workable" | "rippling" | "gem",
+          ats: form.ats as "greenhouse" | "ashby" | "lever" | "workable",
         },
       });
       setForm({ name: "", slug: "", ats: "greenhouse", board_token: "", careers_url: "", website: "" });
-      await router.invalidate();
+      await loadBoard();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
@@ -90,9 +89,11 @@ function AdminPage() {
     <AppShell>
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Admin</h1>
-        <p className="mt-2 text-sm text-muted">{hint}</p>
+        <p className="mt-2 text-sm text-muted">
+          {meta.configured ? "Password required." : "Set ADMIN_PASSWORD to enable admin."}
+        </p>
         <p className="mt-1 text-sm tabular-nums text-muted">
-          Database: {initial.db === "neon" ? "Neon (persistent)" : "PGLite (ephemeral demo)"}
+          Database: {meta.db === "neon" ? "Neon (persistent)" : "PGLite (ephemeral demo)"}
         </p>
         {!unlocked ? (
           <form
@@ -105,6 +106,7 @@ function AdminPage() {
             <input
               className="ledger-input"
               type="password"
+              autoComplete="current-password"
               placeholder="Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -134,7 +136,7 @@ function AdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {initial.companies.map((company) => (
+                  {(board?.companies ?? []).map((company) => (
                     <tr key={company.id} className="border-t border-rule align-top">
                       <td className="px-3 py-2 font-medium">{company.name}</td>
                       <td className="px-3 py-2">{company.ats}</td>
@@ -162,7 +164,7 @@ function AdminPage() {
                             disabled={busy}
                             onClick={() => {
                               void adminDeleteCompanyFn({ data: { password, id: company.id } }).then(
-                                () => router.invalidate(),
+                                () => loadBoard(),
                               );
                             }}
                           >
@@ -217,14 +219,14 @@ function AdminPage() {
             <section>
               <h2 className="font-serif text-xl font-semibold">Recent crawls</h2>
               <ul className="mt-3 space-y-2 text-sm">
-                {initial.runs.map((run) => (
+                {(board?.runs ?? []).map((run) => (
                   <li key={run.id} className="border border-rule px-3 py-2">
                     {ago(run.started_at)} · ok {run.companies_ok} · fail {run.companies_fail} ·
                     upserted {run.jobs_upserted} · closed {run.jobs_closed}
                     {run.error_sample ? ` · ${run.error_sample}` : ""}
                   </li>
                 ))}
-                {initial.runs.length === 0 ? (
+                {(board?.runs ?? []).length === 0 ? (
                   <li className="text-muted">No crawl runs recorded yet.</li>
                 ) : null}
               </ul>

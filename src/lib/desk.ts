@@ -1,22 +1,14 @@
+import { publicHttpsUrl } from "./safe.ts";
+import { rateLimit } from "./security.ts";
+
 export type DeskKind = "write" | "board_request" | "bound_pass" | "placement";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOKEN = /^[a-zA-Z0-9._-]{2,80}$/;
-const ATS = new Set(["greenhouse", "ashby", "lever", "workable", "rippling", "gem"]);
+const ATS = new Set(["greenhouse", "ashby", "lever", "workable"]);
 
 function clip(value: unknown, max: number): string {
   return String(value ?? "").trim().slice(0, max);
-}
-
-function httpsUrl(value: string): string | null {
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    if (url.protocol !== "https:") return null;
-    return url.toString();
-  } catch {
-    return null;
-  }
 }
 
 export type DeskPayload = {
@@ -36,7 +28,7 @@ export type DeskPayload = {
 };
 
 export function parseDeskPayload(input: unknown): DeskPayload | { error: string } {
-  if (!input || typeof input !== "object") return { error: "Empty note" };
+  if (!input || typeof input !== "object" || Array.isArray(input)) return { error: "Empty note" };
   const raw = input as Record<string, unknown>;
   const kind = clip(raw.kind, 32);
   if (kind !== "write" && kind !== "board_request" && kind !== "bound_pass" && kind !== "placement") {
@@ -63,7 +55,7 @@ export function validateDeskPayload(note: DeskPayload): string | null {
   if (!EMAIL.test(note.email)) return "Need a real email so we can reply.";
   if (note.kind === "write") {
     if (note.body.length < 12) return "Write at least a sentence.";
-    if (note.listingUrl && !httpsUrl(note.listingUrl)) return "Listing URL must be https.";
+    if (note.listingUrl && !publicHttpsUrl(note.listingUrl)) return "Listing URL must be https.";
     return null;
   }
   if (note.kind === "bound_pass") {
@@ -71,29 +63,21 @@ export function validateDeskPayload(note: DeskPayload): string | null {
   }
   if (note.kind === "placement") {
     if (note.company.length < 2) return "Company name is required.";
-    if (!httpsUrl(note.listingUrl)) return "Need the Jobrow or employer ATS https URL to pin.";
+    if (!publicHttpsUrl(note.listingUrl)) return "Need the Jobrow or employer ATS https URL to pin.";
     return null;
   }
   if (note.company.length < 2) return "Company name is required.";
   if (!ATS.has(note.ats)) return "Pick Greenhouse, Ashby, Lever, or another supported ATS.";
   if (!TOKEN.test(note.boardToken)) return "Board token looks off. Use the public board slug, not a login.";
-  if (!httpsUrl(note.careersUrl)) return "Careers URL must be https.";
-  if (note.website && !httpsUrl(note.website)) return "Website must be https.";
+  if (!publicHttpsUrl(note.careersUrl)) return "Careers URL must be https.";
+  if (note.website && !publicHttpsUrl(note.website)) return "Website must be https.";
   return null;
 }
 
 const buckets = new Map<string, number[]>();
 
 export function deskRateOk(ip: string, now = Date.now()): boolean {
-  const windowMs = 10 * 60 * 1000;
-  const hits = (buckets.get(ip) ?? []).filter((t) => now - t < windowMs);
-  if (hits.length >= 6) {
-    buckets.set(ip, hits);
-    return false;
-  }
-  hits.push(now);
-  buckets.set(ip, hits);
-  return true;
+  return rateLimit(ip, 6, 10 * 60 * 1000, buckets, now);
 }
 
 export async function saveDeskNote(note: DeskPayload): Promise<void> {
@@ -111,12 +95,12 @@ export async function saveDeskNote(note: DeskPayload): Promise<void> {
       note.email,
       note.topic || null,
       note.body || null,
-      httpsUrl(note.listingUrl),
+      publicHttpsUrl(note.listingUrl),
       note.company || null,
       note.ats || null,
       note.boardToken || null,
-      httpsUrl(note.careersUrl),
-      httpsUrl(note.website),
+      publicHttpsUrl(note.careersUrl),
+      publicHttpsUrl(note.website),
       note.country || null,
     ],
   );

@@ -59,8 +59,8 @@ function CompanyPage() {
             </dd>
           </div>
           <div>
-            <dt className="text-[11px] uppercase tracking-wide text-muted">Token</dt>
-            <dd className="font-mono text-xs">{company.board_token}</dd>
+            <dt className="text-[11px] uppercase tracking-wide text-muted">Listed</dt>
+            <dd className="tabular-nums">{company.listed_count ?? "—"}</dd>
           </div>
         </dl>
         {company.last_error ? (

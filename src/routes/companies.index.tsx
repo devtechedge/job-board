@@ -64,7 +64,7 @@ function CompaniesPage() {
                     {company.last_ok_at
                       ? ago(company.last_ok_at)
                       : company.last_error
-                        ? `failed — ${company.last_error.slice(0, 120)}`
+                        ? "failed"
                         : "queued"}
                   </td>
                 </tr>

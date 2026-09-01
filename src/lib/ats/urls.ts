@@ -1,22 +1,29 @@
 /** Public board JSON endpoints. HTML career-page scraping is not the happy path. */
 
-export function greenhouseListUrl(token: string): string {
-  return `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs?content=false`;
+import { BOARD_TOKEN_RE } from "../safe.ts";
+
+function token(value: string): string {
+  if (!BOARD_TOKEN_RE.test(value)) throw new Error("invalid board token");
+  return encodeURIComponent(value);
 }
 
-export function greenhouseDetailUrl(token: string, id: string): string {
-  return `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs/${encodeURIComponent(id)}`;
+export function greenhouseListUrl(board: string): string {
+  return `https://boards-api.greenhouse.io/v1/boards/${token(board)}/jobs?content=false`;
 }
 
-export function ashbyListUrl(token: string): string {
-  // Public posting API used by jobs.ashbyhq.com/{org}. includeCompensation adds structured pay.
-  return `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(token)}?includeCompensation=true`;
+export function greenhouseDetailUrl(board: string, id: string): string {
+  if (!/^[a-zA-Z0-9._-]{1,80}$/.test(id)) throw new Error("invalid job id");
+  return `https://boards-api.greenhouse.io/v1/boards/${token(board)}/jobs/${encodeURIComponent(id)}`;
 }
 
-export function leverListUrl(token: string): string {
-  return `https://api.lever.co/v0/postings/${encodeURIComponent(token)}?mode=json`;
+export function ashbyListUrl(board: string): string {
+  return `https://api.ashbyhq.com/posting-api/job-board/${token(board)}?includeCompensation=true`;
 }
 
-export function workableListUrl(token: string): string {
-  return `https://apply.workable.com/api/v1/widget/accounts/${encodeURIComponent(token)}`;
+export function leverListUrl(board: string): string {
+  return `https://api.lever.co/v0/postings/${token(board)}?mode=json`;
+}
+
+export function workableListUrl(board: string): string {
+  return `https://apply.workable.com/api/v1/widget/accounts/${token(board)}`;
 }

@@ -2,14 +2,22 @@ const ALLOWED = new Set(["p", "br", "ul", "ol", "li", "strong", "em", "b", "i", 
 
 function decodeEntities(text: string): string {
   return text
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&/gi, "&")
-    .replace(/"/gi, '"')
-    .replace(/&#39;|'/gi, "'")
-    .replace(/</gi, "<")
-    .replace(/>/gi, ">")
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
+    .replace(/\u0026nbsp;/gi, " ")
+    .replace(/\u0026amp;/gi, "&")
+    .replace(/\u0026quot;/gi, '"')
+    .replace(/\u0026#39;|\u0026apos;/gi, "'")
+    .replace(/\u0026lt;/gi, "<")
+    .replace(/\u0026gt;/gi, ">")
+    .replace(/\u0026#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/\u0026#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
+}
+
+export function escapeText(text: string): string {
+  return text
+    .replace(/&/g, "\u0026amp;")
+    .replace(/</g, "\u0026lt;")
+    .replace(/>/g, "\u0026gt;")
+    .replace(/"/g, "\u0026quot;");
 }
 
 export function htmlToText(html: string | null | undefined): string {
@@ -28,11 +36,12 @@ export function htmlToText(html: string | null | undefined): string {
 }
 
 function safeHref(raw: string): string | null {
-  const href = raw.trim();
+  const href = decodeEntities(raw.trim());
   if (!/^https:\/\//i.test(href)) return null;
   try {
     const url = new URL(href);
     if (url.protocol !== "https:") return null;
+    if (url.username || url.password) return null;
     return url.toString();
   } catch {
     return null;
@@ -50,7 +59,7 @@ export function sanitizeHtml(input: string | null | undefined): string {
   let last = 0;
   let match: RegExpExecArray | null;
   while ((match = re.exec(stripped))) {
-    out.push(stripped.slice(last, match.index));
+    out.push(escapeText(stripped.slice(last, match.index)));
     const [full, rawName, attrs] = match;
     const name = rawName.toLowerCase();
     last = match.index + full.length;
@@ -71,12 +80,12 @@ export function sanitizeHtml(input: string | null | undefined): string {
         out.push("<span>");
         continue;
       }
-      out.push(`<a href="${href}" rel="noopener noreferrer" target="_blank">`);
+      out.push(`<a href="${escapeText(href)}" rel="noopener noreferrer" target="_blank">`);
       continue;
     }
     out.push(`<${name}>`);
   }
-  out.push(stripped.slice(last));
+  out.push(escapeText(stripped.slice(last)));
   return out.join("").slice(0, 80_000);
 }
 
