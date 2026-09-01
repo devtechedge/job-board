@@ -19,8 +19,10 @@ function PrivacyPage() {
             choose to sync — and that feature does not exist yet.
           </p>
           <p>
-            The server may keep ordinary request logs (IP, user agent, path, time) to operate and
-            protect the service. We do not collect resumes. Do not send us one.
+            Rate-card waitlist notes (Bound pass, ruled pin) store the email and listing URL you
+            send so we can reply. That is not billing. We do not take card numbers on this site.
+            The server may keep ordinary request logs (IP, user agent, path, time). We do not
+            collect resumes. Do not send us one.
           </p>
           <p>
             Crawl data is public job text published by employers on their ATS boards. We store

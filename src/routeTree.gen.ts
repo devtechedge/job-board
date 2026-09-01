@@ -14,6 +14,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EmployersRouteImport } from './routes/employers'
+import { Route as PlacementsRouteImport } from './routes/placements'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ApiDeskRouteImport } from './routes/api/desk'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
@@ -49,6 +51,16 @@ const ContactRoute = ContactRouteImport.update({
 const EmployersRoute = EmployersRouteImport.update({
   id: '/employers',
   path: '/employers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlacementsRoute = PlacementsRouteImport.update({
+  id: '/placements',
+  path: '/placements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -113,6 +125,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/placements': typeof PlacementsRoute
+  '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
@@ -131,6 +145,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/placements': typeof PlacementsRoute
+  '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
@@ -150,6 +166,8 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/placements': typeof PlacementsRoute
+  '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
@@ -170,6 +188,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/placements'
+    | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
@@ -188,6 +208,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/placements'
+    | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
@@ -206,6 +228,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/placements'
+    | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
@@ -225,6 +249,8 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ContactRoute: typeof ContactRoute
   EmployersRoute: typeof EmployersRoute
+  PlacementsRoute: typeof PlacementsRoute
+  PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiDeskRoute: typeof ApiDeskRoute
   ApiHealthRoute: typeof ApiHealthRoute
@@ -273,6 +299,20 @@ declare module '@tanstack/react-router' {
       path: '/employers'
       fullPath: '/employers'
       preLoaderRoute: typeof EmployersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/placements': {
+      id: '/placements'
+      path: '/placements'
+      fullPath: '/placements'
+      preLoaderRoute: typeof PlacementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -361,6 +401,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ContactRoute: ContactRoute,
   EmployersRoute: EmployersRoute,
+  PlacementsRoute: PlacementsRoute,
+  PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiDeskRoute: ApiDeskRoute,
   ApiHealthRoute: ApiHealthRoute,

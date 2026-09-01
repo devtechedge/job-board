@@ -17,6 +17,12 @@ export function SiteFooter() {
           <Link to="/employers" className="hover:text-ink">
             Crawl slot
           </Link>
+          <Link to="/pricing" className="hover:text-ink">
+            Rates
+          </Link>
+          <Link to="/placements" className="hover:text-ink">
+            Placements
+          </Link>
           <Link to="/contact" className="hover:text-ink">
             Desk
           </Link>

@@ -36,8 +36,8 @@ const RULES = [
   },
   {
     k: "04",
-    t: "No paid pin in v1",
-    d: "There is no featured row, no homepage takeover, and no resume pipe for sale. Counsel has to review any paid placement before we ship one.",
+    t: "Paid pins are a separate card",
+    d: "A crawl slot is free and discretionary. Ruled pins and masthead lines are on the placement card. Checkout is not live; counsel has not cleared billing.",
   },
 ];
 
@@ -114,6 +114,13 @@ function EmployersPage() {
             <p>
               Aggregator URLs (Indeed, LinkedIn, ZipRecruiter, other indexes) are refused. We read
               employer JSON, not someone else’s scrape.
+            </p>
+            <p>
+              Paid pins are a different card:{" "}
+              <Link to="/placements" className="text-pine underline underline-offset-4">
+                placements
+              </Link>
+              .
             </p>
             <p>
               Questions that are not a board add:{" "}

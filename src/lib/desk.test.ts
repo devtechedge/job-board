@@ -39,4 +39,27 @@ describe("desk notes", () => {
     assert.ok(!("error" in parsed));
     assert.match(validateDeskPayload(parsed) ?? "", /https/i);
   });
+
+  it("accepts a bound-pass waitlist note", () => {
+    const parsed = parseDeskPayload({
+      kind: "bound_pass",
+      email: "ada@example.com",
+      topic: "bound_pass",
+      body: "remote backend 180k",
+    });
+    assert.ok(!("error" in parsed));
+    assert.equal(validateDeskPayload(parsed), null);
+  });
+
+  it("rejects a placement without a listing URL", () => {
+    const parsed = parseDeskPayload({
+      kind: "placement",
+      email: "ops@example.com",
+      company: "Acme",
+      topic: "ruled_pin",
+      listingUrl: "",
+    });
+    assert.ok(!("error" in parsed));
+    assert.match(validateDeskPayload(parsed) ?? "", /URL/i);
+  });
 });

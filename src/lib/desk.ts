@@ -1,4 +1,4 @@
-export type DeskKind = "write" | "board_request";
+export type DeskKind = "write" | "board_request" | "bound_pass" | "placement";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOKEN = /^[a-zA-Z0-9._-]{2,80}$/;
@@ -39,7 +39,9 @@ export function parseDeskPayload(input: unknown): DeskPayload | { error: string 
   if (!input || typeof input !== "object") return { error: "Empty note" };
   const raw = input as Record<string, unknown>;
   const kind = clip(raw.kind, 32);
-  if (kind !== "write" && kind !== "board_request") return { error: "Unknown desk queue" };
+  if (kind !== "write" && kind !== "board_request" && kind !== "bound_pass" && kind !== "placement") {
+    return { error: "Unknown desk queue" };
+  }
   return {
     kind,
     name: clip(raw.name, 120),
@@ -62,6 +64,14 @@ export function validateDeskPayload(note: DeskPayload): string | null {
   if (note.kind === "write") {
     if (note.body.length < 12) return "Write at least a sentence.";
     if (note.listingUrl && !httpsUrl(note.listingUrl)) return "Listing URL must be https.";
+    return null;
+  }
+  if (note.kind === "bound_pass") {
+    return null;
+  }
+  if (note.kind === "placement") {
+    if (note.company.length < 2) return "Company name is required.";
+    if (!httpsUrl(note.listingUrl)) return "Need the Jobrow or employer ATS https URL to pin.";
     return null;
   }
   if (note.company.length < 2) return "Company name is required.";

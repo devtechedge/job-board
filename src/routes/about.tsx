@@ -27,8 +27,9 @@ function AboutPage() {
             Summaries are our own one-liners from the posting, never copied from another product.
           </p>
           <p>
-            v1 has no accounts, no resume upload, and no paid placement. A watchlist lives in your
-            browser. Working brand name may change.
+            Search is free. A Bound pass and ruled pins are on the rate card; checkout is not live
+            and counsel has not cleared billing. A watchlist lives in your browser. Working brand
+            name may change.
           </p>
           <p>
             <Link to="/contact" className="text-pine underline underline-offset-4">
@@ -37,6 +38,14 @@ function AboutPage() {
             {" · "}
             <Link to="/employers" className="text-pine underline underline-offset-4">
               Request a crawl slot
+            </Link>
+            {" · "}
+            <Link to="/pricing" className="text-pine underline underline-offset-4">
+              Rate card
+            </Link>
+            {" · "}
+            <Link to="/placements" className="text-pine underline underline-offset-4">
+              Placements
             </Link>
             {" · "}
             <Link to="/legal/sourcing" className="text-pine underline underline-offset-4">

@@ -32,6 +32,14 @@ function TermsPage() {
             personal employment documents here; there is no resume feature.
           </p>
           <p>
+            Rate card: Bound pass (seeker courier + closed drawer) and placements (ruled pin,
+            masthead line) are advertised as waitlist items. Checkout is not live. Filing a request
+            is not a contract and does not start billing. Counsel must review any paid product
+            before a card is charged. A pin, if ever run, ends when a successful crawl no longer
+            lists the role. Refunds are TODO for counsel. Paid placement is advertising on an index,
+            not an employment agency service.
+          </p>
+          <p>
             Acceptable use: no scraping this site, no bulk harvesting of our index, no circumventing
             rate limits, and no impersonating Jobrow or an employer. We may rate-limit or block
             abusive traffic.

@@ -153,7 +153,7 @@ export function HowToRead() {
     {
       k: "03",
       t: "Watchlist stays in this browser",
-      d: "No account, no resume pipe, no Friday letter. v1 does not sell placement. Hiring teams request a crawl slot.",
+      d: "Search is free. Courier mail and ruled pins are a rate card, not a charge in this build. Hiring teams request a crawl slot first.",
     },
   ];
   return (
