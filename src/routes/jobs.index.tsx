@@ -28,9 +28,9 @@ function JobsIndex() {
   return (
     <AppShell current="/jobs">
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold">Full index</h1>
-        <p className="mt-2 text-sm text-muted">
-          {data.total.toLocaleString("en-US")} open US tech roles match this query.
+        <h1 className="font-serif text-3xl font-semibold">Index</h1>
+        <p className="mt-2 text-sm tabular-nums text-muted">
+          {data.total.toLocaleString("en-US")} open
         </p>
         <div className="mt-6">
           <FilterBar

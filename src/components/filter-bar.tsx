@@ -22,10 +22,7 @@ export function FilterBar({
   const [sentence, setSentence] = useState("");
 
   return (
-    <section className="border border-rule bg-paper shadow-ledger">
-      <div className="border-b border-rule px-3 py-2 text-[11px] uppercase tracking-[0.16em] text-muted">
-        Ledger search
-      </div>
+    <section className="border border-rule bg-paper">
       <div className="grid gap-3 p-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="sm:col-span-2 lg:col-span-4">
           <span className="mb-1 block text-[11px] uppercase tracking-wide text-muted">
@@ -161,7 +158,7 @@ export function FilterBar({
           className="text-xs text-muted underline-offset-2 hover:text-ink hover:underline"
           onClick={() => setOpen((v) => !v)}
         >
-          Turn a sentence into filters (beta)
+          Turn a sentence into filters
         </button>
         {open ? (
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">

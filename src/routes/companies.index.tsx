@@ -27,17 +27,8 @@ function CompaniesPage() {
     <AppShell current="/companies">
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Companies</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted">
-          Boards we read directly from public Greenhouse, Ashby, and Lever JSON. The open
-          column is the US tech slice we keep — not every requisition on the careers page.
-          Sales, finance, and non-US postings stay off the register. “Listed” is how many
-          rows the employer JSON returned on the last successful fetch.
-        </p>
         {pending > 0 ? (
-          <p className="mt-4 border border-rule bg-inset px-3 py-2 text-sm">
-            Still reading {pending} board{pending === 1 ? "" : "s"}. This page reloads itself and
-            pulls the next couple of employer APIs each time.
-          </p>
+          <p className="mt-3 text-sm text-muted">Reading {pending} boards…</p>
         ) : null}
         <div className="mt-6 overflow-x-auto border border-rule">
           <table className="min-w-full text-left text-sm">

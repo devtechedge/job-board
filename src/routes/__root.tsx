@@ -15,8 +15,7 @@ export const Route = createRootRoute({
       { title: APP_NAME },
       {
         name: "description",
-        content:
-          "Jobrow lists US tech roles that are still on the employer’s board. When the board drops a role, we drop it.",
+        content: "US tech roles still on the employer ATS board.",
       },
       { name: "theme-color", content: "#F6F1E8" },
     ],

@@ -14,13 +14,13 @@ export function ApplyLink({
     <a
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      aria-label={`Apply at ${company}`}
       className={cn(
         "inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-pine px-4 text-sm font-medium text-pine-fg hover:opacity-90",
         className,
       )}
     >
-      Apply on {company} board
+      Apply
       <ExternalLink className="size-3.5" aria-hidden />
     </a>
   );

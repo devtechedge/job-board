@@ -12,14 +12,11 @@ export function EditionMasthead({ digest }: { digest: HomeDigest }) {
   return (
     <div className="border-y-2 border-ink py-3">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="font-serif text-sm italic text-muted">Public ATS register · US tech</p>
-          <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-muted">
-            {editionDateLabel(digest.editionAt)} · UTC edition
-          </p>
-        </div>
+        <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
+          {editionDateLabel(digest.editionAt)}
+        </p>
         <p className="font-serif text-sm tabular-nums text-ink">
-          {n(digest.openCount)} on the register · {digest.companyCount} boards
+          {n(digest.openCount)} open · {digest.companyCount} boards
         </p>
       </div>
     </div>
@@ -28,15 +25,13 @@ export function EditionMasthead({ digest }: { digest: HomeDigest }) {
 
 export function EditionTally({ digest }: { digest: HomeDigest }) {
   const cells = [
-    { k: "On the register", v: n(digest.openCount), d: "US tech roles still on a successful crawl" },
-    { k: "Boards read", v: n(digest.companyCount), d: "Enabled employer JSON endpoints" },
-    { k: "First seen, 24h", v: n(digest.freshCount), d: "New rows since the last day on the clock" },
+    { k: "Open", v: n(digest.openCount) },
+    { k: "Boards", v: n(digest.companyCount) },
+    { k: "First seen, 24h", v: n(digest.freshCount) },
     {
-      k: "Last crawl window",
+      k: "Last crawl ±",
       v: `${n(digest.lastWindowOpened)} / ${n(digest.lastWindowClosed)}`,
-      d: digest.lastWindowAt
-        ? `Opened / dropped ${ago(digest.lastWindowAt)}`
-        : "No finished crawl run yet",
+      extra: digest.lastWindowAt ? ago(digest.lastWindowAt) : null,
     },
   ];
   return (
@@ -56,7 +51,7 @@ export function EditionTally({ digest }: { digest: HomeDigest }) {
         >
           <dt className="text-[11px] uppercase tracking-[0.14em] text-muted">{cell.k}</dt>
           <dd className="mt-2 font-serif text-3xl font-semibold tabular-nums leading-none">{cell.v}</dd>
-          <p className="mt-2 text-xs leading-snug text-muted">{cell.d}</p>
+          {cell.extra ? <p className="mt-2 text-xs text-muted">{cell.extra}</p> : null}
         </div>
       ))}
     </dl>
@@ -68,9 +63,9 @@ export function FunctionContents({ items }: { items: HomeDigest["functions"] }) 
   return (
     <section>
       <div className="mb-3 flex items-end justify-between gap-3">
-        <h2 className="font-serif text-2xl font-semibold">Contents</h2>
+        <h2 className="font-serif text-2xl font-semibold">Functions</h2>
         <Link to="/jobs" className="text-sm text-muted hover:text-pine">
-          Full index
+          Index
         </Link>
       </div>
       <ul className="columns-1 gap-x-8 border-t border-ink sm:columns-2 lg:columns-3">
@@ -96,9 +91,9 @@ export function BoardStrip({ boards }: { boards: HomeDigest["boards"] }) {
   return (
     <section>
       <div className="mb-3 flex items-end justify-between gap-3">
-        <h2 className="font-serif text-2xl font-semibold">Boards on the register</h2>
+        <h2 className="font-serif text-2xl font-semibold">Boards</h2>
         <Link to="/companies" className="text-sm text-muted hover:text-pine">
-          All companies
+          All
         </Link>
       </div>
       <div className="border border-rule">
@@ -134,40 +129,6 @@ export function BoardStrip({ boards }: { boards: HomeDigest["boards"] }) {
           ))}
         </ul>
       </div>
-    </section>
-  );
-}
-
-export function HowToRead() {
-  const rules = [
-    {
-      k: "01",
-      t: "We are not the employer",
-      d: "Apply leaves Jobrow for the URL already on Greenhouse, Ashby, or Lever. Confirm pay and eligibility there.",
-    },
-    {
-      k: "02",
-      t: "Present on a successful fetch",
-      d: "A role stays while the public JSON still lists it. A failed crawl does not close the set. Dropped after a clean miss.",
-    },
-    {
-      k: "03",
-      t: "Watchlist stays in this browser",
-      d: "Search is free. Courier mail and ruled pins are a rate card, not a charge in this build. Hiring teams request a crawl slot first.",
-    },
-  ];
-  return (
-    <section>
-      <h2 className="mb-3 font-serif text-2xl font-semibold">How to read this register</h2>
-      <ol className="grid gap-px border border-rule bg-rule sm:grid-cols-3">
-        {rules.map((rule) => (
-          <li key={rule.k} className="bg-paper px-4 py-5">
-            <p className="font-mono text-[11px] text-muted">{rule.k}</p>
-            <h3 className="mt-2 font-serif text-xl font-semibold">{rule.t}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{rule.d}</p>
-          </li>
-        ))}
-      </ol>
     </section>
   );
 }

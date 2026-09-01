@@ -19,8 +19,7 @@ export function RegisterTable({
   if (!jobs.length) {
     return (
       <p className="border border-rule bg-inset px-4 py-10 text-center text-sm text-muted">
-        {empty ??
-          "Nothing open matches. Loosen filters or check back after the next crawl (twice a day)."}
+        {empty ?? "No matches."}
       </p>
     );
   }
@@ -101,7 +100,7 @@ function RegisterRow({ job }: { job: JobListItem }) {
       </div>
       {open ? (
         <div className="space-y-3 border-t border-rule bg-inset px-3 py-4">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Jobrow summary</p>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Summary</p>
           <p className="max-w-3xl text-sm">{job.summary || job.title}</p>
           {job.skills.length ? (
             <ul className="flex flex-wrap gap-1.5">

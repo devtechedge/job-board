@@ -74,7 +74,7 @@ function JobPage() {
         </h1>
         <p className="mt-2 text-muted">
           {job.company_name}
-          {job.status === "closed" ? " · Closed on this board" : ""}
+          {job.status === "closed" ? " · Closed" : ""}
         </p>
         <dl className="mt-6 grid grid-cols-2 gap-3 border border-rule bg-inset p-4 text-sm sm:grid-cols-3">
           <Fact label="Pay" value={pay} />
@@ -85,7 +85,7 @@ function JobPage() {
           <Fact label="Board" value={<SourceBadge ats={job.source_ats} />} />
         </dl>
         {job.salary_source === "inferred" ? (
-          <p className="mt-2 text-xs text-muted">Pay marked with ~ was inferred from posting text.</p>
+          <p className="mt-2 text-xs text-muted">~ pay inferred from posting text.</p>
         ) : null}
         <div className="mt-5 flex flex-wrap gap-2">
           <ApplyLink href={job.apply_url} company={job.company_name} />
@@ -99,7 +99,7 @@ function JobPage() {
           />
         </div>
         <section className="mt-10 border-t border-rule pt-6">
-          <h2 className="text-[11px] uppercase tracking-[0.16em] text-muted">Jobrow summary</h2>
+          <h2 className="text-[11px] uppercase tracking-[0.16em] text-muted">Summary</h2>
           <p className="mt-2 text-base">{job.summary || job.title}</p>
         </section>
         {job.skills.length ? (
@@ -112,7 +112,7 @@ function JobPage() {
           </ul>
         ) : null}
         <section className="mt-10 border-t border-rule pt-6">
-          <h2 className="font-serif text-xl font-semibold">From the employer board</h2>
+          <h2 className="font-serif text-xl font-semibold">Posting</h2>
           {job.description_html ? (
             <div
               className="job-prose mt-4"
@@ -120,7 +120,7 @@ function JobPage() {
             />
           ) : (
             <p className="mt-4 whitespace-pre-wrap text-sm text-muted">
-              {job.description_text || "Description not stored on this crawl. Open the employer board for the full posting."}
+              {job.description_text || "Open the employer board for the full posting."}
             </p>
           )}
         </section>

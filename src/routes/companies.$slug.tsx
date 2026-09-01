@@ -32,10 +32,8 @@ function CompanyPage() {
         <h1 className="mt-2 font-serif text-4xl font-semibold">{company.name}</h1>
         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
           <SourceBadge ats={company.ats} />
-          <span>{company.open_count} US tech on the register</span>
-          {company.listed_count != null ? (
-            <span>{company.listed_count} on the public board</span>
-          ) : null}
+          <span>{company.open_count} US tech</span>
+          {company.listed_count != null ? <span>{company.listed_count} listed</span> : null}
           <span>Last ok {ago(company.last_ok_at)}</span>
         </div>
         <dl className="mt-6 grid gap-3 border border-rule bg-inset p-4 text-sm sm:grid-cols-3">
@@ -69,8 +67,8 @@ function CompanyPage() {
           <p className="mt-3 text-sm text-danger">Last crawl error: {company.last_error}</p>
         ) : null}
         <div className="mt-8">
-          <h2 className="mb-3 font-serif text-xl font-semibold">Open US tech roles</h2>
-          <RegisterTable jobs={jobs} empty="Nothing open on this board in the US tech slice." />
+          <h2 className="mb-3 font-serif text-xl font-semibold">Open</h2>
+          <RegisterTable jobs={jobs} empty="None." />
         </div>
       </main>
     </AppShell>
