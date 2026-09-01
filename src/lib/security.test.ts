@@ -63,3 +63,27 @@ describe("publicHttpsUrl", () => {
     assert.equal(isPrivateHost("192.168.0.8"), true);
   });
 });
+
+describe("sanitizeHtml posting entities", () => {
+  it("turns escaped posting HTML into allowlisted tags and glyphs", () => {
+    const html = sanitizeHtml("&lt;p&gt;Hello &amp;bull; world&lt;/p&gt;");
+    assert.match(html, /<p>/);
+    assert.match(html, /\u2022/);
+    assert.equal(html.includes("&lt;p&gt;"), false);
+    assert.equal(html.includes("&amp;bull;"), false);
+  });
+
+  it("still drops script after entity decode", () => {
+    const html = sanitizeHtml("&lt;script&gt;alert(1)&lt;/script&gt;&lt;p&gt;ok&lt;/p&gt;");
+    assert.equal(html.toLowerCase().includes("script"), false);
+    assert.equal(html.includes("alert(1)"), false);
+    assert.match(html, /<p>ok<\/p>/);
+  });
+
+  it("decodes named entities inside real tags", () => {
+    const html = sanitizeHtml("<p>Pay &mdash; $120k &nbsp; remote</p>");
+    assert.match(html, /\u2014/);
+    assert.equal(html.includes("&mdash;"), false);
+    assert.equal(html.includes("&nbsp;"), false);
+  });
+});

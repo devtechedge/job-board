@@ -19,6 +19,11 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ApiDeskRouteImport } from './routes/api/desk'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiHomeRouteImport } from './routes/api/home'
+import { Route as ApiCompaniesIndexRouteImport } from './routes/api/companies.index'
+import { Route as ApiCompaniesSlugRouteImport } from './routes/api/companies.$slug'
+import { Route as ApiJobsIndexRouteImport } from './routes/api/jobs.index'
+import { Route as ApiJobsIdRouteImport } from './routes/api/jobs.$id'
 import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
 import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
@@ -78,6 +83,31 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHomeRoute = ApiHomeRouteImport.update({
+  id: '/api/home',
+  path: '/api/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCompaniesIndexRoute = ApiCompaniesIndexRouteImport.update({
+  id: '/api/companies/',
+  path: '/api/companies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCompaniesSlugRoute = ApiCompaniesSlugRouteImport.update({
+  id: '/api/companies/$slug',
+  path: '/api/companies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobsIndexRoute = ApiJobsIndexRouteImport.update({
+  id: '/api/jobs/',
+  path: '/api/jobs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobsIdRoute = ApiJobsIdRouteImport.update({
+  id: '/api/jobs/$id',
+  path: '/api/jobs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
   id: '/companies/',
   path: '/companies/',
@@ -130,6 +160,9 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/home': typeof ApiHomeRoute
+  '/api/companies/$slug': typeof ApiCompaniesSlugRoute
+  '/api/jobs/$id': typeof ApiJobsIdRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
@@ -138,6 +171,8 @@ export interface FileRoutesByFullPath {
   '/companies/': typeof CompaniesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/api/cron/crawl': typeof ApiCronCrawlRoute
+  '/api/companies/': typeof ApiCompaniesIndexRoute
+  '/api/jobs/': typeof ApiJobsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -150,6 +185,9 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/home': typeof ApiHomeRoute
+  '/api/companies/$slug': typeof ApiCompaniesSlugRoute
+  '/api/jobs/$id': typeof ApiJobsIdRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
@@ -158,6 +196,8 @@ export interface FileRoutesByTo {
   '/companies': typeof CompaniesIndexRoute
   '/jobs': typeof JobsIndexRoute
   '/api/cron/crawl': typeof ApiCronCrawlRoute
+  '/api/companies': typeof ApiCompaniesIndexRoute
+  '/api/jobs': typeof ApiJobsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -171,6 +211,9 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/home': typeof ApiHomeRoute
+  '/api/companies/$slug': typeof ApiCompaniesSlugRoute
+  '/api/jobs/$id': typeof ApiJobsIdRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/jobs/$id': typeof JobsIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
@@ -179,6 +222,8 @@ export interface FileRoutesById {
   '/companies/': typeof CompaniesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/api/cron/crawl': typeof ApiCronCrawlRoute
+  '/api/companies/': typeof ApiCompaniesIndexRoute
+  '/api/jobs/': typeof ApiJobsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -193,6 +238,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
+    | '/api/home'
+    | '/api/companies/$slug'
+    | '/api/jobs/$id'
     | '/companies/$slug'
     | '/jobs/$id'
     | '/legal/privacy'
@@ -201,6 +249,8 @@ export interface FileRouteTypes {
     | '/companies/'
     | '/jobs/'
     | '/api/cron/crawl'
+    | '/api/companies/'
+    | '/api/jobs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -213,6 +263,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
+    | '/api/home'
+    | '/api/companies/$slug'
+    | '/api/jobs/$id'
     | '/companies/$slug'
     | '/jobs/$id'
     | '/legal/privacy'
@@ -221,6 +274,8 @@ export interface FileRouteTypes {
     | '/companies'
     | '/jobs'
     | '/api/cron/crawl'
+    | '/api/companies'
+    | '/api/jobs'
   id:
     | '__root__'
     | '/'
@@ -233,6 +288,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/desk'
     | '/api/health'
+    | '/api/home'
+    | '/api/companies/$slug'
+    | '/api/jobs/$id'
     | '/companies/$slug'
     | '/jobs/$id'
     | '/legal/privacy'
@@ -241,6 +299,8 @@ export interface FileRouteTypes {
     | '/companies/'
     | '/jobs/'
     | '/api/cron/crawl'
+    | '/api/companies/'
+    | '/api/jobs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -254,6 +314,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiDeskRoute: typeof ApiDeskRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  ApiHomeRoute: typeof ApiHomeRoute
+  ApiCompaniesSlugRoute: typeof ApiCompaniesSlugRoute
+  ApiJobsIdRoute: typeof ApiJobsIdRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
   JobsIdRoute: typeof JobsIdRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
@@ -262,6 +325,8 @@ export interface RootRouteChildren {
   CompaniesIndexRoute: typeof CompaniesIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
   ApiCronCrawlRoute: typeof ApiCronCrawlRoute
+  ApiCompaniesIndexRoute: typeof ApiCompaniesIndexRoute
+  ApiJobsIndexRoute: typeof ApiJobsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -385,6 +450,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/home': {
+      id: '/api/home'
+      path: '/api/home'
+      fullPath: '/api/home'
+      preLoaderRoute: typeof ApiHomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/companies/': {
+      id: '/api/companies/'
+      path: '/api/companies'
+      fullPath: '/api/companies/'
+      preLoaderRoute: typeof ApiCompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/companies/$slug': {
+      id: '/api/companies/$slug'
+      path: '/api/companies/$slug'
+      fullPath: '/api/companies/$slug'
+      preLoaderRoute: typeof ApiCompaniesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/jobs/': {
+      id: '/api/jobs/'
+      path: '/api/jobs'
+      fullPath: '/api/jobs/'
+      preLoaderRoute: typeof ApiJobsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/jobs/$id': {
+      id: '/api/jobs/$id'
+      path: '/api/jobs/$id'
+      fullPath: '/api/jobs/$id'
+      preLoaderRoute: typeof ApiJobsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/cron/crawl': {
       id: '/api/cron/crawl'
       path: '/api/cron/crawl'
@@ -406,6 +506,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiDeskRoute: ApiDeskRoute,
   ApiHealthRoute: ApiHealthRoute,
+  ApiHomeRoute: ApiHomeRoute,
+  ApiCompaniesSlugRoute: ApiCompaniesSlugRoute,
+  ApiJobsIdRoute: ApiJobsIdRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
   JobsIdRoute: JobsIdRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
@@ -414,6 +517,8 @@ const rootRouteChildren: RootRouteChildren = {
   CompaniesIndexRoute: CompaniesIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
   ApiCronCrawlRoute: ApiCronCrawlRoute,
+  ApiCompaniesIndexRoute: ApiCompaniesIndexRoute,
+  ApiJobsIndexRoute: ApiJobsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

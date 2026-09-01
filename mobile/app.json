@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Jobrow",
+    "slug": "jobrow",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "jobrow",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E3E8EE"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.jobrow.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#E3E8EE"
+      },
+      "package": "app.jobrow.mobile"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-web-browser",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "https://job-board-devtechedge1.vercel.app"
+    }
+  }
+}

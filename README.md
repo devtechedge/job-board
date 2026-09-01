@@ -20,6 +20,22 @@ Production is **Neon Postgres** on Vercel Hobby. The index currently holds **2,0
 
 `GET /api/health` reports `{ db: "neon", openJobs, pendingBoards }`.
 
+### Public JSON API
+
+Unauthenticated read API for the same US-tech slice the register shows (`status=open`, `us_eligible`, `tech_eligible`). Native apps and other clients can call these without going through server functions:
+
+- `GET /api/jobs` — `JobQuery` as querystring (`q`, `fn`, `seniority`, `workplace`, `location`, `salaryMin`, `posted`, `ats`, `company`, `sort`, `page`). Page size 40.
+- `GET /api/jobs/:id` — one role, with sanitized `description_html` plus `description_text`
+- `GET /api/companies` — boards
+- `GET /api/companies/:slug` — board plus open roles
+- `GET /api/home` — register KPIs (open count, boards, first-seen 24h, last crawl, functions, boards) plus a latest page
+
+`/api/health`, `/api/desk`, cron, and admin are unchanged. Product auth stays off. Apply URLs are employer ATS https links.
+
+### Native app
+
+An Expo (Android + iOS) client lives in [`mobile/`](mobile/). It is a separate package so the Vercel web build does not compile it. See [mobile/README.md](mobile/README.md) to run it in the iOS simulator or Android emulator.
+
 ---
 
 ## Screenshots
@@ -51,7 +67,9 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 - **Add a board** (`/employers`) — public Greenhouse / Ashby / Lever / Workable token
 - **Rates** (`/pricing`) — Bound pass waitlist (`$11` / 28 days). No live checkout
 - **Placements** (`/placements`) — Ruled pin `$120` / masthead line `$55`. Waitlist only
-- **Watchlist** — local to the browser. No account. No resume upload
+- **Watchlist** — local to the browser (`localStorage` key `jobrow:watchlist`, max 200). No account. No resume upload
+- **JSON API** (`/api/jobs`, `/api/companies`, `/api/home`) — public register contract for native apps
+- **iOS / Android** — Expo app in `mobile/`. Apply opens the employer ATS. Watchlist is local AsyncStorage.
 - **Admin** (`/admin`) — password-gated crawl and board edits
 
 A role **drops when a successful crawl no longer sees it**. A failed fetch does not close that board.
