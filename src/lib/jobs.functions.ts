@@ -43,7 +43,7 @@ export const getJobFn = createServerFn({ method: "GET" })
   });
 
 export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async () => {
-  const { ensureIndex } = await import("@/lib/crawl");
+  const { ensureIndex, CLASSIFIER_REV } = await import("@/lib/crawl");
   const { listCompanies } = await import("@/lib/search");
   const boot = await ensureIndex();
   const rows = await listCompanies();
@@ -55,11 +55,11 @@ export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async (
           rows.filter(
             (row) =>
               !row.last_ok_at ||
-              Number(row.classifier_rev ?? 0) < 2 ||
+              Number(row.classifier_rev ?? 0) < CLASSIFIER_REV ||
               Number(row.open_count) === 0,
           ).length,
         )
-      : rows.filter((row) => !row.last_ok_at || Number(row.classifier_rev ?? 0) < 2).length,
+      : rows.filter((row) => !row.last_ok_at || Number(row.classifier_rev ?? 0) < CLASSIFIER_REV).length,
     companies: rows.map((row) => ({
       ...row,
       last_ok_at:

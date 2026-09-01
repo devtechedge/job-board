@@ -28,7 +28,7 @@ export type CrawlRunResult = {
   errorSample: string | null;
 };
 
-const CLASSIFIER_REV = 2;
+export const CLASSIFIER_REV = 3;
 
 function newId(): string {
   return crypto.randomUUID();
