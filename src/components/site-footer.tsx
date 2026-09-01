@@ -51,7 +51,7 @@ export function AppShell({
   current?: string;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-paper text-ink">
+    <div className="flex min-h-screen flex-col bg-transparent text-ink">
       <SiteHeader current={current} />
       <div className="flex-1">{children}</div>
       <SiteFooter />

@@ -2,16 +2,17 @@
 
 :root,
 [data-theme="light"] {
-  --paper: #f6f1e8;
-  --ink: #0b0f14;
+  --paper: #e3e8ee;
+  --ink: #10151c;
   --pine: #1f6b4a;
-  --pine-fg: #f6f1e8;
-  --rule: #d4cbbd;
-  --rule-strong: #b9ae9e;
-  --muted: #5c5852;
-  --inset: #efe8dc;
+  --pine-fg: #e3e8ee;
+  --rule: #c2ccd6;
+  --rule-strong: #96a3b0;
+  --muted: #58636e;
+  --inset: #d5dce4;
   --danger: #8b2e2e;
-  --chip: #e7dfd1;
+  --chip: #ccd4dc;
+  --sheen: linear-gradient(165deg, #eef3f7 0%, #e3e8ee 42%, #d7dfe8 100%);
   color-scheme: light;
 }
 
@@ -26,6 +27,7 @@
   --inset: #1c2229;
   --danger: #c97878;
   --chip: #252c34;
+  --sheen: none;
   color-scheme: dark;
 }
 
@@ -46,19 +48,21 @@
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
-  --shadow-ledger: 0 0 0 1px rgb(11 15 20 / 0.06), 0 1px 2px rgb(11 15 20 / 0.04);
+  --shadow-ledger: 0 0 0 1px rgb(16 21 28 / 0.06), 0 1px 2px rgb(16 21 28 / 0.05);
 }
 
 @layer base {
   html {
-    background: var(--paper);
+    background-color: var(--paper);
+    background-image: var(--sheen);
+    background-attachment: fixed;
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background: var(--paper);
+    background: transparent;
     color: var(--ink);
     font-family: var(--font-sans);
     font-size: 16px;
