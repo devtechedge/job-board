@@ -15,7 +15,9 @@ function SourcingPage() {
           <p>
             Jobrow reads official public ATS board APIs — the same JSON an employer’s careers page
             already uses. We do not scrape Indeed, LinkedIn, ZipRecruiter, or other aggregators. We
-            do not scrape hotfix.jobs or republish another product’s summaries.
+            do not scrape other job indexes or republish another product’s summaries. The public
+            register is 34 US-focused tech boards (Greenhouse, Ashby, Lever). A Workable adapter
+            exists for later tokens.
           </p>
           <ul className="list-disc space-y-2 pl-5">
             <li>
