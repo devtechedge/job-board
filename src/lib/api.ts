@@ -139,20 +139,7 @@ export function publicJob(job: JobListItem, mode: "list" | "detail"): PublicJob 
   };
 }
 
-export function publicCompany(row: {
-  id: unknown;
-  slug: unknown;
-  name: unknown;
-  ats: unknown;
-  careers_url?: unknown;
-  website?: unknown;
-  logo_url?: unknown;
-  hq_country?: unknown;
-  last_ok_at?: unknown;
-  enabled?: unknown;
-  open_count?: unknown;
-  listed_count?: unknown;
-}): PublicCompany {
+export function publicCompany(row: Record<string, unknown>): PublicCompany {
   const website = row.website ? String(row.website) : null;
   const logoUrl = row.logo_url ? String(row.logo_url) : null;
   return {
