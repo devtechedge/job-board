@@ -42,6 +42,7 @@ export type PublicJob = {
   posted_at: string | null;
   first_seen_at: string;
   last_seen_at: string;
+  closed_at: string | null;
   status: string;
   source_ats: string;
   company: PublicCompanyCard & { id: string };
@@ -126,6 +127,7 @@ export function publicJob(job: JobListItem, mode: "list" | "detail"): PublicJob 
     posted_at: job.posted_at,
     first_seen_at: job.first_seen_at,
     last_seen_at: job.last_seen_at,
+    closed_at: job.closed_at,
     status: job.status,
     source_ats: job.source_ats,
     company,

@@ -54,7 +54,7 @@ function RegisterRow({ job, variant = "open" }: { job: JobListItem; variant?: "o
     job.salary_currency,
     job.salary_source,
   );
-  const when = ago(variant === "expired" ? job.closed_at : job.first_seen_at);
+  const when = ago(variant === "expired" ? (job.closed_at ?? job.last_seen_at) : job.first_seen_at);
 
   return (
     <li className="border-b border-rule last:border-b-0">
