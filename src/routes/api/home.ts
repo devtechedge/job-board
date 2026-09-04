@@ -4,9 +4,17 @@ import { jsonOk, optionsOk, parseJobsRequest, publicHome, publicJob } from "@/li
 async function handle({ request }: { request: Request }) {
   const query = parseJobsRequest(request);
   const { ensureIndex } = await import("@/lib/crawl");
-  const { searchJobs, homeDigest } = await import("@/lib/search");
+  const {
+    searchJobs,
+    homeDigest,
+    isBareHomeQuery,
+    listLatestDiverseJobs,
+  } = await import("@/lib/search");
   const boot = await ensureIndex();
-  const [result, digest] = await Promise.all([searchJobs(query), homeDigest()]);
+  const jobsPromise = isBareHomeQuery(query)
+    ? listLatestDiverseJobs()
+    : searchJobs(query);
+  const [result, digest] = await Promise.all([jobsPromise, homeDigest()]);
   return jsonOk({
     jobs: result.jobs.map((job) => publicJob(job, "list")),
     total: result.total,

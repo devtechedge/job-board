@@ -69,7 +69,7 @@ export default function RegisterScreen() {
             />
           </View>
           <Section title="Latest" action="Search" onAction={() => router.push("/jobs")}>
-            {data?.jobs.slice(0, 12).map((job) => (
+            {data?.jobs.slice(0, 8).map((job) => (
               <JobRow key={job.id} job={job} />
             ))}
           </Section>

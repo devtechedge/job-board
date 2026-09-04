@@ -19,9 +19,17 @@ export const homePageFn = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { ensureIndex } = await import("@/lib/crawl");
-    const { searchJobs, homeDigest } = await import("@/lib/search");
+    const {
+      searchJobs,
+      homeDigest,
+      isBareHomeQuery,
+      listLatestDiverseJobs,
+    } = await import("@/lib/search");
     const boot = await ensureIndex();
-    const [result, digest] = await Promise.all([searchJobs(data), homeDigest()]);
+    const jobsPromise = isBareHomeQuery(data)
+      ? listLatestDiverseJobs()
+      : searchJobs(data);
+    const [result, digest] = await Promise.all([jobsPromise, homeDigest()]);
     return { ...result, indexing: boot.indexing, digest };
   });
 

@@ -42,7 +42,7 @@ function Home() {
   const data = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const filtered = hasQuery(search);
-  const jobs = data.jobs.slice(0, 12);
+  const jobs = filtered ? data.jobs.slice(0, 12) : data.jobs;
 
   return (
     <AppShell current="/">

@@ -73,6 +73,73 @@ function postedSql(posted: string, params: unknown[]): string | null {
   return `j.first_seen_at >= now() - $` + params.length + `::interval`;
 }
 
+export const LATEST_HOME_LIMIT = 8;
+
+/** True when the home page has no active filters (Latest strip). */
+export function isBareHomeQuery(query: JobQuery): boolean {
+  return !(
+    query.q ||
+    query.fn ||
+    query.seniority ||
+    query.workplace ||
+    query.location ||
+    query.salaryMin ||
+    query.posted ||
+    query.ats ||
+    query.company
+  );
+}
+
+/** One open US-tech role per company, newest first — keeps Latest compact and mixed. */
+export async function listLatestDiverseJobs(
+  limit = LATEST_HOME_LIMIT,
+): Promise<SearchResult> {
+  const sql = await getSql();
+  const rows = await sql.query<Record<string, unknown>>(
+    `with ranked as (
+       select j.*, c.name as company_name, c.slug as company_slug,
+              c.website as company_website, c.logo_url as company_logo_url,
+              row_number() over (
+                partition by j.company_id
+                order by j.last_seen_at desc nulls last,
+                         j.posted_at desc nulls last,
+                         j.first_seen_at desc
+              ) as rn
+       from jobs j
+       join companies c on c.id = j.company_id
+       where j.status = 'open' and j.us_eligible and j.tech_eligible
+     )
+     select * from ranked
+     where rn = 1
+     order by last_seen_at desc nulls last,
+              posted_at desc nulls last,
+              first_seen_at desc
+     limit $1`,
+    [limit],
+  );
+  const statsRows = await sql.query<{
+    openCount: number;
+    companyCount: number;
+    lastOkAt: unknown;
+  }>(
+    `select
+      (select count(*)::int from jobs where status = 'open' and us_eligible and tech_eligible) as "openCount",
+      (select count(*)::int from companies where enabled) as "companyCount",
+      (select max(last_ok_at) from companies) as "lastOkAt"`,
+  );
+  return {
+    jobs: rows.map(mapJob),
+    total: rows.length,
+    page: 1,
+    pageSize: limit,
+    stats: {
+      openCount: statsRows[0]?.openCount ?? 0,
+      companyCount: statsRows[0]?.companyCount ?? 0,
+      lastOkAt: iso(statsRows[0]?.lastOkAt),
+    },
+  };
+}
+
 export async function searchJobs(query: JobQuery): Promise<SearchResult> {
   const sql = await getSql();
   const params: unknown[] = [];

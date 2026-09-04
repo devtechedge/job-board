@@ -2,18 +2,26 @@
 
 :root,
 [data-theme="light"] {
-  /* Cool silver, ~3+ shades lighter + brighter metallic sheen */
-  --paper: #f3f6f9;
+  /* Cool silver — lifted again (~3 more shades) + stronger metallic sheen */
+  --paper: #fafbfc;
   --ink: #10151c;
   --pine: #1f6b4a;
-  --pine-fg: #f3f6f9;
-  --rule: #d4dbe4;
-  --rule-strong: #a8b3bf;
+  --pine-fg: #fafbfc;
+  --rule: #e5eaef;
+  --rule-strong: #b9c2cd;
   --muted: #58636e;
-  --inset: #e8eef4;
+  --inset: #f3f6f9;
   --danger: #8b2e2e;
-  --chip: #e2e8ef;
-  --sheen: linear-gradient(165deg, #ffffff 0%, #f7f9fb 28%, #f3f6f9 55%, #e6edf4 100%);
+  --chip: #eef2f6;
+  --sheen: linear-gradient(
+      165deg,
+      #ffffff 0%,
+      #ffffff 14%,
+      #fcfdfe 32%,
+      #fafbfc 52%,
+      #f4f7fa 78%,
+      #eef3f8 100%
+    );
   color-scheme: light;
 }
 
