@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { publicHttpsUrl, xmlEscape } from "@/lib/safe";
+import { sitePublicOrigin, xmlEscape } from "@/lib/safe";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -7,10 +7,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const { listOpenJobIds } = await import("@/lib/search");
         const jobs = await listOpenJobIds(5000);
-        const origin =
-          publicHttpsUrl(process.env.VITE_SITE_URL ?? "") ??
-          publicHttpsUrl(process.env.APP_URL ?? "") ??
-          "https://jobrow.vercel.app";
+        const origin = sitePublicOrigin();
         const urls = [
           "",
           "/jobs",

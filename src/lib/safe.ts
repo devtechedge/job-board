@@ -44,6 +44,33 @@ export function publicHttpsUrl(value: string, max = 500): string | null {
   }
 }
 
+
+const CANONICAL_SITE = "https://jobrow.vercel.app";
+const STALE_SITE_HOSTS = new Set(["job-board-devtechedge1.vercel.app"]);
+
+/** Public site origin for sitemap / absolute links. Ignores stale Hobby URLs. */
+export function sitePublicOrigin(): string {
+  const candidates = [
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/^https?:\/\//, "")}`
+      : "",
+    process.env.VITE_SITE_URL ?? "",
+    process.env.APP_URL ?? "",
+  ];
+  for (const raw of candidates) {
+    const url = publicHttpsUrl(raw);
+    if (!url) continue;
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      if (STALE_SITE_HOSTS.has(host)) continue;
+      return url.replace(/\/$/, "");
+    } catch {
+      continue;
+    }
+  }
+  return CANONICAL_SITE;
+}
+
 const ATS_FETCH_HOSTS = new Set([
   "boards-api.greenhouse.io",
   "boards.greenhouse.io",
