@@ -236,7 +236,7 @@ export async function listCompanyJobs(companyId: string): Promise<JobListItem[]>
      from jobs j join companies c on c.id = j.company_id
      where j.company_id = $1 and j.status = 'open' and j.us_eligible and j.tech_eligible
      order by j.last_seen_at desc
-     limit 200`,
+     limit 5000`,
     [companyId],
   );
   return rows.map(mapJob);
