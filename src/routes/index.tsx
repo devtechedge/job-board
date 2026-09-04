@@ -52,7 +52,7 @@ function Home() {
           <EditionTally digest={data.digest} />
         </div>
         {data.indexing ? (
-          <p className="mt-4 text-sm text-muted">Reading boards…</p>
+          <p className="mt-4 text-sm text-muted">Reading companies…</p>
         ) : null}
         <div className="mt-6">
           <FilterBar

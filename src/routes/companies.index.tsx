@@ -29,7 +29,7 @@ function CompaniesPage() {
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold">Companies</h1>
         {pending > 0 ? (
-          <p className="mt-3 text-sm text-muted">Reading {pending} boards…</p>
+          <p className="mt-3 text-sm text-muted">Reading {pending} companies…</p>
         ) : null}
         <div className="mt-6 overflow-x-auto border border-rule">
           <table className="min-w-full text-left text-sm">

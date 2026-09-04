@@ -68,7 +68,7 @@ function CompanyPage() {
           </div>
         </dl>
         {company.last_error ? (
-          <p className="mt-3 text-sm text-danger">Last crawl error: {company.last_error}</p>
+          <p className="mt-3 text-sm text-danger">Last update error: {company.last_error}</p>
         ) : null}
         <div className="mt-8">
           <h2 className="mb-3 font-serif text-xl font-semibold">Open</h2>

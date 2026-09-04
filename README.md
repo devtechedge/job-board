@@ -16,7 +16,7 @@ Tagline: **Still open.**
 
 **https://jobrow.vercel.app**
 
-Production is **Neon Postgres** on Vercel Hobby. The board currently holds **2,000+ open US tech roles across 34 boards**. Apply always leaves Jobrow for the employer ATS. Independent job board — not an employer, recruiter, or agency.
+Production is **Neon Postgres** on Vercel Hobby. The board currently holds **2,000+ open US tech roles across 34 companies**. Apply always leaves Jobrow for the employer ATS. Public listings — not an employer, recruiter, or agency.
 
 `GET /api/health` reports `{ db: "neon", openJobs, pendingBoards }`.
 

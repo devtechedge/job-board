@@ -55,15 +55,15 @@ export default function RegisterScreen() {
           <View style={styles.dateRow}>
             <Text style={styles.kicker}>{digest.editionLabel.toUpperCase()}</Text>
             <Text style={styles.count}>
-              {n(digest.openCount)} open · {digest.companyCount} boards
+              {n(digest.openCount)} open · {digest.companyCount} companies
             </Text>
           </View>
           <View style={styles.grid}>
             <Kpi label="Open" value={n(digest.openCount)} />
-            <Kpi label="Boards" value={n(digest.companyCount)} />
-            <Kpi label="First seen, 24h" value={n(digest.freshCount)} />
+            <Kpi label="Companies" value={n(digest.companyCount)} />
+            <Kpi label="New in 24h" value={n(digest.freshCount)} />
             <Kpi
-              label="Last crawl ±"
+              label="Added / closed"
               value={`${n(digest.lastWindowOpened)} / ${n(digest.lastWindowClosed)}`}
               extra={digest.lastWindowAt ? ago(digest.lastWindowAt) : null}
             />
@@ -85,7 +85,7 @@ export default function RegisterScreen() {
               </Pressable>
             ))}
           </Section>
-          <Section title="Boards" action={String(digest.companyCount)} onAction={() => router.push("/companies")}>
+          <Section title="Companies" action={String(digest.companyCount)} onAction={() => router.push("/companies")}>
             {digest.boards.map((board) => (
               <Pressable
                 key={board.slug}
@@ -105,7 +105,7 @@ export default function RegisterScreen() {
         <Text style={styles.loading}>Loading jobs…</Text>
       ) : null}
       <View style={styles.footer}>
-        <Text style={styles.footNote}>Independent job board. Not an employer.</Text>
+        <Text style={styles.footNote}>Public listings. Not an employer.</Text>
         <Pressable onPress={() => router.push("/desk")}>
           <Text style={styles.footLink}>Contact</Text>
         </Pressable>

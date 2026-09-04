@@ -17,7 +17,7 @@ export function EditionMasthead({ digest }: { digest: HomeDigest }) {
           {editionDateLabel(digest.editionAt)}
         </p>
         <p className="font-serif text-sm tabular-nums text-ink">
-          {n(digest.openCount)} open · {digest.companyCount} boards
+          {n(digest.openCount)} open · {digest.companyCount} companies
         </p>
       </div>
     </div>
@@ -27,10 +27,10 @@ export function EditionMasthead({ digest }: { digest: HomeDigest }) {
 export function EditionTally({ digest }: { digest: HomeDigest }) {
   const cells = [
     { k: "Open", v: n(digest.openCount) },
-    { k: "Boards", v: n(digest.companyCount) },
-    { k: "First seen, 24h", v: n(digest.freshCount) },
+    { k: "Companies", v: n(digest.companyCount) },
+    { k: "New in 24h", v: n(digest.freshCount) },
     {
-      k: "Last crawl ±",
+      k: "Added / closed",
       v: `${n(digest.lastWindowOpened)} / ${n(digest.lastWindowClosed)}`,
       extra: digest.lastWindowAt ? ago(digest.lastWindowAt) : null,
     },
@@ -66,7 +66,7 @@ export function FunctionContents({ items }: { items: HomeDigest["functions"] }) 
       <div className="mb-3 flex items-end justify-between gap-3">
         <h2 className="font-serif text-2xl font-semibold">Functions</h2>
         <Link to="/jobs" className="text-sm text-muted hover:text-pine">
-          Index
+          Search
         </Link>
       </div>
       <ul className="columns-1 gap-x-8 border-t border-ink sm:columns-2 lg:columns-3">
@@ -92,7 +92,7 @@ export function BoardStrip({ boards }: { boards: HomeDigest["boards"] }) {
   return (
     <section>
       <div className="mb-3 flex items-end justify-between gap-3">
-        <h2 className="font-serif text-2xl font-semibold">Boards</h2>
+        <h2 className="font-serif text-2xl font-semibold">Companies</h2>
         <Link to="/companies" className="text-sm text-muted hover:text-pine">
           All
         </Link>
@@ -101,7 +101,7 @@ export function BoardStrip({ boards }: { boards: HomeDigest["boards"] }) {
         <div className="hidden border-b border-rule bg-inset px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-muted sm:grid sm:grid-cols-[1fr_7rem_6rem]">
           <span>Company</span>
           <span>Open</span>
-          <span>Board</span>
+          <span>ATS</span>
         </div>
         <ul>
           {boards.map((board) => (

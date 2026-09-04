@@ -40,7 +40,7 @@ export default function CompaniesScreen() {
       contentContainerStyle={styles.content}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <Text style={styles.lede}>{n(rows?.length ?? 0)} boards</Text>
+      <Text style={styles.lede}>{n(rows?.length ?? 0)} companies</Text>
       {error ? <ErrorState message={error} onRetry={load} /> : null}
       {rows?.map((company) => (
         <Pressable
