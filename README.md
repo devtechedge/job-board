@@ -4,8 +4,8 @@ Public register of **still-open US tech roles**, read from employer ATS JSON —
 
 Tagline: **Still open.**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://job-board-devtechedge1.vercel.app)
-[![Boards](https://img.shields.io/badge/Boards-34-1F6B4A)](https://job-board-devtechedge1.vercel.app/companies)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://jobrow.vercel.app)
+[![Boards](https://img.shields.io/badge/Boards-34-1F6B4A)](https://jobrow.vercel.app/companies)
 [![TanStack Start](https://img.shields.io/badge/TanStack%20Start-black)](https://tanstack.com/start)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -14,7 +14,7 @@ Tagline: **Still open.**
 
 ## Live demo
 
-**https://job-board-devtechedge1.vercel.app**
+**https://jobrow.vercel.app**
 
 Production is **Neon Postgres** on Vercel Hobby. The index currently holds **2,000+ open US tech roles across 34 boards**. Apply always leaves Jobrow for the employer ATS. Independent index — not an employer, recruiter, or agency.
 

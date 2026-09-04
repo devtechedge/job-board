@@ -33,7 +33,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "apiUrl": "https://job-board-devtechedge1.vercel.app"
+      "apiUrl": "https://jobrow.vercel.app"
     }
   }
 }

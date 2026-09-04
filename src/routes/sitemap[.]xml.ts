@@ -10,7 +10,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const origin =
           publicHttpsUrl(process.env.VITE_SITE_URL ?? "") ??
           publicHttpsUrl(process.env.APP_URL ?? "") ??
-          "https://job-board-devtechedge1.vercel.app";
+          "https://jobrow.vercel.app";
         const urls = [
           "",
           "/jobs",

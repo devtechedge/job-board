@@ -21,7 +21,7 @@ Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workabl
 
 ## In scope
 
-- https://job-board-devtechedge1.vercel.app and the `devtechedge/job-board` codebase
+- https://jobrow.vercel.app and the `devtechedge/job-board` codebase
 - Stored XSS via crawled job HTML
 - Auth bypass on `/admin` or `POST /api/cron/crawl`
 - SSRF from crawl/fetch helpers
