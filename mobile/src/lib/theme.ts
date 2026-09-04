@@ -1,15 +1,15 @@
 import { Platform, StyleSheet } from "react-native";
 
 export const colors = {
-  paper: "#E3E8EE",
+  paper: "#F3F6F9",
   ink: "#10151C",
   pine: "#1F6B4A",
-  pineFg: "#E3E8EE",
-  rule: "#C2CCD6",
-  ruleStrong: "#96A3B0",
+  pineFg: "#F3F6F9",
+  rule: "#D4DBE4",
+  ruleStrong: "#A8B3BF",
   muted: "#58636E",
-  inset: "#D5DCE4",
-  chip: "#CCD4DC",
+  inset: "#E8EEF4",
+  chip: "#E2E8EF",
 } as const;
 
 export const fonts = {
