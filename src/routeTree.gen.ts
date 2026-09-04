@@ -14,10 +14,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EmployersRouteImport } from './routes/employers'
+import { Route as ExpiredRouteImport } from './routes/expired'
 import { Route as PlacementsRouteImport } from './routes/placements'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ApiDeskRouteImport } from './routes/api/desk'
+import { Route as ApiExpiredRouteImport } from './routes/api/expired'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiHomeRouteImport } from './routes/api/home'
 import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
@@ -58,9 +60,19 @@ const EmployersRoute = EmployersRouteImport.update({
   path: '/employers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpiredRoute = ExpiredRouteImport.update({
+  id: '/expired',
+  path: '/expired',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlacementsRoute = PlacementsRouteImport.update({
   id: '/placements',
   path: '/placements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExpiredRoute = ApiExpiredRouteImport.update({
+  id: '/api/expired',
+  path: '/api/expired',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -155,7 +167,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/expired': typeof ExpiredRoute
   '/placements': typeof PlacementsRoute
+  '/api/expired': typeof ApiExpiredRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
@@ -180,7 +194,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/expired': typeof ExpiredRoute
   '/placements': typeof PlacementsRoute
+  '/api/expired': typeof ApiExpiredRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
@@ -206,7 +222,9 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/employers': typeof EmployersRoute
+  '/expired': typeof ExpiredRoute
   '/placements': typeof PlacementsRoute
+  '/api/expired': typeof ApiExpiredRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/desk': typeof ApiDeskRoute
@@ -233,7 +251,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/expired'
     | '/placements'
+    | '/api/expired'
     | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
@@ -258,7 +278,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/expired'
     | '/placements'
+    | '/api/expired'
     | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
@@ -283,7 +305,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/employers'
+    | '/expired'
     | '/placements'
+    | '/api/expired'
     | '/pricing'
     | '/sitemap.xml'
     | '/api/desk'
@@ -309,7 +333,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ContactRoute: typeof ContactRoute
   EmployersRoute: typeof EmployersRoute
+  ExpiredRoute: typeof ExpiredRoute
   PlacementsRoute: typeof PlacementsRoute
+  ApiExpiredRoute: typeof ApiExpiredRoute
   PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiDeskRoute: typeof ApiDeskRoute
@@ -366,11 +392,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expired': {
+      id: '/expired'
+      path: '/expired'
+      fullPath: '/expired'
+      preLoaderRoute: typeof ExpiredRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/placements': {
       id: '/placements'
       path: '/placements'
       fullPath: '/placements'
       preLoaderRoute: typeof PlacementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/expired': {
+      id: '/api/expired'
+      path: '/api/expired'
+      fullPath: '/api/expired'
+      preLoaderRoute: typeof ApiExpiredRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -501,7 +541,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ContactRoute: ContactRoute,
   EmployersRoute: EmployersRoute,
+  ExpiredRoute: ExpiredRoute,
   PlacementsRoute: PlacementsRoute,
+  ApiExpiredRoute: ApiExpiredRoute,
   PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiDeskRoute: ApiDeskRoute,

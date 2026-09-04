@@ -124,3 +124,22 @@ export const getCompanyFn = createServerFn({ method: "GET" })
       jobs,
     };
   });
+
+export const listClosedJobsFn = createServerFn({ method: "GET" })
+  .validator((data: unknown) => {
+    const raw = (data ?? {}) as { page?: unknown };
+    const page =
+      typeof raw.page === "number"
+        ? raw.page
+        : typeof raw.page === "string" && raw.page
+          ? Number(raw.page)
+          : 1;
+    return { page: Number.isFinite(page) && page > 0 ? Math.floor(page) : 1 };
+  })
+  .handler(async ({ data }) => {
+    const { ensureIndex } = await import("@/lib/crawl");
+    const { listClosedJobs } = await import("@/lib/search");
+    const boot = await ensureIndex();
+    const result = await listClosedJobs(data.page);
+    return { ...result, indexing: boot.indexing };
+  });

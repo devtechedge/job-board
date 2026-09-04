@@ -11,6 +11,9 @@ export function SiteFooter() {
           <p>Public listings. Not an employer.</p>
         </div>
         <nav className="flex flex-wrap gap-x-4 gap-y-1">
+          <Link to="/expired" className="hover:text-ink">
+            Expired
+          </Link>
           <Link to="/legal/sourcing" className="hover:text-ink">
             How we source
           </Link>

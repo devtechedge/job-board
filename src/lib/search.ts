@@ -238,6 +238,51 @@ export async function searchJobs(query: JobQuery): Promise<SearchResult> {
   };
 }
 
+
+export async function listClosedJobs(page = 1): Promise<SearchResult> {
+  const sql = await getSql();
+  const safePage = Math.max(1, page);
+  const countRows = await sql.query<{ n: number }>(
+    `select count(*)::int as n
+     from jobs j
+     where j.status = 'closed' and j.us_eligible and j.tech_eligible`,
+  );
+  const total = countRows[0]?.n ?? 0;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE) || 1);
+  const pageClamped = Math.min(safePage, pages);
+  const offset = (pageClamped - 1) * PAGE_SIZE;
+  const rows = await sql.query<Record<string, unknown>>(
+    `select j.*, c.name as company_name, c.slug as company_slug,
+            c.website as company_website, c.logo_url as company_logo_url
+     from jobs j join companies c on c.id = j.company_id
+     where j.status = 'closed' and j.us_eligible and j.tech_eligible
+     order by j.closed_at desc nulls last, j.last_seen_at desc
+     limit $1 offset $2`,
+    [PAGE_SIZE, offset],
+  );
+  const statsRows = await sql.query<{
+    openCount: number;
+    companyCount: number;
+    lastOkAt: unknown;
+  }>(
+    `select
+      (select count(*)::int from jobs where status = 'open' and us_eligible and tech_eligible) as "openCount",
+      (select count(*)::int from companies where enabled) as "companyCount",
+      (select max(last_ok_at) from companies) as "lastOkAt"`,
+  );
+  return {
+    jobs: rows.map(mapJob),
+    total,
+    page: pageClamped,
+    pageSize: PAGE_SIZE,
+    stats: {
+      openCount: statsRows[0]?.openCount ?? 0,
+      companyCount: statsRows[0]?.companyCount ?? 0,
+      lastOkAt: iso(statsRows[0]?.lastOkAt),
+    },
+  };
+}
+
 export async function getJobById(id: string): Promise<JobListItem | null> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(

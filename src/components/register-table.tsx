@@ -13,9 +13,11 @@ import { cn } from "@/lib/utils";
 export function RegisterTable({
   jobs,
   empty,
+  variant = "open",
 }: {
   jobs: JobListItem[];
   empty?: string;
+  variant?: "open" | "expired";
 }) {
   if (!jobs.length) {
     return (
@@ -32,19 +34,19 @@ export function RegisterTable({
         <span>Company</span>
         <span>Pay</span>
         <span>Workplace</span>
-        <span>Posted</span>
+        <span>{variant === "expired" ? "Expired" : "Posted"}</span>
         <span>Source</span>
       </div>
       <ul>
         {jobs.map((job) => (
-          <RegisterRow key={job.id} job={job} />
+          <RegisterRow key={job.id} job={job} variant={variant} />
         ))}
       </ul>
     </div>
   );
 }
 
-function RegisterRow({ job }: { job: JobListItem }) {
+function RegisterRow({ job, variant = "open" }: { job: JobListItem; variant?: "open" | "expired" }) {
   const [open, setOpen] = useState(false);
   const pay = formatPay(
     job.salary_min_cents,
@@ -52,6 +54,7 @@ function RegisterRow({ job }: { job: JobListItem }) {
     job.salary_currency,
     job.salary_source,
   );
+  const when = ago(variant === "expired" ? job.closed_at : job.first_seen_at);
 
   return (
     <li className="border-b border-rule last:border-b-0">
@@ -100,13 +103,13 @@ function RegisterRow({ job }: { job: JobListItem }) {
         </div>
         <span className="hidden text-sm tabular-nums md:block">{pay}</span>
         <span className="hidden text-sm md:block">{workplaceLabel(job.workplace)}</span>
-        <span className="hidden text-sm text-muted md:block">{ago(job.first_seen_at)}</span>
+        <span className="hidden text-sm text-muted md:block">{when}</span>
         <div className="hidden md:block">
           <SourceBadge ats={job.source_ats} />
         </div>
         <div className="col-span-full flex items-center justify-between gap-2 pl-11 md:hidden">
           <SourceBadge ats={job.source_ats} />
-          <span className="text-xs text-muted">{ago(job.first_seen_at)}</span>
+          <span className="text-xs text-muted">{when}</span>
         </div>
       </div>
       {open ? (
