@@ -39,14 +39,14 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Jobrow",
-          tabBarLabel: ({ focused }) => <TabLabel label="Register" focused={focused} />,
+          tabBarLabel: ({ focused }) => <TabLabel label="Jobs" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="jobs"
         options={{
-          title: "Index",
-          tabBarLabel: ({ focused }) => <TabLabel label="Index" focused={focused} />,
+          title: "Search",
+          tabBarLabel: ({ focused }) => <TabLabel label="Search" focused={focused} />,
         }}
       />
       <Tabs.Screen
@@ -59,8 +59,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="watchlist"
         options={{
-          title: "Watchlist",
-          tabBarLabel: ({ focused }) => <TabLabel label="Watched" focused={focused} />,
+          title: "Saved",
+          tabBarLabel: ({ focused }) => <TabLabel label="Saved" focused={focused} />,
         }}
       />
     </Tabs>

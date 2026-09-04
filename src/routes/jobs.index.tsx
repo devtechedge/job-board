@@ -12,7 +12,7 @@ export const Route = createFileRoute("/jobs/")({
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) => listJobsFn({ data: parseJobQuery(deps) }),
   head: () => ({
-    meta: [{ title: "Job index — Jobrow" }],
+    meta: [{ title: "Search — Jobrow" }],
   }),
   pendingComponent: PendingRegister,
   component: JobsIndex,
@@ -28,7 +28,7 @@ function JobsIndex() {
   return (
     <AppShell current="/jobs">
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold">Index</h1>
+        <h1 className="font-serif text-3xl font-semibold">Search</h1>
         <p className="mt-2 text-sm tabular-nums text-muted">
           {data.total.toLocaleString("en-US")} open
         </p>

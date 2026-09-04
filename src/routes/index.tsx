@@ -74,7 +74,7 @@ function Home() {
               search={compactSearch(search)}
               className="text-sm text-muted hover:text-pine"
             >
-              Index
+              Search
               {filtered ? ` · ${data.total.toLocaleString("en-US")}` : ""}
             </Link>
           </div>

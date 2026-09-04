@@ -72,7 +72,7 @@ export default function JobScreen() {
           }}
           style={styles.watch}
         >
-          <Text style={styles.watchText}>{watched ? "Watching" : "Watchlist"}</Text>
+          <Text style={styles.watchText}>{watched ? "Saved" : "Save"}</Text>
         </Pressable>
       </View>
       <Text style={styles.sectionKicker}>SUMMARY</Text>

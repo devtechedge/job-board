@@ -139,7 +139,7 @@ describe("public company payload", () => {
 });
 
 describe("home digest", () => {
-  it("keeps KPI fields the register uses", () => {
+  it("keeps KPI fields Jobs uses", () => {
     const digest: HomeDigest = {
       openCount: 10,
       companyCount: 2,

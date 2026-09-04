@@ -8,8 +8,8 @@ import { BOUND_PASS, SEEKER_ROWS } from "@/lib/rates";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Rates — Jobrow" },
-      { name: "description", content: "Free register. Bound pass waitlist. No live checkout." },
+      { title: "Pricing — Jobrow" },
+      { name: "description", content: "Free Jobs browse. Bound pass waitlist. No live checkout." },
     ],
   }),
   component: PricingPage,
@@ -54,14 +54,14 @@ function PricingPage() {
   return (
     <AppShell current="/pricing">
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold">Rates</h1>
+        <h1 className="font-serif text-3xl font-semibold">Pricing</h1>
         <p className="mt-2 text-sm text-muted">No card charged. Waitlist only.</p>
         <div className="mt-6 overflow-x-auto border border-rule">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-inset text-[11px] uppercase tracking-[0.14em] text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">Line</th>
-                <th className="px-3 py-2 font-medium">Register</th>
+                <th className="px-3 py-2 font-medium">Jobs</th>
                 <th className="px-3 py-2 font-medium">Bound pass</th>
               </tr>
             </thead>

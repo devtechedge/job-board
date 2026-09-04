@@ -2,7 +2,7 @@
 
 Expo Android and iOS client for the Jobrow register.
 
-Not a marketplace. Apply is external. Watchlist is local.
+Not a marketplace. Apply is external. Saved jobs are local.
 Install deps in this folder, then start Expo. Press i or a for simulators.
 Set EXPO_PUBLIC_API_URL for a non-production API origin. See .env.example.
 No EAS, no store listing, no custom fonts.

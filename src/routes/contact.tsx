@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Desk — Jobrow" },
+      { title: "Contact — Jobrow" },
       { name: "description", content: "Corrections and legal notes. Not applications." },
     ],
   }),
@@ -63,7 +63,7 @@ function ContactPage() {
   return (
     <AppShell current="/contact">
       <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold">Desk</h1>
+        <h1 className="font-serif text-3xl font-semibold">Contact</h1>
         <p className="mt-2 text-sm text-muted">Corrections and legal. Not applications.</p>
         {status === "sent" ? (
           <p className="mt-6 text-sm">Filed.</p>

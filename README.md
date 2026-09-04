@@ -16,13 +16,13 @@ Tagline: **Still open.**
 
 **https://jobrow.vercel.app**
 
-Production is **Neon Postgres** on Vercel Hobby. The index currently holds **2,000+ open US tech roles across 34 boards**. Apply always leaves Jobrow for the employer ATS. Independent index — not an employer, recruiter, or agency.
+Production is **Neon Postgres** on Vercel Hobby. The board currently holds **2,000+ open US tech roles across 34 boards**. Apply always leaves Jobrow for the employer ATS. Independent job board — not an employer, recruiter, or agency.
 
 `GET /api/health` reports `{ db: "neon", openJobs, pendingBoards }`.
 
 ### Public JSON API
 
-Unauthenticated read API for the same US-tech slice the register shows (`status=open`, `us_eligible`, `tech_eligible`). Native apps and other clients can call these without going through server functions:
+Unauthenticated read API for the same US-tech slice Jobs shows (`status=open`, `us_eligible`, `tech_eligible`). Native apps and other clients can call these without going through server functions:
 
 - `GET /api/jobs` — `JobQuery` as querystring (`q`, `fn`, `seniority`, `workplace`, `location`, `salaryMin`, `posted`, `ats`, `company`, `sort`, `page`). Page size 40.
 - `GET /api/jobs/:id` — one role, with sanitized `description_html` plus `description_text`
@@ -40,17 +40,17 @@ An Expo (Android + iOS) client lives in [`mobile/`](mobile/). It is a separate p
 
 ## Screenshots
 
-| Register | Index |
+| Jobs | Search |
 |----------|--------|
-| ![Register](docs/screenshots/01-register.png) | ![Index](docs/screenshots/05-index.png) |
+| ![Jobs](docs/screenshots/01-register.png) | ![Search](docs/screenshots/05-index.png) |
 
 | Role | Companies |
 |------|-----------|
 | ![Job detail](docs/screenshots/03-job-detail.png) | ![Companies](docs/screenshots/04-companies.png) |
 
-| About | Rates |
+| About | Pricing |
 |-------|--------|
-| ![About](docs/screenshots/02-about.png) | ![Rates](docs/screenshots/06-rates.png) |
+| ![About](docs/screenshots/02-about.png) | ![Pricing](docs/screenshots/06-rates.png) |
 
 Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-preview.png)
 
@@ -58,18 +58,18 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 
 ## What you can do
 
-- **Register** (`/`) — date, open count, filters, latest rows, functions, boards
+- **Jobs** (`/`) — date, open count, filters, latest rows, functions, boards
 - Company marks next to every listing (site icon, initials if the icon fails)
-- **Index** (`/jobs`) — full paginated table of the US tech slice
+- **Search** (`/jobs`) — full paginated table of the US tech slice
 - **Companies** (`/companies`) — 34 boards, US-tech count vs listed count, last successful fetch
 - **Role** (`/jobs/:id`) — summary, pay, workplace, posting HTML, Apply (leaves the site)
-- **Desk** (`/contact`) — corrections and legal notes (not applications)
+- **Contact** (`/contact`) — corrections and legal notes (not applications)
 - **Add a board** (`/employers`) — public Greenhouse / Ashby / Lever / Workable token
-- **Rates** (`/pricing`) — Bound pass waitlist (`$11` / 28 days). No live checkout
-- **Placements** (`/placements`) — Ruled pin `$120` / masthead line `$55`. Waitlist only
+- **Pricing** (`/pricing`) — Bound pass waitlist (`$11` / 28 days). No live checkout
+- **Promote** (`/placements`) — Ruled pin `$120` / masthead line `$55`. Waitlist only
 - **Watchlist** — local to the browser (`localStorage` key `jobrow:watchlist`, max 200). No account. No resume upload
 - **JSON API** (`/api/jobs`, `/api/companies`, `/api/home`) — public register contract for native apps
-- **iOS / Android** — Expo app in `mobile/`. Apply opens the employer ATS. Watchlist is local AsyncStorage.
+- **iOS / Android** — Expo app in `mobile/`. Apply opens the employer ATS. Saved jobs use local AsyncStorage.
 - **Admin** (`/admin`) — password-gated crawl and board edits
 
 A role **drops when a successful crawl no longer sees it**. A failed fetch does not close that board.
@@ -86,7 +86,7 @@ Seeded from [data/companies.csv](data/companies.csv) and [src/lib/seed-companies
 | Ashby (7) | OpenAI, Ramp, Linear, Notion, Cursor, Perplexity, Supabase |
 | Lever (3) | Palantir, Wealthfront, Spotify |
 
-US-eligible **tech** titles stay on the register. Sales, finance, and non-US postings on the same board are ignored. The companies table shows both **US tech** and **listed** (raw JSON rows on the last good fetch).
+US-eligible **tech** titles stay on Jobs. Sales, finance, and non-US postings on the same board are ignored. The companies table shows both **US tech** and **listed** (raw JSON rows on the last good fetch).
 
 ### Add another company
 

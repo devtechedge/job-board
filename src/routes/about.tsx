@@ -13,11 +13,11 @@ function AboutPage() {
         <h1 className="font-serif text-4xl font-semibold">About</h1>
         <div className="mt-6 space-y-4 text-base">
           <p>
-            Jobrow indexes public Greenhouse, Ashby, and Lever JSON. We are not the employer. Apply
+            Jobrow lists public Greenhouse, Ashby, and Lever JSON. We are not the employer. Apply
             leaves this site. A role drops when a successful crawl no longer sees it.
           </p>
           <p>
-            Search is free. Checkout is not live. Watchlist stays in the browser.
+            Search is free. Checkout is not live. Saved jobs stay in the browser.
           </p>
           <p className="text-sm">
             <Link to="/legal/sourcing" className="text-pine underline underline-offset-4">
@@ -33,7 +33,7 @@ function AboutPage() {
             </Link>
             {" · "}
             <Link to="/contact" className="text-pine underline underline-offset-4">
-              Desk
+              Contact
             </Link>
           </p>
         </div>

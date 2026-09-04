@@ -23,7 +23,7 @@ export function WatchButton({ item }: { item: Watched }) {
         on && "border-pine text-pine",
       )}
       aria-pressed={on}
-      aria-label={on ? "Remove from watchlist" : "Watch this role"}
+      aria-label={on ? "Remove from saved" : "Save this role"}
     >
       <Bookmark className={cn("size-4", on && "fill-pine")} />
     </button>

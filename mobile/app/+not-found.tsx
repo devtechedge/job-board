@@ -7,7 +7,7 @@ export default function NotFound() {
     <>
       <Stack.Screen options={{ title: "Not found" }} />
       <View style={styles.box}>
-        <Text style={styles.title}>That page is not on the register.</Text>
+        <Text style={styles.title}>That page is not on Jobrow.</Text>
         <Link href="/" style={styles.link}>
           <Text style={styles.linkText}>Back to Jobrow</Text>
         </Link>

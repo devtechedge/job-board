@@ -19,7 +19,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="job/[id]" options={{ title: "Role" }} />
         <Stack.Screen name="company/[slug]" options={{ title: "Board" }} />
-        <Stack.Screen name="desk" options={{ title: "Desk" }} />
+        <Stack.Screen name="desk" options={{ title: "Contact" }} />
       </Stack>
     </GestureHandlerRootView>
   );

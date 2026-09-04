@@ -5,8 +5,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { listWatched } from "@/lib/watchlist";
 
 const NAV = [
-  { to: "/", label: "Register" },
-  { to: "/jobs", label: "Index" },
+  { to: "/", label: "Jobs" },
+  { to: "/jobs", label: "Search" },
   { to: "/companies", label: "Companies" },
   { to: "/about", label: "About" },
 ] as const;
@@ -48,7 +48,7 @@ export function SiteHeader({ current }: { current?: string }) {
               {item.label}
             </Link>
           ))}
-          <span className="text-muted">Watched {watched}</span>
+          <span className="text-muted">Saved {watched}</span>
           <ThemeToggle />
         </nav>
       </div>

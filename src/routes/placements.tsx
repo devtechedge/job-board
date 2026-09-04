@@ -8,7 +8,7 @@ import { MASTHEAD_LINE, RULED_PIN } from "@/lib/rates";
 export const Route = createFileRoute("/placements")({
   head: () => ({
     meta: [
-      { title: "Placements — Jobrow" },
+      { title: "Promote — Jobrow" },
       { name: "description", content: "Ruled pin and masthead line. Waitlist. No live checkout." },
     ],
   }),
@@ -56,8 +56,8 @@ function PlacementsPage() {
   return (
     <AppShell current="/placements">
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold">Placements</h1>
-        <p className="mt-2 text-sm text-muted">Role must already be on the register. No card charged.</p>
+        <h1 className="font-serif text-3xl font-semibold">Promote</h1>
+        <p className="mt-2 text-sm text-muted">Role must already be listed on Jobs. No card charged.</p>
         <div className="mt-6 overflow-x-auto border border-rule">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-inset text-[11px] uppercase tracking-[0.14em] text-muted">

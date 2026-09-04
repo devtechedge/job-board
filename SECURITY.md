@@ -43,7 +43,7 @@ Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workabl
 - Parameterized SQL only
 - Job HTML is tag-allowlisted; text nodes are escaped; `javascript:` links dropped
 - JSON-LD is serialized with `<` escaped so it cannot break out of `<script>`
-- Desk notes: size cap, honeypot, rate limit, public-https URLs only (no loopback / RFC1918)
+- Contact notes: size cap, honeypot, rate limit, public-https URLs only (no loopback / RFC1918)
 - Admin board dump and crawl require the password; guesses are rate-limited; compare is SHA-256 + `timingSafeEqual`
 - Cron accepts `Authorization: Bearer` only — not `?secret=`
 - Outbound crawl fetch: HTTPS, no redirects, host allowlist (Greenhouse / Ashby / Lever / Workable), no private IPs

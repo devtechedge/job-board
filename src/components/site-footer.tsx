@@ -8,23 +8,23 @@ export function SiteFooter() {
     <footer className="page-enter-footer border-t border-rule bg-inset">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div className="max-w-md">
-          <p>Independent index. Not an employer.</p>
+          <p>Independent job board. Not an employer.</p>
         </div>
         <nav className="flex flex-wrap gap-x-4 gap-y-1">
           <Link to="/legal/sourcing" className="hover:text-ink">
             How we source
           </Link>
           <Link to="/employers" className="hover:text-ink">
-            Crawl slot
+            Add a board
           </Link>
           <Link to="/pricing" className="hover:text-ink">
-            Rates
+            Pricing
           </Link>
           <Link to="/placements" className="hover:text-ink">
-            Placements
+            Promote
           </Link>
           <Link to="/contact" className="hover:text-ink">
-            Desk
+            Contact
           </Link>
           <Link to="/legal/terms" className="hover:text-ink">
             Terms

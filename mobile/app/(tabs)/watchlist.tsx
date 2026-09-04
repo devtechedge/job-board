@@ -21,7 +21,7 @@ export default function WatchlistScreen() {
       </Text>
       {items.length === 0 ? (
         <Text style={styles.empty}>
-          Watch a role from its page. Nothing leaves this device — there is no account.
+          Save a role from its page. Nothing leaves this device — there is no account.
         </Text>
       ) : (
         items.map((item) => (

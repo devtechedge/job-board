@@ -42,7 +42,7 @@ function SourcingPage() {
             Apply always goes to the employer ATS URL. We keep US-eligible tech roles in the public
             register. First seen / last seen are our crawl clocks.
           </p>
-          <p>Independent index. Not affiliated with Greenhouse, Ashby, Lever, or any employer.</p>
+          <p>Independent job board. Not affiliated with Greenhouse, Ashby, Lever, or any employer.</p>
         </div>
       </main>
     </AppShell>

@@ -22,7 +22,7 @@ export default function RegisterScreen() {
       setError(null);
       setData(await fetchHome({ page: 1 }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not load the register.");
+      setError(err instanceof Error ? err.message : "Could not load jobs.");
     }
   }, []);
 
@@ -68,12 +68,12 @@ export default function RegisterScreen() {
               extra={digest.lastWindowAt ? ago(digest.lastWindowAt) : null}
             />
           </View>
-          <Section title="Latest" action="Index" onAction={() => router.push("/jobs")}>
+          <Section title="Latest" action="Search" onAction={() => router.push("/jobs")}>
             {data?.jobs.slice(0, 12).map((job) => (
               <JobRow key={job.id} job={job} />
             ))}
           </Section>
-          <Section title="Functions" action="Index" onAction={() => router.push("/jobs")}>
+          <Section title="Functions" action="Search" onAction={() => router.push("/jobs")}>
             {digest.functions.map((item) => (
               <Pressable
                 key={item.fn}
@@ -102,12 +102,12 @@ export default function RegisterScreen() {
           </Section>
         </>
       ) : !error ? (
-        <Text style={styles.loading}>Loading the register…</Text>
+        <Text style={styles.loading}>Loading jobs…</Text>
       ) : null}
       <View style={styles.footer}>
-        <Text style={styles.footNote}>Independent index. Not an employer.</Text>
+        <Text style={styles.footNote}>Independent job board. Not an employer.</Text>
         <Pressable onPress={() => router.push("/desk")}>
-          <Text style={styles.footLink}>Desk</Text>
+          <Text style={styles.footLink}>Contact</Text>
         </Pressable>
       </View>
     </ScrollView>
