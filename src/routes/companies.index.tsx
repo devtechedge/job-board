@@ -11,8 +11,8 @@ export const Route = createFileRoute("/companies/")({
   loader: () => listCompaniesFn(),
   head: () =>
     pageHead({
-      title: "Companies — Jobrow",
-      description: "US tech companies with still-open roles on Jobrow.",
+      title: "US tech companies with still-open roles — Jobrow",
+      description: "Browse 50 US tech companies Jobrow tracks for still-open Greenhouse, Ashby, and Lever roles.",
       path: "/companies",
     }),
   component: CompaniesPage,

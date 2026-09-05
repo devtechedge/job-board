@@ -9,7 +9,7 @@ import { ago, workplaceLabel } from "@/lib/format";
 import { getJobFn } from "@/lib/jobs.functions";
 import { formatPay } from "@/lib/salary";
 import { jsonForScript } from "@/lib/safe";
-import { pageHead } from "@/lib/seo";
+import { jobPageDescription, jobPageTitle, pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/jobs/$id")({
   loader: ({ params }) => getJobFn({ data: { id: params.id } }),
@@ -17,9 +17,17 @@ export const Route = createFileRoute("/jobs/$id")({
     if (!loaderData) {
       return pageHead({ title: "Role — Jobrow", path: "/jobs" });
     }
-    const title = `${loaderData.title} at ${loaderData.company_name} — Jobrow`;
-    const description =
-      loaderData.summary ?? `${loaderData.title} at ${loaderData.company_name}. Still open on Jobrow.`;
+    const title = jobPageTitle({
+      title: loaderData.title,
+      companyName: loaderData.company_name,
+      status: loaderData.status,
+    });
+    const description = jobPageDescription({
+      title: loaderData.title,
+      companyName: loaderData.company_name,
+      status: loaderData.status,
+      summary: loaderData.summary,
+    });
     return pageHead({
       title,
       description,

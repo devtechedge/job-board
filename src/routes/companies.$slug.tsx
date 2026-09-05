@@ -5,7 +5,7 @@ import { AppShell } from "@/components/site-footer";
 import { SourceBadge } from "@/components/source-badge";
 import { ago } from "@/lib/format";
 import { getCompanyFn } from "@/lib/jobs.functions";
-import { pageHead } from "@/lib/seo";
+import { companyPageDescription, companyPageTitle, pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/companies/$slug")({
   loader: ({ params }) => getCompanyFn({ data: { slug: params.slug } }),
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/companies/$slug")({
     const { company } = loaderData;
     const open = company.open_count ?? 0;
     return pageHead({
-      title: `${company.name} roles — Jobrow`,
-      description: `${open} still-open US tech roles at ${company.name} on Jobrow.`,
+      title: companyPageTitle(company.name),
+      description: companyPageDescription(company.name, open),
       path: `/companies/${company.slug}`,
     });
   },

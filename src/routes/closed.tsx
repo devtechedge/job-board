@@ -22,7 +22,7 @@ export const Route = createFileRoute("/closed")({
   loader: ({ deps }) => listClosedJobsFn({ data: { page: deps.page } }),
   head: () =>
     pageHead({
-      title: "Closed — Jobrow",
+      title: "Closed US tech roles — Jobrow",
       description:
         "Roles Jobrow listed that later left the employer board after a successful crawl.",
       path: "/closed",

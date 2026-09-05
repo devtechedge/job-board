@@ -38,3 +38,37 @@ export function pageHead(opts: {
     links: [{ rel: "canonical", href: url }],
   };
 }
+
+/** Long-tail document titles for indexable entity pages. */
+export function companyPageTitle(companyName: string): string {
+  return `${companyName} US tech roles still open — Jobrow`;
+}
+
+export function companyPageDescription(companyName: string, openCount: number): string {
+  const n = Number.isFinite(openCount) ? openCount : 0;
+  return `${n} still-open US tech role${n === 1 ? "" : "s"} at ${companyName} on Jobrow. Apply on the employer ATS.`;
+}
+
+export function jobPageTitle(opts: {
+  title: string;
+  companyName: string;
+  status?: string | null;
+}): string {
+  const closed = opts.status === "closed";
+  const signal = closed ? "closed" : "still open";
+  return `${opts.title} at ${opts.companyName} — ${signal} | Jobrow`;
+}
+
+export function jobPageDescription(opts: {
+  title: string;
+  companyName: string;
+  status?: string | null;
+  summary?: string | null;
+}): string {
+  if (opts.status === "closed") {
+    return `${opts.title} at ${opts.companyName} left the employer board after a Jobrow crawl. Not still open.`;
+  }
+  if (opts.summary && opts.summary.trim()) return opts.summary.trim();
+  return `${opts.title} at ${opts.companyName}. Still open on Jobrow — apply on the employer ATS.`;
+}
+
