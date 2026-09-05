@@ -8,7 +8,7 @@ function token(value: string): string {
 }
 
 export function greenhouseListUrl(board: string): string {
-  return `https://boards-api.greenhouse.io/v1/boards/${token(board)}/jobs?content=false`;
+  return `https://boards-api.greenhouse.io/v1/boards/${token(board)}/jobs?content=true`;
 }
 
 export function greenhouseDetailUrl(board: string, id: string): string {

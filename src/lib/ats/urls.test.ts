@@ -17,7 +17,7 @@ describe("adapter URL builders", () => {
   it("builds Greenhouse list and detail URLs", () => {
     assert.equal(
       greenhouseListUrl("stripe"),
-      "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=false",
+      "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true",
     );
     assert.equal(
       greenhouseDetailUrl("stripe", "123"),
@@ -151,6 +151,12 @@ describe("salary parser", () => {
     assert.equal(k.minCents, 18000000);
     assert.equal(dollarsToCents(257000), 25700000);
     assert.equal(formatPay(16000000, 22000000, "USD", "posted"), "$160k–$220k");
+    assert.equal(formatPay(248000000, 310000000, "COP", "posted"), "COP 2480k–3100k");
+    const noise = parseSalaryFromText("An estimated $124 trillion of assets will be invested");
+    assert.equal(noise.source, "none");
+    const meta = parseSalaryFromText("$160,000 – $220,000");
+    assert.equal(meta.source, "inferred");
+    assert.ok(meta.minCents && meta.maxCents);
   });
 });
 

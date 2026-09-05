@@ -2,6 +2,7 @@ import type { BoardAdapter, RawJob } from "@/lib/ats/types";
 import { fetchJson, paceHost } from "@/lib/ats/fetch";
 import { greenhouseDetailUrl, greenhouseListUrl } from "@/lib/ats/urls";
 import { htmlToText } from "@/lib/sanitize";
+import { payFromMetaValue, type SalaryGuess } from "@/lib/salary";
 
 type GhMeta = { name?: string; value?: unknown };
 type GhJob = {
@@ -17,6 +18,9 @@ type GhJob = {
   company_name?: string;
 };
 
+const PAY_META_RE =
+  /salary|compensation|pay transparency|base pay|pay range|total base pay/i;
+
 function locationName(job: GhJob): string {
   if (typeof job.location === "string") return job.location;
   return job.location?.name ?? "";
@@ -29,6 +33,20 @@ function metaValue(job: GhJob, name: string): string | null {
   return null;
 }
 
+function payFromMetadata(job: GhJob): SalaryGuess {
+  let best: SalaryGuess = { minCents: null, maxCents: null, currency: "USD", source: "none" };
+  for (const row of job.metadata ?? []) {
+    const name = row?.name ?? "";
+    if (!PAY_META_RE.test(name)) continue;
+    // Prefer full ranges over single midpoints when both exist.
+    const guessed = payFromMetaValue(row.value);
+    if (!guessed.minCents && !guessed.maxCents) continue;
+    if (guessed.minCents && guessed.maxCents) return { ...guessed, source: "posted" };
+    if (!best.minCents && !best.maxCents) best = { ...guessed, source: "posted" };
+  }
+  return best;
+}
+
 function toRaw(job: GhJob): RawJob {
   const loc = locationName(job);
   const html = job.content ?? null;
@@ -36,6 +54,7 @@ function toRaw(job: GhJob): RawJob {
     job.departments?.[0]?.name ??
     metaValue(job, "Career Page Allocation") ??
     metaValue(job, "Skillset");
+  const pay = payFromMetadata(job);
   return {
     sourceId: String(job.id),
     title: job.title?.trim() || "Untitled role",
@@ -45,6 +64,10 @@ function toRaw(job: GhJob): RawJob {
     department,
     descriptionHtml: html,
     descriptionText: html ? htmlToText(html) : null,
+    salaryMinCents: pay.minCents,
+    salaryMaxCents: pay.maxCents,
+    salaryCurrency: pay.currency,
+    salarySource: pay.source,
     postedAt: job.first_published ?? job.updated_at ?? null,
     raw: {
       id: job.id,

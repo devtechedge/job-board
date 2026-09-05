@@ -24,6 +24,12 @@ Product polish and scale-up session. Live: [jobrow.vercel.app](https://jobrow.ve
 - New `/closed` page + `/api/closed` for roles that left a board after a successful crawl
 - Renamed Expired→Closed; `/expired` redirects; footer link removed
 
+### Pay (real ATS data only)
+- Greenhouse list now fetches `content=true` so posted ranges in job HTML can be inferred
+- Greenhouse metadata pay fields (Pay Transparency Range, Compensation Range, …) marked **posted**
+- Ashby falls back to compensation summary strings when structured tiers are missing
+- Safer text parse (skip “$124 trillion” noise); non-USD pay shows ISO code, never a fake `$` conversion
+
 ### Discovery
 - Sitemap includes all `/companies/{slug}` URLs (plus jobs + static pages)
 - Shared `pageHead` meta (description, OG/Twitter fields, canonical) on key routes

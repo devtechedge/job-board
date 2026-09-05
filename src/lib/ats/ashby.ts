@@ -1,7 +1,7 @@
 import type { BoardAdapter, RawJob, SalarySource } from "@/lib/ats/types";
 import { fetchJson, paceHost } from "@/lib/ats/fetch";
 import { ashbyListUrl } from "@/lib/ats/urls";
-import { dollarsToCents } from "@/lib/salary";
+import { dollarsToCents, parseSalaryFromText } from "@/lib/salary";
 import { htmlToText } from "@/lib/sanitize";
 
 type AshbyAddress = {
@@ -70,6 +70,22 @@ function payFrom(comp: AshbyComp | null | undefined): {
       currency: salary?.currencyCode ?? "USD",
       source: "posted",
     };
+  }
+  // Boards sometimes only expose a human summary string — parse it, still mark posted.
+  const summary =
+    comp?.scrapeableCompensationSalarySummary ||
+    comp?.compensationTierSummary ||
+    "";
+  if (summary) {
+    const guessed = parseSalaryFromText(summary);
+    if (guessed.minCents || guessed.maxCents) {
+      return {
+        min: guessed.minCents,
+        max: guessed.maxCents,
+        currency: guessed.currency,
+        source: "posted",
+      };
+    }
   }
   return { min: null, max: null, currency: "USD", source: "none" };
 }
