@@ -86,7 +86,7 @@ describe("job query from the public API querystring", () => {
     const query = parseJobsRequest(request);
     assert.equal(query.fn, "ml");
     assert.equal(query.page, 3);
-    assert.equal(query.sort, "last_seen");
+    assert.equal(query.sort, "posted");
   });
 });
 

@@ -101,9 +101,9 @@ export async function listLatestDiverseJobs(
               c.website as company_website, c.logo_url as company_logo_url,
               row_number() over (
                 partition by j.company_id
-                order by j.last_seen_at desc nulls last,
-                         j.posted_at desc nulls last,
-                         j.first_seen_at desc
+                order by j.posted_at desc nulls last,
+                         j.first_seen_at desc,
+                         j.last_seen_at desc nulls last
               ) as rn
        from jobs j
        join companies c on c.id = j.company_id
@@ -111,9 +111,9 @@ export async function listLatestDiverseJobs(
      )
      select * from ranked
      where rn = 1
-     order by last_seen_at desc nulls last,
-              posted_at desc nulls last,
-              first_seen_at desc
+     order by posted_at desc nulls last,
+              first_seen_at desc,
+              last_seen_at desc nulls last
      limit $1`,
     [limit],
   );
@@ -188,12 +188,14 @@ export async function searchJobs(query: JobQuery): Promise<SearchResult> {
 
   const order =
     query.sort === "first_seen"
-      ? "j.first_seen_at desc"
-      : query.sort === "salary"
-        ? "j.salary_min_cents desc nulls last, j.last_seen_at desc"
-        : query.sort === "title"
-          ? "j.title asc"
-          : "j.last_seen_at desc, j.posted_at desc nulls last, j.first_seen_at desc";
+      ? "j.first_seen_at desc, j.posted_at desc nulls last"
+      : query.sort === "last_seen"
+        ? "j.last_seen_at desc, j.posted_at desc nulls last, j.first_seen_at desc"
+        : query.sort === "salary"
+          ? "j.salary_min_cents desc nulls last, j.posted_at desc nulls last"
+          : query.sort === "title"
+            ? "j.title asc"
+            : "j.posted_at desc nulls last, j.first_seen_at desc, j.last_seen_at desc";
 
   const whereSql = where.join(" and ");
   const countRows = await sql.query<{ n: number }>(

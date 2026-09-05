@@ -26,7 +26,7 @@ export const SENIORITIES = [
 export const WORKPLACES = ["remote", "hybrid", "onsite"] as const;
 export const ATS_FILTERS = ["greenhouse", "ashby", "lever"] as const;
 export const POSTED_WINDOWS = ["1d", "3d", "7d", "14d", "30d"] as const;
-export const SORTS = ["last_seen", "first_seen", "salary", "title"] as const;
+export const SORTS = ["posted", "first_seen", "last_seen", "salary", "title"] as const;
 
 export type JobQuery = {
   q: string;
@@ -52,7 +52,7 @@ export const DEFAULT_QUERY: JobQuery = {
   posted: "",
   ats: "",
   company: "",
-  sort: "last_seen",
+  sort: "posted",
   page: 1,
 };
 
@@ -65,7 +65,7 @@ export function parseJobQuery(raw: Record<string, unknown> | undefined): JobQuer
   const sortRaw = str(s.sort);
   const sort = (SORTS as readonly string[]).includes(sortRaw)
     ? (sortRaw as JobQuery["sort"])
-    : "last_seen";
+    : "posted";
   const salaryRaw = s.salaryMin;
   const salaryMin =
     typeof salaryRaw === "number"
@@ -125,7 +125,7 @@ export function compactSearch(query: JobQuery): JobSearch {
   if (query.posted) out.posted = query.posted;
   if (query.ats) out.ats = query.ats;
   if (query.company) out.company = query.company;
-  if (query.sort && query.sort !== "last_seen") out.sort = query.sort;
+  if (query.sort && query.sort !== "posted") out.sort = query.sort;
   if (query.page > 1) out.page = query.page;
   return out;
 }

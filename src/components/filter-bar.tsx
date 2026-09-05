@@ -140,13 +140,15 @@ export function FilterBar({
           >
             {SORTS.map((item) => (
               <option key={item} value={item}>
-                {item === "last_seen"
-                  ? "Last seen"
+                {item === "posted"
+                  ? "Posted"
                   : item === "first_seen"
                     ? "First seen"
-                    : item === "salary"
-                      ? "Pay"
-                      : "Title"}
+                    : item === "last_seen"
+                      ? "Last seen"
+                      : item === "salary"
+                        ? "Pay"
+                        : "Title"}
               </option>
             ))}
           </select>
