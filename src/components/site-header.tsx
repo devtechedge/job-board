@@ -7,7 +7,7 @@ import { listWatched } from "@/lib/watchlist";
 const NAV = [
   { to: "/", label: "Jobs" },
   { to: "/jobs", label: "Search" },
-  { to: "/expired", label: "Expired" },
+  { to: "/closed", label: "Closed" },
   { to: "/companies", label: "Companies" },
   { to: "/about", label: "About" },
 ] as const;

@@ -59,7 +59,7 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 ## What you can do
 
 - **Jobs** (`/`)
-- **Expired** (`/expired`) — roles removed after a successful crawl (filled or pulled) — date, open count, filters, latest rows, functions, boards
+- **Closed** (`/closed`) — roles removed after a successful crawl (filled or pulled) — date, open count, filters, latest rows, functions, boards
 - Company marks next to every listing (site icon, initials if the icon fails)
 - **Search** (`/jobs`) — full paginated table of the US tech slice
 - **Companies** (`/companies`) — 34 boards, US-tech count vs listed count, last successful fetch

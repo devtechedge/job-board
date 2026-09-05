@@ -15,8 +15,8 @@ function AboutPage() {
           <p>
             Jobrow lists public Greenhouse, Ashby, and Lever JSON. We are not the employer. Apply
             leaves this site. A role drops when a successful crawl no longer sees it. Those land on{' '}
-            <Link to="/expired" className="text-pine underline underline-offset-4">
-              Expired
+            <Link to="/closed" className="text-pine underline underline-offset-4">
+              Closed
             </Link>
             .
           </p>

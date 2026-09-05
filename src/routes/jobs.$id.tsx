@@ -81,7 +81,7 @@ function JobPage() {
             size={22}
           />
           {job.company_name}
-          {job.status === "closed" ? " · Expired" : ""}
+          {job.status === "closed" ? " · Closed" : ""}
         </p>
         <dl className="mt-6 grid grid-cols-2 gap-3 border border-rule bg-inset p-4 text-sm sm:grid-cols-3">
           <Fact label="Pay" value={pay} />

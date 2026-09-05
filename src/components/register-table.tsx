@@ -17,7 +17,7 @@ export function RegisterTable({
 }: {
   jobs: JobListItem[];
   empty?: string;
-  variant?: "open" | "expired";
+  variant?: "open" | "closed";
 }) {
   if (!jobs.length) {
     return (
@@ -34,7 +34,7 @@ export function RegisterTable({
         <span>Company</span>
         <span>Pay</span>
         <span>Workplace</span>
-        <span>{variant === "expired" ? "Expired" : "Posted"}</span>
+        <span>{variant === "closed" ? "Closed" : "Posted"}</span>
         <span>Source</span>
       </div>
       <ul>
@@ -46,7 +46,7 @@ export function RegisterTable({
   );
 }
 
-function RegisterRow({ job, variant = "open" }: { job: JobListItem; variant?: "open" | "expired" }) {
+function RegisterRow({ job, variant = "open" }: { job: JobListItem; variant?: "open" | "closed" }) {
   const [open, setOpen] = useState(false);
   const pay = formatPay(
     job.salary_min_cents,
@@ -54,7 +54,7 @@ function RegisterRow({ job, variant = "open" }: { job: JobListItem; variant?: "o
     job.salary_currency,
     job.salary_source,
   );
-  const when = ago(variant === "expired" ? (job.closed_at ?? job.last_seen_at) : job.first_seen_at);
+  const when = ago(variant === "closed" ? (job.closed_at ?? job.last_seen_at) : job.first_seen_at);
 
   return (
     <li className="border-b border-rule last:border-b-0">
