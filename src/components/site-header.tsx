@@ -29,8 +29,8 @@ export function SiteHeader({ current }: { current?: string }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-3" aria-label="Jobrow home">
           <Wordmark />
-          <span className="hidden h-5 w-px shrink-0 bg-rule-strong sm:block" aria-hidden="true" />
-          <span className="hidden truncate font-serif text-base italic text-muted sm:inline">
+          <span className="hidden h-6 w-px shrink-0 bg-rule-strong sm:block" aria-hidden="true" />
+          <span className="hidden truncate font-serif text-lg italic text-muted sm:inline">
             Still open.
           </span>
         </Link>
