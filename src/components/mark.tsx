@@ -17,8 +17,8 @@ export function HashMark({ className }: { className?: string }) {
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <HashMark className="size-5" />
-      <span className="font-serif text-xl font-semibold tracking-tight">Jobrow</span>
+      <HashMark className="size-6" />
+      <span className="font-serif text-2xl font-semibold tracking-tight">Jobrow</span>
     </span>
   );
 }
