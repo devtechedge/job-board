@@ -118,7 +118,7 @@ Do not scrape career marketing HTML when the board JSON exists. Do not scrape ot
 | Data | Neon Postgres in production; embedded PGLite when `DATABASE_URL` is omitted (local) |
 | Sources | Greenhouse, Ashby, Lever public JSON (Workable adapter ready) |
 | Host | Vercel Hobby |
-| Crawl | GitHub Action, twice daily, `POST /api/cron/crawl` with `Authorization: Bearer` |
+| Crawl | GitHub Action, 4× daily (8 shards), `POST /api/cron/crawl` with `Authorization: Bearer` |
 | Security | CSP and related headers in [vercel.json](vercel.json); see [SECURITY.md](SECURITY.md) |
 
 ---

@@ -330,7 +330,15 @@ export async function loadEnabledCompanies(): Promise<CompanyRow[]> {
 
 export async function crawlShard(shard: number, of: number): Promise<CrawlRunResult> {
   const all = await loadEnabledCompanies();
-  const slice = all.filter((_, i) => i % of === shard);
+  // Stable name order for sharding, then oldest last_ok first inside the shard
+  // so a timed-out Hobby invoke still refreshes the stalest boards.
+  const slice = all
+    .filter((_, i) => i % of === shard)
+    .sort((a, b) => {
+      const at = a.last_ok_at ? new Date(a.last_ok_at).getTime() : 0;
+      const bt = b.last_ok_at ? new Date(b.last_ok_at).getTime() : 0;
+      return at - bt;
+    });
   return crawlCompanies(slice, { shard, shardOf: of });
 }
 

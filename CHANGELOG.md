@@ -2,6 +2,10 @@
 
 All notable changes to Jobrow are documented here.
 
+## 2026-09-06
+
+- Crawl freshness: 4× daily GitHub Action, 8 shards with retries, fail on board errors; sitemap `lastmod` from last crawl / last seen; `/api/health` reports `staleBoards` + `lastOkAt`
+
 ## [0.2.0] — 2026-09-05
 
 Product polish and scale-up session. Live: [jobrow.vercel.app](https://jobrow.vercel.app).

@@ -34,7 +34,7 @@ function SourcingPage() {
             </li>
           </ul>
           <p>
-            Refresh: twice a day (scheduled crawl). A role is marked closed when it is missing from a
+            Refresh: several times a day (scheduled crawl). A role is marked closed when it is missing from a
             successful board fetch. A failed fetch (timeout, 429, 5xx, unreadable body) does not close
             that company’s open set — we keep the last good snapshot and log the error.
           </p>

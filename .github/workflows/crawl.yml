@@ -2,23 +2,56 @@ name: crawl
 
 on:
   schedule:
-    - cron: "20 13 * * *"
+    # Four times daily (UTC). GH Actions may delay schedules; denser cadence
+    # keeps boards fresh even when one run slips.
     - cron: "20 1 * * *"
+    - cron: "20 7 * * *"
+    - cron: "20 13 * * *"
+    - cron: "20 19 * * *"
   workflow_dispatch:
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
     steps:
-      - name: Crawl shard 0
+      - name: Crawl shards
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           APP_URL: ${{ secrets.APP_URL }}
         run: |
-          test -n "$APP_URL"
-          for shard in 0 1 2 3; do
-            curl -fsS -X POST "$APP_URL/api/cron/crawl?shard=$shard&of=4" \
-              -H "Authorization: Bearer $CRON_SECRET" \
-              --max-time 25
+          set -euo pipefail
+          test -n "${APP_URL:-}"
+          test -n "${CRON_SECRET:-}"
+          # More shards = fewer companies per Hobby invoke (≈10s limit).
+          OF=8
+          for shard in $(seq 0 $((OF - 1))); do
+            ok=0
+            for attempt in 1 2 3; do
+              echo "shard $shard/$OF attempt $attempt"
+              body=$(curl -fsS -X POST "$APP_URL/api/cron/crawl?shard=$shard&of=$OF" \
+                -H "Authorization: Bearer $CRON_SECRET" \
+                -H "Accept: application/json" \
+                --max-time 55) || {
+                echo "curl failed for shard $shard attempt $attempt"
+                sleep $((attempt * 4))
+                continue
+              }
+              echo "$body" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+fail=int(d.get('companiesFail') or 0)
+okn=int(d.get('companiesOk') or 0)
+print(f\"ok={okn} fail={fail} upserted={d.get('jobsUpserted')} closed={d.get('jobsClosed')} opened={d.get('jobsOpened')}\")
+if fail:
+    err=d.get('errorSample') or 'companiesFail>0'
+    raise SystemExit(f'shard failed: {err}')
+"
+              ok=1
+              break
+            done
+            if [ "$ok" != "1" ]; then
+              echo "giving up on shard $shard"
+              exit 1
+            fi
             sleep 2
           done
