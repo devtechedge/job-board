@@ -5,7 +5,7 @@ Public register of **still-open US tech roles**, read from employer ATS JSON —
 Tagline: **Still open.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://jobrow.vercel.app)
-[![Boards](https://img.shields.io/badge/Boards-34-1F6B4A)](https://jobrow.vercel.app/companies)
+[![Boards](https://img.shields.io/badge/Boards-50-1F6B4A)](https://jobrow.vercel.app/companies)
 [![TanStack Start](https://img.shields.io/badge/TanStack%20Start-black)](https://tanstack.com/start)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -16,7 +16,7 @@ Tagline: **Still open.**
 
 **https://jobrow.vercel.app**
 
-Production is **Neon Postgres** on Vercel Hobby. The board currently holds **2,000+ open US tech roles across 34 companies**. Apply always leaves Jobrow for the employer ATS. Public listings — not an employer, recruiter, or agency.
+Production is **Neon Postgres** on Vercel Hobby. The board currently holds **5,000+ open US tech roles across 50 companies**. Apply always leaves Jobrow for the employer ATS. Public listings — not an employer, recruiter, or agency.
 
 `GET /api/health` reports `{ db: "neon", openJobs, pendingBoards }`.
 
@@ -29,8 +29,9 @@ Unauthenticated read API for the same US-tech slice Jobs shows (`status=open`, `
 - `GET /api/companies` — boards
 - `GET /api/companies/:slug` — board plus open roles
 - `GET /api/home` — register KPIs (open count, boards, first-seen 24h, last crawl, functions, boards) plus a latest page
+- `GET /api/closed` — roles closed after a successful crawl
 
-`/api/health`, `/api/desk`, cron, and admin are unchanged. Product auth stays off. Apply URLs are employer ATS https links.
+`/api/health`, `/api/desk`, cron, and admin are unchanged. Product auth stays off. Apply URLs are employer ATS https links. Discovery helpers: [`/sitemap.xml`](https://jobrow.vercel.app/sitemap.xml), [`/llms.txt`](https://jobrow.vercel.app/llms.txt).
 
 ### Native app
 
@@ -58,11 +59,12 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 
 ## What you can do
 
-- **Jobs** (`/`)
-- **Closed** (`/closed`) — roles removed after a successful crawl (filled or pulled) — date, open count, filters, latest rows, functions, boards
+- **Jobs** (`/`) — Latest (8 roles, one company per row), filters, KPIs, Companies strip (8)
+- **Closed** (`/closed`) — roles removed after a successful crawl (filled or pulled)
 - Company marks next to every listing (site icon, initials if the icon fails)
 - **Search** (`/jobs`) — full paginated table of the US tech slice
-- **Companies** (`/companies`) — 34 boards, US-tech count vs listed count, last successful fetch
+- **Companies** (`/companies`) — 50 boards, US-tech count vs listed count, last successful fetch
+- **Saved** — browser watchlist count in the header (nav: Jobs · Search · Companies · About · Saved · Closed)
 - **Role** (`/jobs/:id`) — summary, pay, workplace, posting HTML, Apply (leaves the site)
 - **Contact** (`/contact`) — corrections and legal notes (not applications)
 - **Add a board** (`/employers`) — public Greenhouse / Ashby / Lever / Workable token
@@ -77,14 +79,14 @@ A role **drops when a successful crawl no longer sees it**. A failed fetch does 
 
 ---
 
-## Registry (34)
+## Registry (50)
 
 Seeded from [data/companies.csv](data/companies.csv) and [src/lib/seed-companies.ts](src/lib/seed-companies.ts). Tokens were confirmed against live public board JSON.
 
 | ATS | Companies |
 |-----|-----------|
-| Greenhouse (24) | Stripe, Anthropic, Airbnb, Coinbase, Discord, Figma, Cloudflare, Databricks, Vercel, Dropbox, Robinhood, Block, Lyft, Pinterest, Reddit, Twilio, Datadog, MongoDB, Instacart, Roblox, GitLab, Grafana Labs, Asana, Okta |
-| Ashby (7) | OpenAI, Ramp, Linear, Notion, Cursor, Perplexity, Supabase |
+| Greenhouse (36) | Stripe, Anthropic, Airbnb, Coinbase, Discord, Figma, Cloudflare, Databricks, Vercel, Dropbox, Robinhood, Block, Lyft, Pinterest, Reddit, Twilio, Datadog, MongoDB, Instacart, Roblox, GitLab, Grafana Labs, Asana, Okta, Alpaca, Affirm, Brex, Scale AI, Anduril, HubSpot, DoorDash, Elastic, Glean, Chime, Flexport, Samsara |
+| Ashby (11) | OpenAI, Ramp, Linear, Notion, Cursor, Perplexity, Supabase, Plaid, Snowflake, Confluent, Sentry |
 | Lever (3) | Palantir, Wealthfront, Spotify |
 
 US-eligible **tech** titles stay on Jobs. Sales, finance, and non-US postings on the same board are ignored. The companies table shows both **US tech** and **listed** (raw JSON rows on the last good fetch).
@@ -122,7 +124,7 @@ npm install
 npm run dev
 ```
 
-Without `DATABASE_URL` the app uses embedded PGLite and seeds the 34 boards on first load.
+Without `DATABASE_URL` the app uses embedded PGLite and seeds the 50 boards on first load.
 
 ```bash
 npm test

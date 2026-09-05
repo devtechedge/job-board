@@ -17,7 +17,7 @@ We will acknowledge valid reports and patch production before any write-up.
 
 ## What this app is
 
-Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workable). Production is Neon Postgres with 34 seeded boards. It is not an employer, recruiter, or resume database. Search does not require an account. Apply leaves this site.
+Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workable). Production is Neon Postgres with 50 seeded boards. It is not an employer, recruiter, or resume database. Search does not require an account. Apply leaves this site.
 
 ## In scope
 

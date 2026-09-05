@@ -1,5 +1,7 @@
 {
-  "title": "Jobrow",
+  "description": "Public register of still-open US tech roles from employer ATS boards. Not an employer.",
   "card": "custom",
-  "color": "1F6B4A"
+  "color": "1F6B4A",
+  "image": "/og.jpg",
+  "origin": "https://jobrow.vercel.app"
 }

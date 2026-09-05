@@ -297,6 +297,16 @@ export function titleFromDocument(html) {
   return match ? unescapeHtml(match[1]).trim() : "";
 }
 
+export function descriptionFromDocument(html) {
+  const s = String(html ?? "");
+  const named = s.match(
+    /<meta\b[^>]*\bname\s*=\s*["']description["'][^>]*\bcontent\s*=\s*["']([^"']*)["'][^>]*>/i,
+  ) || s.match(
+    /<meta\b[^>]*\bcontent\s*=\s*["']([^"']*)["'][^>]*\bname\s*=\s*["']description["'][^>]*>/i,
+  );
+  return named ? unescapeHtml(named[1]).trim() : "";
+}
+
 export function resolveOgTitle(
   site = {},
   appName = DEFAULT_APP_NAME,
@@ -338,6 +348,7 @@ export function grokOgHeadTags({
   appName = DEFAULT_APP_NAME,
   site = {},
   documentTitle = "",
+  documentDescription = "",
   cwd = process.cwd(),
 } = {}) {
   const title = resolveOgTitle(site, appName, host, documentTitle);
@@ -345,31 +356,61 @@ export function grokOgHeadTags({
   const tags = [
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}">`,
   ];
-  const description = String(site.description ?? "").trim();
+  const description =
+    String(documentDescription ?? "").trim() ||
+    String(site.description ?? "").trim();
   if (description) {
     tags.push(`<meta property="og:description" content="${escapeHtml(description)}">`);
+    tags.push(`<meta name="twitter:description" content="${escapeHtml(description)}">`);
   }
   if (String(site.type ?? "").toLowerCase() === "x:game") {
     tags.push(`<meta property="og:type" content="x:game">`);
+  } else {
+    tags.push(`<meta property="og:type" content="website">`);
   }
-  if (publicHost) {
-    const asset = resolveOgCardAsset(site, cwd);
+  tags.push(`<meta property="og:site_name" content="${escapeHtml(appName)}">`);
+
+  const asset = resolveOgCardAsset(site, cwd);
+  const bakedOrigin = String(site.origin ?? "").trim().replace(/\/$/, "");
+  // Custom cards on *.vercel.app: Host is rejected by resolvePublicHost, so
+  // allow an explicit site.origin (baked from site.json) for absolute og:image.
+  let imageOrigin = publicHost ? `https://${publicHost}` : "";
+  if (!imageOrigin && asset && bakedOrigin) {
+    const reqHost = String(host ?? "").split(",")[0].trim().split(":")[0].toLowerCase();
+    if (isVercelSystemHost(reqHost)) {
+      try {
+        const u = new URL(bakedOrigin.includes("://") ? bakedOrigin : `https://${bakedOrigin}`);
+        imageOrigin = u.origin;
+      } catch {
+        imageOrigin = "";
+      }
+    }
+  }
+  if (imageOrigin) {
     const custom = Boolean(asset);
     let image = custom
-      ? `https://${publicHost}${asset.startsWith("/") ? asset : `/${asset}`}`
-      : `${ogServiceUrl()}/v1/card.png?host=${encodeURIComponent(publicHost)}&title=${encodeURIComponent(title)}`;
-    const color = !custom ? placeholderCardColor(site) : "";
-    if (color) image += `&color=${encodeURIComponent(color)}`;
-    tags.push(`<meta property="og:image" content="${escapeHtml(image)}">`);
-    tags.push(`<meta property="og:image:width" content="1200">`);
-    tags.push(`<meta property="og:image:height" content="630">`);
-    const banner = String(site.banner ?? "").trim();
-    if (banner) {
-      const bannerUrl = `https://${publicHost}${banner.startsWith("/") ? banner : `/${banner}`}`;
-      tags.push(`<meta property="x:game:image" content="${escapeHtml(bannerUrl)}">`);
-      tags.push(`<meta property="x:game:image:width" content="1200">`);
-      tags.push(`<meta property="x:game:image:height" content="264">`);
+      ? `${imageOrigin}${asset.startsWith("/") ? asset : `/${asset}`}`
+      : publicHost
+        ? `${ogServiceUrl()}/v1/card.png?host=${encodeURIComponent(publicHost)}&title=${encodeURIComponent(title)}`
+        : "";
+    if (image) {
+      const color = !custom && publicHost ? placeholderCardColor(site) : "";
+      if (color) image += `&color=${encodeURIComponent(color)}`;
+      tags.push(`<meta property="og:image" content="${escapeHtml(image)}">`);
+      tags.push(`<meta property="og:image:width" content="1200">`);
+      tags.push(`<meta property="og:image:height" content="630">`);
+      tags.push(`<meta name="twitter:image" content="${escapeHtml(image)}">`);
+    }
+    if (publicHost) {
+      const banner = String(site.banner ?? "").trim();
+      if (banner) {
+        const bannerUrl = `https://${publicHost}${banner.startsWith("/") ? banner : `/${banner}`}`;
+        tags.push(`<meta property="x:game:image" content="${escapeHtml(bannerUrl)}">`);
+        tags.push(`<meta property="x:game:image:width" content="1200">`);
+        tags.push(`<meta property="x:game:image:height" content="264">`);
+      }
     }
   }
   return tags;
@@ -442,9 +483,17 @@ export function injectGrokPwaHead(html, ctx = {}) {
     })
     .map(([, tag]) => tag);
 
+  const documentDescription = descriptionFromDocument(html);
   next = insertAfterHeadOpen(
     next,
-    grokOgHeadTags({ host, appName, site, documentTitle, cwd }).join(""),
+    grokOgHeadTags({
+      host,
+      appName,
+      site,
+      documentTitle,
+      documentDescription,
+      cwd,
+    }).join(""),
   );
 
   if (!next.includes("/grok-app-builder/extensions.js")) {
