@@ -2,8 +2,7 @@ name: crawl
 
 on:
   schedule:
-    # Four times daily (UTC). GH Actions may delay schedules; denser cadence
-    # keeps boards fresh even when one run slips.
+    # Four times daily (UTC). GH may delay schedules; denser cadence keeps boards fresh.
     - cron: "20 1 * * *"
     - cron: "20 7 * * *"
     - cron: "20 13 * * *"
@@ -22,35 +21,39 @@ jobs:
           set -euo pipefail
           test -n "${APP_URL:-}"
           test -n "${CRON_SECRET:-}"
-          # More shards = fewer companies per Hobby invoke (≈10s limit).
+          # More shards = fewer companies per Hobby invoke (~10s limit).
           OF=8
           for shard in $(seq 0 $((OF - 1))); do
             ok=0
             for attempt in 1 2 3; do
-              echo "shard $shard/$OF attempt $attempt"
-              body=$(curl -fsS -X POST "$APP_URL/api/cron/crawl?shard=$shard&of=$OF" \
-                -H "Authorization: Bearer $CRON_SECRET" \
+              echo "shard ${shard}/${OF} attempt ${attempt}"
+              code=$(curl -sS -o /tmp/crawl-shard.json -w "%{http_code}" -X POST \
+                "${APP_URL}/api/cron/crawl?shard=${shard}&of=${OF}" \
+                -H "Authorization: Bearer ${CRON_SECRET}" \
                 -H "Accept: application/json" \
-                --max-time 55) || {
-                echo "curl failed for shard $shard attempt $attempt"
+                --max-time 55 || true)
+              echo "http ${code}"
+              if [ "${code}" != "200" ]; then
+                echo "curl/http failed for shard ${shard} attempt ${attempt}"
+                cat /tmp/crawl-shard.json || true
                 sleep $((attempt * 4))
                 continue
-              }
-              echo "$body" | python3 -c "
-import json,sys
-d=json.load(sys.stdin)
-fail=int(d.get('companiesFail') or 0)
-okn=int(d.get('companiesOk') or 0)
-print(f\"ok={okn} fail={fail} upserted={d.get('jobsUpserted')} closed={d.get('jobsClosed')} opened={d.get('jobsOpened')}\")
+              fi
+              python3 <<'PY'
+import json
+from pathlib import Path
+d = json.loads(Path("/tmp/crawl-shard.json").read_text())
+fail = int(d.get("companiesFail") or 0)
+okn = int(d.get("companiesOk") or 0)
+print(f"ok={okn} fail={fail} upserted={d.get('jobsUpserted')} closed={d.get('jobsClosed')} opened={d.get('jobsOpened')}")
 if fail:
-    err=d.get('errorSample') or 'companiesFail>0'
-    raise SystemExit(f'shard failed: {err}')
-"
+    raise SystemExit(d.get("errorSample") or "companiesFail>0")
+PY
               ok=1
               break
             done
-            if [ "$ok" != "1" ]; then
-              echo "giving up on shard $shard"
+            if [ "${ok}" != "1" ]; then
+              echo "giving up on shard ${shard}"
               exit 1
             fi
             sleep 2
