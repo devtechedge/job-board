@@ -30,6 +30,17 @@ function AboutPage() {
           <p>
             Search is free. Checkout is not live. Saved jobs stay in the browser.
           </p>
+          <p>
+            Looking for blockchain / crypto / Web3 roles instead? Sister board{" "}
+            <a
+              href="https://lattice-devtechedge1.vercel.app"
+              className="text-pine underline underline-offset-4"
+              rel="noopener noreferrer"
+            >
+              Lattice
+            </a>{" "}
+            lists live openings from crypto teams’ public ATS boards.
+          </p>
           <p className="text-sm">
             <Link to="/legal/sourcing" className="text-pine underline underline-offset-4">
               Sourcing

@@ -35,6 +35,13 @@ export function SiteFooter() {
           <Link to="/about" className="hover:text-ink">
             About
           </Link>
+          <a
+            href="https://lattice-devtechedge1.vercel.app"
+            className="hover:text-ink"
+            rel="noopener noreferrer"
+          >
+            Lattice — Web3 jobs
+          </a>
           <Link to="/admin" className="hover:text-ink">
             Admin
           </Link>

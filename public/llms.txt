@@ -26,3 +26,8 @@ Jobrow lists roles that are still open on the company board. Listings are US-tec
 
 - Sitemap: https://jobrow.vercel.app/sitemap.xml
 - Source: https://github.com/devtechedge/job-board
+
+## Related
+
+- Lattice (Web3 / crypto jobs): https://lattice-devtechedge1.vercel.app/
+- Lattice source: https://github.com/devtechedge/lattice

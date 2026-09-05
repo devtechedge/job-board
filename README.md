@@ -39,6 +39,12 @@ An Expo (Android + iOS) client lives in [`mobile/`](mobile/). It is a separate p
 
 ---
 
+## Sister product
+
+**[Lattice](https://lattice-devtechedge1.vercel.app)** — free board for **blockchain, crypto, and Web3 jobs** from live employer ATS boards (Coinbase, Binance, Ripple, and more). Jobrow stays US tech; Lattice covers Web3 careers. Source: [devtechedge/lattice](https://github.com/devtechedge/lattice).
+
+---
+
 ## Screenshots
 
 | Jobs | Search |
