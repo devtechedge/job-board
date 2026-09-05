@@ -40,7 +40,7 @@ export function SiteFooter() {
             className="hover:text-ink"
             rel="noopener noreferrer"
           >
-            Lattice — Web3 jobs
+            Lattice - Web3 jobs
           </a>
           <Link to="/admin" className="hover:text-ink">
             Admin
