@@ -3,6 +3,7 @@ import { PendingRegister } from "@/components/pending-register";
 import { RegisterTable } from "@/components/register-table";
 import { AppShell } from "@/components/site-footer";
 import { listClosedJobsFn } from "@/lib/jobs.functions";
+import { pageHead } from "@/lib/seo";
 
 type ClosedSearch = { page: number };
 
@@ -19,16 +20,13 @@ export const Route = createFileRoute("/closed")({
   },
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) => listClosedJobsFn({ data: { page: deps.page } }),
-  head: () => ({
-    meta: [
-      { title: "Closed — Jobrow" },
-      {
-        name: "description",
-        content:
-          "Roles Jobrow listed that later left the employer board after a successful crawl.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Closed — Jobrow",
+      description:
+        "Roles Jobrow listed that later left the employer board after a successful crawl.",
+      path: "/closed",
+    }),
   pendingComponent: PendingRegister,
   component: ClosedPage,
 });

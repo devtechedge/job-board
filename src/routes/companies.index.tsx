@@ -5,10 +5,16 @@ import { AppShell } from "@/components/site-footer";
 import { SourceBadge } from "@/components/source-badge";
 import { listCompaniesFn } from "@/lib/jobs.functions";
 import { ago } from "@/lib/format";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/companies/")({
   loader: () => listCompaniesFn(),
-  head: () => ({ meta: [{ title: "Companies — Jobrow" }] }),
+  head: () =>
+    pageHead({
+      title: "Companies — Jobrow",
+      description: "US tech companies with still-open roles on Jobrow.",
+      path: "/companies",
+    }),
   component: CompaniesPage,
 });
 

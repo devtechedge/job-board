@@ -5,8 +5,11 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { listOpenJobIds } = await import("@/lib/search");
-        const jobs = await listOpenJobIds(5000);
+        const { listOpenJobIds, listEnabledCompanySlugs } = await import("@/lib/search");
+        const [jobs, companySlugs] = await Promise.all([
+          listOpenJobIds(5000),
+          listEnabledCompanySlugs(),
+        ]);
         const origin = sitePublicOrigin();
         const urls = [
           "",
@@ -21,6 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "/legal/terms",
           "/legal/privacy",
           "/legal/sourcing",
+          ...companySlugs.map((slug) => `/companies/${xmlEscape(slug)}`),
           ...jobs.map((job) => `/jobs/${xmlEscape(job.id)}`),
         ];
         const body = `<?xml version="1.0" encoding="UTF-8"?>

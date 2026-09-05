@@ -1,0 +1,28 @@
+# Jobrow
+
+> Public register of still-open US tech roles scraped from employer ATS boards (Greenhouse, Ashby, Lever). Not a marketplace and not an employer.
+
+Jobrow lists roles that are still open on the company board. Listings are US-tech filtered. Apply on the employer site.
+
+## Site
+
+- Home: https://jobrow.vercel.app/
+- Search: https://jobrow.vercel.app/jobs
+- Companies: https://jobrow.vercel.app/companies
+- Closed roles: https://jobrow.vercel.app/closed
+- About: https://jobrow.vercel.app/about
+- Contact: https://jobrow.vercel.app/contact
+
+## API (JSON)
+
+- Open jobs: https://jobrow.vercel.app/api/jobs
+- Companies: https://jobrow.vercel.app/api/companies
+- Home digest: https://jobrow.vercel.app/api/home
+- Closed roles: https://jobrow.vercel.app/api/closed
+- Single job: https://jobrow.vercel.app/api/jobs/{id}
+- Company + roles: https://jobrow.vercel.app/api/companies/{slug}
+
+## Optional
+
+- Sitemap: https://jobrow.vercel.app/sitemap.xml
+- Source: https://github.com/devtechedge/job-board

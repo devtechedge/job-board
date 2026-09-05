@@ -9,20 +9,24 @@ import { ago, workplaceLabel } from "@/lib/format";
 import { getJobFn } from "@/lib/jobs.functions";
 import { formatPay } from "@/lib/salary";
 import { jsonForScript } from "@/lib/safe";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/jobs/$id")({
   loader: ({ params }) => getJobFn({ data: { id: params.id } }),
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.title} at ${loaderData.company_name} — Jobrow` },
-          {
-            name: "description",
-            content: loaderData.summary ?? `${loaderData.title} at ${loaderData.company_name}`,
-          },
-        ]
-      : [{ title: "Role — Jobrow" }],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData) {
+      return pageHead({ title: "Role — Jobrow", path: "/jobs" });
+    }
+    const title = `${loaderData.title} at ${loaderData.company_name} — Jobrow`;
+    const description =
+      loaderData.summary ?? `${loaderData.title} at ${loaderData.company_name}. Still open on Jobrow.`;
+    return pageHead({
+      title,
+      description,
+      path: `/jobs/${loaderData.id}`,
+      ogType: "article",
+    });
+  },
   component: JobPage,
 });
 

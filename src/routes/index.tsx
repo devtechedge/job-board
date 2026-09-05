@@ -6,18 +6,20 @@ import { RegisterTable } from "@/components/register-table";
 import { AppShell } from "@/components/site-footer";
 import { homePageFn } from "@/lib/jobs.functions";
 import { compactSearch, parseJobQuery, type JobSearch } from "@/lib/query";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): JobSearch =>
     compactSearch(parseJobQuery(search)),
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) => homePageFn({ data: parseJobQuery(deps) }),
-  head: () => ({
-    meta: [
-      { title: "Jobrow" },
-      { name: "description", content: "US tech roles still on the employer ATS board." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Jobrow — still-open US tech roles",
+      description:
+        "Browse still-open US tech jobs from employer ATS boards. Public listings, not an employer.",
+      path: "/",
+    }),
   pendingComponent: PendingRegister,
   component: Home,
 });

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+
 Sitemap: https://jobrow.vercel.app/sitemap.xml
+# Machine-readable site summary for AI assistants
+# https://jobrow.vercel.app/llms.txt

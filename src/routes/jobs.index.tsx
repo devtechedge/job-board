@@ -5,15 +5,19 @@ import { RegisterTable } from "@/components/register-table";
 import { AppShell } from "@/components/site-footer";
 import { listJobsFn } from "@/lib/jobs.functions";
 import { compactSearch, parseJobQuery, type JobSearch } from "@/lib/query";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/jobs/")({
   validateSearch: (search: Record<string, unknown>): JobSearch =>
     compactSearch(parseJobQuery(search)),
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) => listJobsFn({ data: parseJobQuery(deps) }),
-  head: () => ({
-    meta: [{ title: "Search — Jobrow" }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Search — Jobrow",
+      description: "Search still-open US tech roles across employer ATS boards.",
+      path: "/jobs",
+    }),
   pendingComponent: PendingRegister,
   component: JobsIndex,
 });

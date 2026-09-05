@@ -1,8 +1,15 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About — Jobrow" }] }),
+  head: () =>
+    pageHead({
+      title: "About — Jobrow",
+      description:
+        "Jobrow is a public register of still-open US tech roles from employer ATS boards.",
+      path: "/about",
+    }),
   component: AboutPage,
 });
 

@@ -354,6 +354,15 @@ export async function listCompanyJobs(companyId: string): Promise<JobListItem[]>
   return rows.map(mapJob);
 }
 
+
+export async function listEnabledCompanySlugs(): Promise<string[]> {
+  const sql = await getSql();
+  const rows = await sql.query<{ slug: string }>(
+    `select slug from companies where enabled = true order by slug asc`,
+  );
+  return rows.map((r) => r.slug);
+}
+
 export async function listOpenJobIds(limit = 5000): Promise<Array<{ id: string; last_seen_at: unknown }>> {
   const sql = await getSql();
   return sql.query(
