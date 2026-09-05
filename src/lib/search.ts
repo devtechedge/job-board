@@ -443,7 +443,7 @@ export async function homeDigest(): Promise<HomeDigest> {
      where c.enabled = true
      group by c.id
      order by open_count desc, c.name asc
-     limit 12`,
+     limit 8`,
   );
   return {
     openCount: stats?.openCount ?? 0,

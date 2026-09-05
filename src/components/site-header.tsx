@@ -7,7 +7,6 @@ import { listWatched } from "@/lib/watchlist";
 const NAV = [
   { to: "/", label: "Jobs" },
   { to: "/jobs", label: "Search" },
-  { to: "/closed", label: "Closed" },
   { to: "/companies", label: "Companies" },
   { to: "/about", label: "About" },
 ] as const;
@@ -50,6 +49,16 @@ export function SiteHeader({ current }: { current?: string }) {
             </Link>
           ))}
           <span className="text-muted">Saved {watched}</span>
+          <Link
+            to="/closed"
+            className={
+              current === "/closed"
+                ? "font-medium text-pine underline decoration-from-font underline-offset-4"
+                : "text-ink hover:text-pine"
+            }
+          >
+            Closed
+          </Link>
           <ThemeToggle />
         </nav>
       </div>
