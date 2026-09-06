@@ -2,9 +2,7 @@ export type Ats =
   | "greenhouse"
   | "ashby"
   | "lever"
-  | "workable"
-  | "rippling"
-  | "gem";
+  | "workable";
 
 export type Workplace = "remote" | "hybrid" | "onsite" | "unknown";
 export type SalarySource = "posted" | "inferred" | "none";
@@ -91,8 +89,6 @@ export const ATS_HOST_SUFFIXES = [
   "ashbyhq.com",
   "lever.co",
   "workable.com",
-  "rippling.com",
-  "gem.com",
   // Greenhouse white-label used by Lyft and others
   "careerpuck.com",
 ];

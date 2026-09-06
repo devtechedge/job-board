@@ -44,11 +44,3 @@ export const workableAdapter: BoardAdapter = {
     });
   },
 };
-
-export const stubAdapter = (name: "rippling" | "gem"): BoardAdapter => ({
-  name,
-  listUrl: () => "",
-  async list() {
-    throw new Error(`${name} public JSON adapter is not wired in v1`);
-  },
-});
