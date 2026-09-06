@@ -1,5 +1,7 @@
 # Security Policy
 
+**Date:** 2026-09-06  
+
 ## Reporting a vulnerability
 
 Do **not** open a public GitHub issue for a security report.
