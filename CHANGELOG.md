@@ -2,6 +2,11 @@
 
 All notable changes to Jobrow are documented here.
 
+## 2026-09-06 (security + docs)
+
+- Security: fail-closed admin/cron secrets in production (reject weak/`change-me`), admin unlock rate-limited by client IP, public JSON API per-IP throttle, HTTPS-only Apply links, HSTS + stronger frame/CSP headers, robots disallow for `/api/cron` + `/api/desk`, admin `noindex`
+- Docs: SECURITY.md + README discovery/security status brought current (long-tail titles, sitemap lastmod, 4× crawl, GSC/Bing)
+
 ## 2026-09-06
 
 - Crawl freshness: 4× daily GitHub Action, 8 shards with retries, fail on board errors; sitemap `lastmod` from last crawl / last seen; `/api/health` reports `staleBoards` + `lastOkAt`

@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { onPressDrop } from "@/lib/motion";
+import { publicHttpsUrl } from "@/lib/safe";
 import { cn } from "@/lib/utils";
 
 export function ApplyLink({
@@ -11,9 +12,11 @@ export function ApplyLink({
   company: string;
   className?: string;
 }) {
+  const safe = publicHttpsUrl(href, 2000);
+  if (!safe) return null;
   return (
     <a
-      href={href}
+      href={safe}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Apply at ${company}`}

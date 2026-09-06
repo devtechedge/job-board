@@ -4,7 +4,8 @@
 
 Do **not** open a public GitHub issue for a security report.
 
-Use [GitHub private vulnerability reporting](https://github.com/devtechedge/job-board/security/advisories/new) on this repository.
+Use GitHub private vulnerability reporting on this repository:
+https://github.com/devtechedge/job-board/security/advisories/new
 
 Include:
 
@@ -15,9 +16,13 @@ Include:
 
 We will acknowledge valid reports and patch production before any write-up.
 
+## Honest scope
+
+No public website is "impossible to hack." Jobrow is hardened for a **public read-only index** with a small password-gated admin and a secret-gated crawl. Making the GitHub repo private reduces source disclosure; it does **not** replace strong `ADMIN_PASSWORD` / `CRON_SECRET` / Neon credentials on Vercel.
+
 ## What this app is
 
-Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workable). Production is Neon Postgres with 50 seeded boards. It is not an employer, recruiter, or resume database. Search does not require an account. Apply leaves this site.
+Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workable). Production is Neon Postgres with 50 seeded boards. It is not an employer, recruiter, or resume database. Search does not require an account. Apply leaves this site for employer HTTPS URLs only.
 
 ## In scope
 
@@ -28,47 +33,58 @@ Jobrow is a public index of employer ATS JSON (Greenhouse, Ashby, Lever, Workabl
 - SQL injection in search or desk notes
 - Leak of `ADMIN_PASSWORD`, `CRON_SECRET`, or `DATABASE_URL`
 - Unauthenticated dump of admin board tokens / crawl errors
+- Abuse of public JSON API / desk endpoint
 
 ## Out of scope
 
-- Rate limits on Vercel Hobby (in-memory, per-instance)
+- Perfect global rate limits on Vercel Hobby (in-memory, per-isolate)
 - Third-party ATS availability or content
-- Open redirect on employer apply URLs we did not mint
-- Missing `HSTS` until a custom domain is attached
-- Self-XSS, logout CSRF on a product with no user sessions
-- Reports that require physical access to the operator's Vercel/GitHub account
+- Open redirect on employer apply URLs we did not mint (we only emit allowlisted HTTPS apply links)
+- Self-XSS; CSRF on a product with no end-user sessions
+- Reports that require account access to the operator Vercel / GitHub / Neon console
 
-## Hardening already in the tree
+
+## Hardening in the tree
 
 - Parameterized SQL only
-- Job HTML is tag-allowlisted; text nodes are escaped; `javascript:` links dropped
-- JSON-LD is serialized with `<` escaped so it cannot break out of `<script>`
-- Contact notes: size cap, honeypot, rate limit, public-https URLs only (no loopback / RFC1918)
-- Admin board dump and crawl require the password; guesses are rate-limited; compare is SHA-256 + `timingSafeEqual`
-- Cron accepts `Authorization: Bearer` only — not `?secret=`
-- Outbound crawl fetch: HTTPS, no redirects, host allowlist (Greenhouse / Ashby / Lever / Workable), no private IPs
-- Board tokens are `[A-Za-z0-9._-]{1,80}`
-- Security headers (CSP, `nosniff`, `SAMEORIGIN`, COOP, Permissions-Policy) via `vercel.json`
-- Public company pages do not show board tokens or raw crawl errors
+- Job HTML tag-allowlisted; text escaped; `javascript:` links dropped
+- JSON-LD serialized with `<` escaped (no script breakout)
+- Apply buttons only render `publicHttpsUrl()` targets (`rel="noopener noreferrer"`)
+- Contact desk: size cap, honeypot, rate limit, public-https URLs only (no loopback / RFC1918)
+- Admin: password required; production rejects missing/weak/`change-me` passwords; IP-keyed rate limit; SHA-256 + `timingSafeEqual`
+- Cron: `Authorization: Bearer` only (no `?secret=`); production/DB hosts fail closed without a strong `CRON_SECRET`
+- Outbound crawl: HTTPS, no redirects, ATS host allowlist, no private IPs, short timeout
+- Board tokens: `[A-Za-z0-9._-]{1,80}`
+- Public JSON API: best-effort per-IP rate limit (429)
+- Security headers via `vercel.json`: CSP, HSTS, `nosniff`, `X-Frame-Options: DENY`, COOP, Permissions-Policy
+- `/admin` robots `Disallow` + `noindex`; `/api/cron` and `/api/desk` disallowed in `robots.txt`
+- Public company pages never show board tokens or raw crawl errors
 
 ## Secrets the operator must set
 
 | Name | Where | Why |
 |---|---|---|
-| `DATABASE_URL` | Vercel (Neon) | Persistent index. Without it, production admin stays locked. |
-| `ADMIN_PASSWORD` | Vercel | `/admin`. Use a long random string. Never commit it. |
-| `CRON_SECRET` | Vercel **and** GitHub Actions | `POST /api/cron/crawl`. Hex, ≥ 32 bytes. |
-| `APP_URL` | GitHub Actions | Origin the Action calls. |
+| `DATABASE_URL` | Vercel (Neon) | Persistent index (`sslmode=require`) |
+| `ADMIN_PASSWORD` | Vercel | `/admin`. At least 16 chars, not a placeholder. Never commit. |
+| `CRON_SECRET` | Vercel **and** GitHub Actions | `POST /api/cron/crawl`. At least 16 chars; prefer 32+ random bytes hex. |
+| `APP_URL` | GitHub Actions | Origin the Action calls (`https://jobrow.vercel.app`) |
+| `VITE_SITE_URL` | Vercel | Sitemap / OG origin |
 
-Rotate any of the above if it was pasted into chat, a ticket, or a screenshot.
+Rotate any secret that was pasted into chat, a ticket, or a screenshot.
 
-## Residual risk (honest)
+### Making the GitHub repo private
 
-No public internet app is “unhackable.” Remaining limits:
+Recommended when you are done open-sourcing the build story. Still required after that:
 
-- Vercel Hobby cron/desk rate limits reset per isolate
-- CSP still allows `'unsafe-inline'` scripts because of the theme boot + TanStack hydration
-- Crawled employer HTML can still contain *links* to third-party HTTPS sites
-- Counsel has not reviewed the legal drafts
+1. Confirm Vercel env vars are strong and not reused elsewhere
+2. Confirm GitHub Actions secrets `CRON_SECRET` + `APP_URL`
+3. Keep a private way to receive vulnerability reports if you disable public advisories
 
-If you run a fork, set the secrets above before exposing `/admin`.
+## Residual risk
+
+- Hobby rate limits reset per serverless isolate
+- CSP still allows `unsafe-inline` scripts (theme boot + framework hydration)
+- Crawled employer HTML may contain links to third-party HTTPS sites
+- Legal copy is draft until counsel reviews
+
+If you run a fork, set the secrets above before exposing `/admin` or enabling the crawl Action.

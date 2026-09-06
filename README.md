@@ -18,7 +18,7 @@ Tagline: **Still open.**
 
 Production is **Neon Postgres** on Vercel Hobby. The board currently holds **5,000+ open US tech roles across 50 companies**. Apply always leaves Jobrow for the employer ATS. Public listings — not an employer, recruiter, or agency.
 
-`GET /api/health` reports `{ db: "neon", openJobs, pendingBoards }`.
+`GET /api/health` reports `{ db, openJobs, pendingBoards, staleBoards, lastOkAt }`.
 
 ### Public JSON API
 
@@ -155,9 +155,20 @@ Production already has Neon attached. Local demos can omit `DATABASE_URL`.
 
 See [SECURITY.md](SECURITY.md). Report vulnerabilities with GitHub private advisory, not a public issue.
 
-Hardening in this tree: parameterized SQL, escaped job HTML, script-safe JSON-LD, password-gated admin dump, ATS host allowlist, no `?secret=` on cron, desk size cap, public-https URL checks.
+Hardening in this tree: parameterized SQL, escaped job HTML, script-safe JSON-LD, fail-closed admin/cron secrets in production, IP-limited admin unlock, public API rate limits, ATS host allowlist, no `?secret=` on cron, desk size cap, HTTPS-only Apply links, HSTS + CSP headers. Details: [SECURITY.md](SECURITY.md).
 
 ---
+
+## Discovery (SEO)
+
+| Item | Status |
+|------|--------|
+| Crawlable pages + `robots.txt` + sitemap (`lastmod`) | Live |
+| `/llms.txt`, OG/canonical, long-tail titles | Live |
+| Google Search Console + Bing Webmaster | Verified / imported |
+| Crawl freshness | GitHub Action **4× daily**, 8 shards |
+| Earn links (X / Indie Hackers / Discord) | Operator posts; HN gated for new accounts |
+| Patience | New hosts often need weeks–months for competitive queries |
 
 ## Remaining
 
@@ -168,6 +179,7 @@ Hardening in this tree: parameterized SQL, escaped job HTML, script-safe JSON-LD
 | GitHub Action `APP_URL` + `CRON_SECRET` | Set on the repo. |
 | Counsel | Terms / privacy / sourcing are drafts. |
 | Bound pass / ruled pins | Rate card exists. Checkout is not live. |
+| Private GitHub repo | Optional. Does not replace Vercel secrets — see [SECURITY.md](SECURITY.md). |
 
 ---
 

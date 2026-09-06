@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { jsonOk, optionsOk, publicCompany } from "@/lib/api";
+import { guardPublicApi, jsonOk, optionsOk, publicCompany } from "@/lib/api";
 
-async function handle() {
+async function handle({ request }: { request: Request }) {
+  const limited = guardPublicApi(request);
+  if (limited) return limited;
   const { ensureIndex } = await import("@/lib/crawl");
   const { listCompanies } = await import("@/lib/search");
   const boot = await ensureIndex();

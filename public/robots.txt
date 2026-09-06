@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /api/cron
+Disallow: /api/desk
 
 Sitemap: https://jobrow.vercel.app/sitemap.xml
 # Machine-readable site summary for AI assistants

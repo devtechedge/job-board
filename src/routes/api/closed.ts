@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { jsonOk, optionsOk, publicJob } from "@/lib/api";
+import { jsonOk, optionsOk, publicJob, guardPublicApi } from "@/lib/api";
 
 async function handle({ request }: { request: Request }) {
+  const limited = guardPublicApi(request);
+  if (limited) return limited;
   const url = new URL(request.url);
   const pageRaw = url.searchParams.get("page");
   const page = pageRaw ? Number(pageRaw) : 1;

@@ -4,6 +4,7 @@ import { jobQueryFromSearchParams, type JobQuery } from "@/lib/query";
 import { formatPay } from "@/lib/salary";
 import { htmlToText, sanitizeHtml } from "@/lib/sanitize";
 import { SLUG_RE, UUID_RE } from "@/lib/safe";
+import { publicApiRateOk } from "@/lib/security";
 import { iso } from "@/lib/utils";
 import type { JobListItem, HomeDigest } from "@/lib/search";
 
@@ -85,6 +86,13 @@ export function jsonError(message: string, status: number): Response {
       "Cache-Control": "no-store",
     },
   });
+}
+
+export function guardPublicApi(request: Request): Response | null {
+  if (!publicApiRateOk(request)) {
+    return jsonError("Too many requests", 429);
+  }
+  return null;
 }
 
 export function optionsOk(): Response {

@@ -15,7 +15,12 @@ import { ago } from "@/lib/format";
 
 export const Route = createFileRoute("/admin")({
   loader: () => adminMetaFn(),
-  head: () => ({ meta: [{ title: "Admin — Jobrow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin — Jobrow" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AdminPage,
 });
 

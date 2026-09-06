@@ -18,8 +18,8 @@ export const adminMetaFn = createServerFn({ method: "GET" }).handler(async () =>
 export const adminBoardFn = createServerFn({ method: "POST" })
   .validator((data) => authFields.parse(data))
   .handler(async ({ data }) => {
-    const { adminPasswordOk } = await import("@/lib/admin");
-    if (!adminPasswordOk(data.password)) throw new Error("Wrong password");
+    const { assertAdminPassword } = await import("@/lib/admin");
+    await assertAdminPassword(data.password);
     const { getSql, dbSource } = await import("@/lib/db");
     const sql = await getSql();
     const companies = await sql.query<{
@@ -75,8 +75,8 @@ export const adminBoardFn = createServerFn({ method: "POST" })
 export const adminUnlockFn = createServerFn({ method: "POST" })
   .validator((data) => authFields.parse(data))
   .handler(async ({ data }) => {
-    const { adminPasswordOk } = await import("@/lib/admin");
-    if (!adminPasswordOk(data.password)) throw new Error("Wrong password");
+    const { assertAdminPassword } = await import("@/lib/admin");
+    await assertAdminPassword(data.password);
     return { ok: true };
   });
 
@@ -90,8 +90,8 @@ export const adminCrawlFn = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const { adminPasswordOk } = await import("@/lib/admin");
-    if (!adminPasswordOk(data.password)) throw new Error("Wrong password");
+    const { assertAdminPassword } = await import("@/lib/admin");
+    await assertAdminPassword(data.password);
     const crawl = await import("@/lib/crawl");
     if (data.slug) return { one: await crawl.crawlOne(data.slug) };
     const companies = await crawl.loadEnabledCompanies();
@@ -114,8 +114,8 @@ export const adminSaveCompanyFn = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const { adminPasswordOk } = await import("@/lib/admin");
-    if (!adminPasswordOk(data.password)) throw new Error("Wrong password");
+    const { assertAdminPassword } = await import("@/lib/admin");
+    await assertAdminPassword(data.password);
     const slug = data.slug.toLowerCase().replace(/[^a-z0-9-]/g, "-");
     if (!SLUG_RE.test(slug)) throw new Error("Invalid slug");
     const careers = data.careers_url ? publicHttpsUrl(data.careers_url) : null;
@@ -153,8 +153,8 @@ export const adminSaveCompanyFn = createServerFn({ method: "POST" })
 export const adminDeleteCompanyFn = createServerFn({ method: "POST" })
   .validator((data) => authFields.extend({ id: z.string().regex(UUID_RE) }).parse(data))
   .handler(async ({ data }) => {
-    const { adminPasswordOk } = await import("@/lib/admin");
-    if (!adminPasswordOk(data.password)) throw new Error("Wrong password");
+    const { assertAdminPassword } = await import("@/lib/admin");
+    await assertAdminPassword(data.password);
     const { getSql } = await import("@/lib/db");
     const sql = await getSql();
     await sql.query(`delete from companies where id = $1`, [data.id]);

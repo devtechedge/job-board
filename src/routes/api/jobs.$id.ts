@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { jsonError, jsonOk, optionsOk, parseJobId, publicJob } from "@/lib/api";
+import { guardPublicApi, jsonError, jsonOk, optionsOk, parseJobId, publicJob } from "@/lib/api";
 
-async function handle({ params }: { params: { id: string } }) {
+async function handle({ request, params }: { request: Request; params: { id: string } }) {
+  const limited = guardPublicApi(request);
+  if (limited) return limited;
   const id = parseJobId(params.id);
   if (!id) return jsonError("Invalid job id", 400);
   const { getJobById } = await import("@/lib/search");
