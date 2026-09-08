@@ -20,12 +20,59 @@ jobs:
           test -n "$APP_URL"
           test -n "$CRON_SECRET"
           OF=8
+          MAX_ATTEMPTS=3
+          cat > /tmp/crawl_verdict.py <<'PY'
+          import json, sys
+          d = json.load(open(sys.argv[1]))
+          fails = [r for r in (d.get("results") or []) if not r.get("ok")]
+          print(
+              d.get("companiesOk"),
+              d.get("companiesFail"),
+              d.get("jobsUpserted"),
+              d.get("jobsClosed"),
+          )
+          ok = int(d.get("companiesOk") or 0)
+          for r in fails:
+              slug = r.get("slug") or r.get("name") or "?"
+              err = str(r.get("error") or d.get("errorSample") or "crawl failed")[:200]
+              print(f"FAIL {slug} {err}")
+              print(f"::warning title=board fail::{slug}: {err}")
+          if not fails:
+              raise SystemExit(0)
+          raise SystemExit(2 if ok == 0 else 1)
+          PY
           for shard in 0 1 2 3 4 5 6 7; do
-            echo "shard $shard of $OF"
-            curl -fsS -X POST "$APP_URL/api/cron/crawl?shard=$shard&of=$OF" \
-              -H "Authorization: Bearer $CRON_SECRET" \
-              --max-time 55 \
-              -o "/tmp/crawl-$shard.json"
-            python3 -c "import json; d=json.load(open('/tmp/crawl-$shard.json')); print(d.get('companiesOk'), d.get('companiesFail'), d.get('jobsUpserted'), d.get('jobsClosed')); raise SystemExit(1 if int(d.get('companiesFail') or 0) else 0)"
+            attempt=1
+            while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+              echo "shard $shard of $OF (attempt $attempt/$MAX_ATTEMPTS)"
+              if ! curl -fsS -X POST "$APP_URL/api/cron/crawl?shard=$shard&of=$OF" \
+                -H "Authorization: Bearer $CRON_SECRET" \
+                --max-time 55 \
+                -o "/tmp/crawl-$shard.json"; then
+                echo "::error::shard $shard curl failed (attempt $attempt)"
+                if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+                  exit 1
+                fi
+                attempt=$((attempt + 1))
+                sleep 5
+                continue
+              fi
+              if python3 /tmp/crawl_verdict.py "/tmp/crawl-$shard.json"; then
+                break
+              else
+                code=$?
+                if [ "$code" -eq 2 ] && [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+                  echo "::error::shard $shard: every board failed"
+                  exit 1
+                fi
+                if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+                  echo "::warning::shard $shard still has a flaky board after $MAX_ATTEMPTS attempts; not failing the run"
+                  break
+                fi
+                echo "retrying shard $shard in 5s"
+                attempt=$((attempt + 1))
+                sleep 5
+              fi
+            done
             sleep 2
           done

@@ -118,7 +118,7 @@ Do not scrape career marketing HTML when the board JSON exists. Do not scrape ot
 | Data | Neon Postgres in production; embedded PGLite when `DATABASE_URL` is omitted (local) |
 | Sources | Greenhouse, Ashby, Lever public JSON (Workable adapter ready) |
 | Host | Vercel Hobby |
-| Crawl | GitHub Action, 4× daily (8 shards), `POST /api/cron/crawl` with `Authorization: Bearer` |
+| Crawl | GitHub Action, 4× daily (8 shards, retry on a flaky board), `POST /api/cron/crawl` with `Authorization: Bearer` |
 | Security | CSP and related headers in [vercel.json](vercel.json); see [SECURITY.md](SECURITY.md) |
 
 ---
@@ -166,7 +166,7 @@ Hardening in this tree: parameterized SQL, escaped job HTML, script-safe JSON-LD
 | Crawlable pages + `robots.txt` + sitemap (`lastmod`) | Live |
 | `/llms.txt`, OG/canonical, long-tail titles | Live |
 | Google Search Console + Bing Webmaster | Verified / imported |
-| Crawl freshness | GitHub Action **4× daily**, 8 shards |
+| Crawl freshness | GitHub Action **4× daily**, 8 shards; retry + warn on one flaky board |
 | Earn links (X / Indie Hackers / Discord) | Operator posts; HN gated for new accounts |
 | Patience | New hosts often need weeks–months for competitive queries |
 

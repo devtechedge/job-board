@@ -2,6 +2,10 @@
 
 All notable changes to Jobrow are documented here.
 
+## 2026-09-08
+
+- Crawl Action: print failing board slugs, retry a shard up to 3 times, warn instead of failing the run on one flaky ATS fetch. Curl errors and a shard where every board fails still go red.
+
 ## 2026-09-06 (security + docs)
 
 - Security: fail-closed admin/cron secrets in production (reject weak/`change-me`), admin unlock rate-limited by client IP, public JSON API per-IP throttle, HTTPS-only Apply links, HSTS + stronger frame/CSP headers, robots disallow for `/api/cron` + `/api/desk`, admin `noindex`
@@ -9,7 +13,7 @@ All notable changes to Jobrow are documented here.
 
 ## 2026-09-06
 
-- Crawl freshness: 4× daily GitHub Action, 8 shards with retries, fail on board errors; sitemap `lastmod` from last crawl / last seen; `/api/health` reports `staleBoards` + `lastOkAt`
+- Crawl freshness: 4× daily GitHub Action, 8 shards; sitemap `lastmod` from last crawl / last seen; `/api/health` reports `staleBoards` + `lastOkAt`
 
 ## [0.2.0] — 2026-09-05
 
