@@ -15,7 +15,7 @@ All notable changes to Jobrow are documented here.
 
 - Crawl freshness: 4× daily GitHub Action, 8 shards; sitemap `lastmod` from last crawl / last seen; `/api/health` reports `staleBoards` + `lastOkAt`
 
-## [0.2.0] — 2026-09-05
+## [0.2.0] - 2026-09-05
 
 Product polish and scale-up session. Live: [jobrow.vercel.app](https://jobrow.vercel.app).
 
@@ -49,6 +49,6 @@ Product polish and scale-up session. Live: [jobrow.vercel.app](https://jobrow.ve
 - Public [`/llms.txt`](https://jobrow.vercel.app/llms.txt) for AI assistants; noted in `robots.txt`
 - Grok share-card bake: `site.json` description + `origin` so `og:image` works on `*.vercel.app`
 
-## [0.1.0] — 2026-08-31
+## [0.1.0] - 2026-08-31
 
 Initial public release: Jobs register, Search, Companies, JSON API, Expo mobile client, Neon production, twice-daily crawl.

@@ -183,7 +183,7 @@ test("siteDeclaresOgTypeGame reads the site contract", () => {
 test("a fresh og-pending marker silences the whole gate view", () => {
   const root = makeWorkspace({ siteJson: UTILITY_SITE, pendingAgeMs: 1000 });
   // Every caller reports this array as a count, so an in-flight card has to
-  // leave nothing behind — a note would print as "brand: 1 warning(s)".
+  // leave nothing behind - a note would print as "brand: 1 warning(s)".
   assert.deepEqual(computeBrandWarnings({ hasCanvas: true, workspaceRoot: root }), []);
   assert.deepEqual(computeBrandWarnings({ hasCanvas: false, workspaceRoot: root }), []);
 });
@@ -269,7 +269,7 @@ test("cli: a bad argument fails with JSON on stderr", () => {
   assert.equal(JSON.parse(run.stderr).ok, false);
 });
 
-test("cli: a non-game with no card fails too — the pass exists to produce one", () => {
+test("cli: a non-game with no card fails too - the pass exists to produce one", () => {
   const root = makeWorkspace({ siteJson: UTILITY_SITE });
   const run = runCheck(root);
   assert.equal(run.status, 1, run.stdout + run.stderr);
@@ -336,7 +336,7 @@ const PROHIBITION_SECTIONS = [
 function prohibitionSection({ rel, label, from, until }) {
   const doc = readDoc(rel);
   const start = doc.indexOf(from);
-  assert.notEqual(start, -1, `${rel}: ${label} moved — no "${from.trim()}"`);
+  assert.notEqual(start, -1, `${rel}: ${label} moved - no "${from.trim()}"`);
   const rest = doc.slice(start + from.length);
   const end = rest.search(until);
   // Markdown emphasis and prose wrapping both sit between the two words.

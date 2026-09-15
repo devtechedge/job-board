@@ -11,7 +11,7 @@ export const Route = createFileRoute("/companies/$slug")({
   loader: ({ params }) => getCompanyFn({ data: { slug: params.slug } }),
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return pageHead({ title: "Company — Jobrow", path: "/companies" });
+      return pageHead({ title: "Company - Jobrow", path: "/companies" });
     }
     const { company } = loaderData;
     const open = company.open_count ?? 0;

@@ -90,7 +90,7 @@ export function isBareHomeQuery(query: JobQuery): boolean {
   );
 }
 
-/** One open US-tech role per company, newest first — keeps Latest compact and mixed. */
+/** One open US-tech role per company, newest first - keeps Latest compact and mixed. */
 export async function listLatestDiverseJobs(
   limit = LATEST_HOME_LIMIT,
 ): Promise<SearchResult> {

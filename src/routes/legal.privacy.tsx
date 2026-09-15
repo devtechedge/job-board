@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/privacy")({
-  head: () => ({ meta: [{ title: "Privacy — Jobrow" }] }),
+  head: () => ({ meta: [{ title: "Privacy - Jobrow" }] }),
   component: PrivacyPage,
 });
 
@@ -16,7 +16,7 @@ function PrivacyPage() {
           <p>
             v1 search does not require an account. Optional watchlist data stays in your browser
             (localStorage). We do not receive those titles unless you later create an account and
-            choose to sync — and that feature does not exist yet.
+            choose to sync - and that feature does not exist yet.
           </p>
           <p>
             Rate-card waitlist notes (Bound pass, ruled pin) store the email and listing URL you

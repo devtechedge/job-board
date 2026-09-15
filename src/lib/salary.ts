@@ -31,7 +31,7 @@ export function dollarsToCents(value: number | null | undefined): number | null 
   return Math.round(value); // already cents
 }
 
-/** Structured Greenhouse/Ashby metadata objects — only use numbers the board posted. */
+/** Structured Greenhouse/Ashby metadata objects - only use numbers the board posted. */
 export function payFromMetaValue(
   value: unknown,
   currencyFallback = "USD",

@@ -4,7 +4,7 @@
  *
  * `dev`, `build` and `preview` all route through this wrapper, so the dev
  * server, the built bundle and the preview server can never disagree about
- * `VITE_AUTH_ENABLED` — a divergence that only shows up as a built-output
+ * `VITE_AUTH_ENABLED` - a divergence that only shows up as a built-output
  * mismatch long after the fact. Anything that starts Vite directly bypasses it.
  *
  * Only `VITE_`-prefixed keys are honored: the file is a build flag carrier, not
@@ -31,7 +31,7 @@ const VITE_PREFIX = "VITE_";
 
 /**
  * Parse an app-env document, keeping only `VITE_`-prefixed string entries.
- * Anything unparseable is an empty environment — a workspace without the file
+ * Anything unparseable is an empty environment - a workspace without the file
  * must behave exactly like today (auth on, no overrides).
  */
 export function parseAppEnv(text) {

@@ -4,7 +4,7 @@
  * `VITE_AUTH_ENABLED`.
  *
  * `npm run dev`, `npm run build` and `npm run preview` all get the flag from
- * `scripts/with-app-env.mjs`, so they agree by construction — but a dev server
+ * `scripts/with-app-env.mjs`, so they agree by construction - but a dev server
  * started outside npm (`npx vite dev`) does not, and the result is sign-in
  * visible in the live preview and absent from the built output, or the reverse.
  *
@@ -33,7 +33,7 @@ export function authEnabledFromEnvValue(value) {
 }
 
 /**
- * Compare the two resolved values. `null` means "could not observe" — reported
+ * Compare the two resolved values. `null` means "could not observe" - reported
  * as indeterminate rather than as agreement.
  */
 export function compareAuthInvariant({ devAuthEnabled, buildAuthEnabled }) {
@@ -54,7 +54,7 @@ export function compareAuthInvariant({ devAuthEnabled, buildAuthEnabled }) {
     status: "diverged",
     message:
       `[auth-invariant] dev server has sign-in ${label(devAuthEnabled)} but the next ` +
-      `build has it ${label(buildAuthEnabled)}. Start the app with \`npm run dev\` — ` +
+      `build has it ${label(buildAuthEnabled)}. Start the app with \`npm run dev\` - ` +
       "invoking vite directly skips scripts/with-app-env.mjs, so the dev server and " +
       "the built output resolve .grok/app-env.json differently.",
   };

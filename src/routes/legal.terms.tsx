@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/terms")({
-  head: () => ({ meta: [{ title: "Terms — Jobrow" }] }),
+  head: () => ({ meta: [{ title: "Terms - Jobrow" }] }),
   component: TermsPage,
 });
 
@@ -24,7 +24,7 @@ function TermsPage() {
           </p>
           <p>
             Listings belong to the employers. We may show short original summaries. Confirm every
-            detail — pay, location, eligibility, closing date — on the employer board before you
+            detail - pay, location, eligibility, closing date - on the employer board before you
             apply. Apply links leave this site.
           </p>
           <p>

@@ -8,7 +8,7 @@ import { MASTHEAD_LINE, RULED_PIN } from "@/lib/rates";
 export const Route = createFileRoute("/placements")({
   head: () => ({
     meta: [
-      { title: "Promote — Jobrow" },
+      { title: "Promote - Jobrow" },
       { name: "description", content: "Ruled pin and masthead line. Waitlist. No live checkout." },
     ],
   }),

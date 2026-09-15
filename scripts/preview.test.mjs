@@ -183,7 +183,7 @@ test("stopOutcome reports a verified free port", () => {
     after: { pids: [] },
   });
   assert.equal(stopped.ok, true);
-  assert.match(stopped.message, /stopped pid\(s\) 50 — port 8081 is free/);
+  assert.match(stopped.message, /stopped pid\(s\) 50 - port 8081 is free/);
 
   const idle = stopOutcome({ signalled: [], stubborn: [], after: { pids: [] } });
   assert.equal(idle.ok, true);

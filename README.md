@@ -1,6 +1,6 @@
 # Jobrow
 
-Public register of **still-open US tech roles**, read from employer ATS JSON — not from another job site.
+Public register of **still-open US tech roles**, read from employer ATS JSON - not from another job site.
 
 Tagline: **Still open.**
 
@@ -16,7 +16,7 @@ Tagline: **Still open.**
 
 **https://jobrow.vercel.app**
 
-Production is **Neon Postgres** on Vercel Hobby. The board currently holds **5,000+ open US tech roles across 50 companies**. Apply always leaves Jobrow for the employer ATS. Public listings — not an employer, recruiter, or agency.
+Production is **Neon Postgres** on Vercel Hobby. The board currently holds **5,000+ open US tech roles across 50 companies**. Apply always leaves Jobrow for the employer ATS. Public listings - not an employer, recruiter, or agency.
 
 `GET /api/health` reports `{ db, openJobs, pendingBoards, staleBoards, lastOkAt }`.
 
@@ -24,12 +24,12 @@ Production is **Neon Postgres** on Vercel Hobby. The board currently holds **5,0
 
 Unauthenticated read API for the same US-tech slice Jobs shows (`status=open`, `us_eligible`, `tech_eligible`). Native apps and other clients can call these without going through server functions:
 
-- `GET /api/jobs` — `JobQuery` as querystring (`q`, `fn`, `seniority`, `workplace`, `location`, `salaryMin`, `posted`, `ats`, `company`, `sort`, `page`). Page size 40.
-- `GET /api/jobs/:id` — one role, with sanitized `description_html` plus `description_text`
-- `GET /api/companies` — boards
-- `GET /api/companies/:slug` — board plus open roles
-- `GET /api/home` — register KPIs (open count, boards, first-seen 24h, last crawl, functions, boards) plus a latest page
-- `GET /api/closed` — roles closed after a successful crawl
+- `GET /api/jobs` - `JobQuery` as querystring (`q`, `fn`, `seniority`, `workplace`, `location`, `salaryMin`, `posted`, `ats`, `company`, `sort`, `page`). Page size 40.
+- `GET /api/jobs/:id` - one role, with sanitized `description_html` plus `description_text`
+- `GET /api/companies` - boards
+- `GET /api/companies/:slug` - board plus open roles
+- `GET /api/home` - register KPIs (open count, boards, first-seen 24h, last crawl, functions, boards) plus a latest page
+- `GET /api/closed` - roles closed after a successful crawl
 
 `/api/health`, `/api/desk`, cron, and admin are unchanged. Product auth stays off. Apply URLs are employer ATS https links. Discovery helpers: [`/sitemap.xml`](https://jobrow.vercel.app/sitemap.xml), [`/llms.txt`](https://jobrow.vercel.app/llms.txt).
 
@@ -41,7 +41,7 @@ An Expo (Android + iOS) client lives in [`mobile/`](mobile/). It is a separate p
 
 ## Sister product
 
-**[Lattice](https://lattice-devtechedge1.vercel.app)** — free board for **blockchain, crypto, and Web3 jobs** from live employer ATS boards (Coinbase, Binance, Ripple, and more). Jobrow stays US tech; Lattice covers Web3 careers. Source: [devtechedge/lattice](https://github.com/devtechedge/lattice).
+**[Lattice](https://lattice-devtechedge1.vercel.app)** - free board for **blockchain, crypto, and Web3 jobs** from live employer ATS boards (Coinbase, Binance, Ripple, and more). Jobrow stays US tech; Lattice covers Web3 careers. Source: [devtechedge/lattice](https://github.com/devtechedge/lattice).
 
 ---
 
@@ -65,21 +65,21 @@ Share card: [docs/screenshots/social-preview.png](docs/screenshots/social-previe
 
 ## What you can do
 
-- **Jobs** (`/`) — Latest (8 roles, one company per row), filters, KPIs, Companies strip (8)
-- **Closed** (`/closed`) — roles removed after a successful crawl (filled or pulled)
+- **Jobs** (`/`) - Latest (8 roles, one company per row), filters, KPIs, Companies strip (8)
+- **Closed** (`/closed`) - roles removed after a successful crawl (filled or pulled)
 - Company marks next to every listing (site icon, initials if the icon fails)
-- **Search** (`/jobs`) — full paginated table of the US tech slice
-- **Companies** (`/companies`) — 50 boards, US-tech count vs listed count, last successful fetch
-- **Saved** — browser watchlist count in the header (nav: Jobs · Search · Companies · About · Saved · Closed)
-- **Role** (`/jobs/:id`) — summary, pay, workplace, posting HTML, Apply (leaves the site)
-- **Contact** (`/contact`) — corrections and legal notes (not applications)
-- **Add a board** (`/employers`) — public Greenhouse / Ashby / Lever / Workable token
-- **Pricing** (`/pricing`) — Bound pass waitlist (`$11` / 28 days). No live checkout
-- **Promote** (`/placements`) — Ruled pin `$120` / masthead line `$55`. Waitlist only
-- **Watchlist** — local to the browser (`localStorage` key `jobrow:watchlist`, max 200). No account. No resume upload
-- **JSON API** (`/api/jobs`, `/api/companies`, `/api/home`) — public register contract for native apps
-- **iOS / Android** — Expo app in `mobile/`. Apply opens the employer ATS. Saved jobs use local AsyncStorage.
-- **Admin** (`/admin`) — password-gated crawl and board edits
+- **Search** (`/jobs`) - full paginated table of the US tech slice
+- **Companies** (`/companies`) - 50 boards, US-tech count vs listed count, last successful fetch
+- **Saved** - browser watchlist count in the header (nav: Jobs · Search · Companies · About · Saved · Closed)
+- **Role** (`/jobs/:id`) - summary, pay, workplace, posting HTML, Apply (leaves the site)
+- **Contact** (`/contact`) - corrections and legal notes (not applications)
+- **Add a board** (`/employers`) - public Greenhouse / Ashby / Lever / Workable token
+- **Pricing** (`/pricing`) - Bound pass waitlist (`$11` / 28 days). No live checkout
+- **Promote** (`/placements`) - Ruled pin `$120` / masthead line `$55`. Waitlist only
+- **Watchlist** - local to the browser (`localStorage` key `jobrow:watchlist`, max 200). No account. No resume upload
+- **JSON API** (`/api/jobs`, `/api/companies`, `/api/home`) - public register contract for native apps
+- **iOS / Android** - Expo app in `mobile/`. Apply opens the employer ATS. Saved jobs use local AsyncStorage.
+- **Admin** (`/admin`) - password-gated crawl and board edits
 
 A role **drops when a successful crawl no longer sees it**. A failed fetch does not close that board.
 
@@ -179,7 +179,7 @@ Hardening in this tree: parameterized SQL, escaped job HTML, script-safe JSON-LD
 | GitHub Action `APP_URL` + `CRON_SECRET` | Set on the repo. |
 | Counsel | Terms / privacy / sourcing are drafts. |
 | Bound pass / ruled pins | Rate card exists. Checkout is not live. |
-| Private GitHub repo | Optional. Does not replace Vercel secrets — see [SECURITY.md](SECURITY.md). |
+| Private GitHub repo | Optional. Does not replace Vercel secrets - see [SECURITY.md](SECURITY.md). |
 
 ---
 

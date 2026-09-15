@@ -14,7 +14,7 @@ export type AppUser = {
  * Stable fallback user, used ONLY when auth is disabled
  * (`VITE_AUTH_ENABLED=false`, the shipped default). With auth on, the sandbox
  * live preview does real sign-in via the baked preview client. Its id is
- * `"dev-user"` — the SAME id `verify.server.ts` returns server-side — so per-user
+ * `"dev-user"` - the SAME id `verify.server.ts` returns server-side - so per-user
  * rows written in that mode belong to one consistent owner.
  */
 export const DEV_USER: AppUser = {
@@ -27,9 +27,9 @@ export const DEV_USER: AppUser = {
 
 /** `useCurrentUserState()` result: the user plus the session-loading flag. */
 export type CurrentUserState = {
-  /** The user — `null` BOTH while the session loads and when signed out. */
+  /** The user - `null` BOTH while the session loads and when signed out. */
   user: AppUser | null;
-  /** True while the session is still resolving — don't treat `user: null` as signed out yet. */
+  /** True while the session is still resolving - don't treat `user: null` as signed out yet. */
   isPending: boolean;
 };
 
@@ -48,7 +48,7 @@ export type CurrentUserState = {
  *
  *   import { RedirectToSignIn } from "@/lib/auth/gates";
  *   const { user, isPending } = useCurrentUserState();
- *   if (isPending) return null;              // still resolving — don't redirect yet
+ *   if (isPending) return null;              // still resolving - don't redirect yet
  *   if (!user) return <RedirectToSignIn />;  // definitely signed out
  *
  * `authEnabled` is a module-level constant fixed at load, so the guarded hook

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/jobs/$id")({
   loader: ({ params }) => getJobFn({ data: { id: params.id } }),
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return pageHead({ title: "Role — Jobrow", path: "/jobs" });
+      return pageHead({ title: "Role - Jobrow", path: "/jobs" });
     }
     const title = jobPageTitle({
       title: loaderData.title,

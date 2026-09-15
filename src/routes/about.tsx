@@ -5,7 +5,7 @@ import { pageHead } from "@/lib/seo";
 export const Route = createFileRoute("/about")({
   head: () =>
     pageHead({
-      title: "About — Jobrow",
+      title: "About - Jobrow",
       description:
         "Jobrow is a public register of still-open US tech roles from employer ATS boards.",
       path: "/about",

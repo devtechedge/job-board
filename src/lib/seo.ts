@@ -41,7 +41,7 @@ export function pageHead(opts: {
 
 /** Long-tail document titles for indexable entity pages. */
 export function companyPageTitle(companyName: string): string {
-  return `${companyName} US tech roles still open — Jobrow`;
+  return `${companyName} US tech roles still open - Jobrow`;
 }
 
 export function companyPageDescription(companyName: string, openCount: number): string {
@@ -56,7 +56,7 @@ export function jobPageTitle(opts: {
 }): string {
   const closed = opts.status === "closed";
   const signal = closed ? "closed" : "still open";
-  return `${opts.title} at ${opts.companyName} — ${signal} | Jobrow`;
+  return `${opts.title} at ${opts.companyName} - ${signal} | Jobrow`;
 }
 
 export function jobPageDescription(opts: {
@@ -69,6 +69,6 @@ export function jobPageDescription(opts: {
     return `${opts.title} at ${opts.companyName} left the employer board after a Jobrow crawl. Not still open.`;
   }
   if (opts.summary && opts.summary.trim()) return opts.summary.trim();
-  return `${opts.title} at ${opts.companyName}. Still open on Jobrow — apply on the employer ATS.`;
+  return `${opts.title} at ${opts.companyName}. Still open on Jobrow - apply on the employer ATS.`;
 }
 

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/sourcing")({
-  head: () => ({ meta: [{ title: "How we source jobs — Jobrow" }] }),
+  head: () => ({ meta: [{ title: "How we source jobs - Jobrow" }] }),
   component: SourcingPage,
 });
 
@@ -13,7 +13,7 @@ function SourcingPage() {
         <h1 className="font-serif text-4xl font-semibold">How we source jobs</h1>
         <div className="mt-6 space-y-4 text-sm leading-relaxed">
           <p>
-            Jobrow reads official public ATS board APIs — the same JSON an employer’s careers page
+            Jobrow reads official public ATS board APIs - the same JSON an employer’s careers page
             already uses. We do not scrape Indeed, LinkedIn, ZipRecruiter, or other aggregators. We
             do not scrape other job indexes or republish another product’s summaries. The public
             register is 34 US-focused tech boards (Greenhouse, Ashby, Lever). A Workable adapter
@@ -36,7 +36,7 @@ function SourcingPage() {
           <p>
             Refresh: several times a day (scheduled crawl). A role is marked closed when it is missing from a
             successful board fetch. A failed fetch (timeout, 429, 5xx, unreadable body) does not close
-            that company’s open set — we keep the last good snapshot and log the error.
+            that company’s open set - we keep the last good snapshot and log the error.
           </p>
           <p>
             Apply always goes to the employer ATS URL. We keep US-eligible tech roles in the public

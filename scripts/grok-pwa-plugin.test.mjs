@@ -487,7 +487,7 @@ test("renders the manifest with the per-app name", () => {
   assert.equal(manifest.icons[0].src, "/__grok/icon-180.png");
 });
 
-// Tripwires: the deployed-app path only works if Nitro scans server/ — an
+// Tripwires: the deployed-app path only works if Nitro scans server/ - an
 // accidental edit that drops serverDir or the middleware file would otherwise
 // fail silently (published apps would just render the app for ?install=1).
 test("vite config keeps the nitro serverDir wiring", () => {

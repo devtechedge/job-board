@@ -66,7 +66,7 @@ test("the template ships auth off", () => {
 test("vite loadEnv resolves the wrapped value", () => {
   // What `import.meta.env.VITE_AUTH_ENABLED` becomes: loadEnv prefix-matches
   // process.env, so the wrapper's merge has to land before Vite starts.
-  // Do not `import { loadEnv } from "vite"` here — Vite 8 loads rolldown
+  // Do not `import { loadEnv } from "vite"` here - Vite 8 loads rolldown
   // native bindings that SIGSEGV the test worker under qemu-user.
   const root = makeWorkspace('{"VITE_AUTH_ENABLED":"false"}');
   const merged = mergeAppEnv(readAppEnv(root), { PATH: "/usr/bin" });

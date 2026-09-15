@@ -7,16 +7,16 @@
  * The two environments authenticate differently, so they need different
  * answers to "the server did not reply":
  *
- * - **Live preview** — a partitioned iframe with no readable session cookie;
+ * - **Live preview** - a partitioned iframe with no readable session cookie;
  *   the session rides the bearer token in `sessionStorage`. Dropping that token
  *   IS being signed out, so the server call is best effort and a wedged request
  *   must never strand the button. This is where the hang actually happens.
- * - **Deployed** — the session rides an HttpOnly `__Host-` cookie that JS
+ * - **Deployed** - the session rides an HttpOnly `__Host-` cookie that JS
  *   cannot delete. ONLY a completed sign-out response clears it, and
  *   `server.ts` enables `session.cookieCache` (maxAge 300), so `/get-session`
  *   would keep answering from the cached cookie for minutes afterwards.
  *   Redirecting on a timeout would show the visitor "signed out" while their
- *   session is still live — so here we fail loudly instead of pretending.
+ *   session is still live - so here we fail loudly instead of pretending.
  */
 
 /**
@@ -27,7 +27,7 @@
 export const PREVIEW_SIGN_OUT_TIMEOUT_MS = 1500;
 
 /**
- * Deployed: generous, because only the server can end this session — but still
+ * Deployed: generous, because only the server can end this session - but still
  * bounded, so a wedged request reports failure the visitor can retry instead of
  * spinning forever. A sign-out still unanswered at 10s is not going to land.
  */
@@ -46,7 +46,7 @@ export function signOutTimeoutMs(livePreview) {
 
 /**
  * Run `start()` but give up after `timeoutMs`, reporting which happened. Never
- * rejects — callers decide what a failure means, and a `try/catch` around an
+ * rejects - callers decide what a failure means, and a `try/catch` around an
  * `await` does nothing for a promise that never settles.
  * @param {() => unknown} start
  * @param {number} timeoutMs
@@ -85,7 +85,7 @@ export function settleWithin(start, timeoutMs) {
  * End the session, then clear the local token and redirect.
  *
  * In the live preview those last two always run. When deployed they run only if
- * the server confirmed, because nothing else can clear the cookie — a failed or
+ * the server confirmed, because nothing else can clear the cookie - a failed or
  * timed-out sign-out throws rather than reporting a sign-out that did not
  * happen.
  * @param {SignOutSteps} steps
@@ -114,8 +114,8 @@ export async function runSignOut({
   if (outcome !== "ok") {
     throw new Error(
       outcome === "timeout"
-        ? "Sign-out timed out — you are still signed in. Please try again."
-        : "Sign-out failed — you are still signed in. Please try again.",
+        ? "Sign-out timed out - you are still signed in. Please try again."
+        : "Sign-out failed - you are still signed in. Please try again.",
     );
   }
   clearToken();
@@ -135,7 +135,7 @@ export async function runSignOut({
  * Drop any prior session before a new sign-in starts, so switching providers
  * actually switches identity.
  *
- * Deliberately BEST EFFORT — unlike `runSignOut` this never throws. It also
+ * Deliberately BEST EFFORT - unlike `runSignOut` this never throws. It also
  * runs when there is no prior session at all, so treating a failure as fatal
  * would block first-time sign-in on a transport hiccup, for a visitor with no
  * session to protect. The subsequent OAuth flow issues a fresh session either

@@ -8,7 +8,7 @@ import { BOUND_PASS, SEEKER_ROWS } from "@/lib/rates";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — Jobrow" },
+      { title: "Pricing - Jobrow" },
       { name: "description", content: "Free Jobs browse. Bound pass waitlist. No live checkout." },
     ],
   }),

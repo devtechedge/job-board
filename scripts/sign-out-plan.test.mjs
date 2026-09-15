@@ -17,7 +17,7 @@ const rejects = () => Promise.reject(new Error("network down"));
 /**
  * Drain pending microtasks without advancing mocked time, so "has it finished
  * yet?" is answered by the mocked clock rather than by wall-clock luck.
- * `setImmediate` stays real — only `setTimeout` is mocked.
+ * `setImmediate` stays real - only `setTimeout` is mocked.
  */
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 
@@ -88,7 +88,7 @@ test("preview: a sign-out that never settles clears and redirects once the wait 
 
   t.mock.timers.tick(TEST_TIMEOUT_MS - 1);
   await flush();
-  assert.deepEqual(h.order, [], "the server still has its window — do not give up early");
+  assert.deepEqual(h.order, [], "the server still has its window - do not give up early");
 
   t.mock.timers.tick(1);
   await done;
@@ -201,7 +201,7 @@ test("pre-sign-in: a deployed session gets the deployed window, not the preview 
   assert.equal(
     h.cleared,
     0,
-    "only the server can end a deployed session — do not start OAuth while it is still live",
+    "only the server can end a deployed session - do not start OAuth while it is still live",
   );
 
   t.mock.timers.tick(DEPLOYED_SIGN_OUT_TIMEOUT_MS - PREVIEW_SIGN_OUT_TIMEOUT_MS);

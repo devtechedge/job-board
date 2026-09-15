@@ -39,7 +39,7 @@ export default function DeskScreen() {
       keyboardShouldPersistTaps="handled"
     >
       <Text style={styles.lede}>
-        Corrections and legal notes only. Applications go to the employer ATS — never here.
+        Corrections and legal notes only. Applications go to the employer ATS - never here.
       </Text>
       <Label text="Name">
         <TextInput style={styles.input} value={name} onChangeText={setName} />

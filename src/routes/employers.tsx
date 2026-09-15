@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/employers")({
   head: () => ({
     meta: [
-      { title: "Add a board — Jobrow" },
+      { title: "Add a board - Jobrow" },
       { name: "description", content: "Request a public Greenhouse, Ashby, or Lever board token." },
     ],
   }),

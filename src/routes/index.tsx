@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
   loader: ({ deps }) => homePageFn({ data: parseJobQuery(deps) }),
   head: () =>
     pageHead({
-      title: "Jobrow — still-open US tech roles",
+      title: "Jobrow - still-open US tech roles",
       description:
         "Browse still-open US tech jobs from employer ATS boards. Public listings, not an employer.",
       path: "/",

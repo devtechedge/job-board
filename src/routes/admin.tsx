@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin")({
   loader: () => adminMetaFn(),
   head: () => ({
     meta: [
-      { title: "Admin — Jobrow" },
+      { title: "Admin - Jobrow" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

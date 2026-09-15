@@ -71,7 +71,7 @@ function payFrom(comp: AshbyComp | null | undefined): {
       source: "posted",
     };
   }
-  // Boards sometimes only expose a human summary string — parse it, still mark posted.
+  // Boards sometimes only expose a human summary string - parse it, still mark posted.
   const summary =
     comp?.scrapeableCompensationSalarySummary ||
     comp?.compensationTierSummary ||
