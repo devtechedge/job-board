@@ -227,18 +227,20 @@ export function grokXCreatorHeadTags(creator = readXCreator(), creatorId = readX
   ];
 }
 
-/** Platform "Created with Grok" banner - injected into every HTML document. */
+/**
+ * Platform project id meta only.
+ *
+ * The companion `https://grok.com/grok-app-builder/extensions.js` tag that used to
+ * be emitted here is deliberately gone. It added a third-party request to every
+ * document and rendered the platform's "Created with Grok" attribution on a
+ * production surface. Nothing in this app depends on that script.
+ */
 export function grokExtensionsHeadTags(projectId = readGrokProjectId()) {
   const id = escapeHtml(projectId);
   const tags = [];
   if (projectId) {
     tags.push(`<meta name="grok-project-id" content="${id}">`);
   }
-  tags.push(
-    `<script src="${GROK_EXTENSIONS_SCRIPT_SRC}"${
-      projectId ? ` data-project-id="${id}"` : ""
-    } defer></script>`,
-  );
   return tags;
 }
 
@@ -496,10 +498,12 @@ export function injectGrokPwaHead(html, ctx = {}) {
     }).join(""),
   );
 
-  if (!next.includes("/grok-app-builder/extensions.js")) {
-    missing.push(...grokExtensionsHeadTags(projectId));
-  } else if (projectId && !next.includes('name="grok-project-id"')) {
-    missing.push(`<meta name="grok-project-id" content="${escapeHtml(projectId)}">`);
+  // The extensions script is no longer emitted, so guard on the meta tag instead.
+  // Injecting must stay idempotent: re-running over an already-injected document
+  // has to be a no-op.
+  const extensionsTags = grokExtensionsHeadTags(projectId);
+  if (extensionsTags.length > 0 && !next.includes('name="grok-project-id"')) {
+    missing.push(...extensionsTags);
   }
   if (
     projectId &&
