@@ -344,6 +344,56 @@ export async function reclassifyOpenJobs(sql: Sql): Promise<number> {
   return drop.length + keep.length;
 }
 
+/** Closed listings keep title/pay/company but lose their posting text after this. */
+export const CLOSED_METADATA_DAYS = 7;
+/** Closed listings leave the ledger entirely after this. */
+export const CLOSED_RETENTION_DAYS = 90;
+
+export type RetentionResult = { trimmed: number; deleted: number };
+
+/**
+ * Reclaim storage from the closed ledger.
+ *
+ * A closed row is never shown with its posting text (the closed page is a
+ * ledger of what disappeared, and `fillJobDescription` refuses closed rows), yet
+ * `description_html`, `description_text` and `raw_json` are the overwhelming
+ * majority of a row's bytes - the descriptions alone average ~11 KB. Dropping
+ * them after {@link CLOSED_METADATA_DAYS} frees most of a closed row's storage
+ * while keeping the history intact; the row itself is dropped after
+ * {@link CLOSED_RETENTION_DAYS}.
+ *
+ * Both statements only ever match rows that still have something to reclaim, so
+ * a second run writes nothing.
+ */
+export async function pruneClosedJobs(
+  opts: { trimDays?: number; deleteDays?: number } = {},
+): Promise<RetentionResult> {
+  const sql = await getSql();
+  const trimDays = opts.trimDays ?? CLOSED_METADATA_DAYS;
+  const deleteDays = opts.deleteDays ?? CLOSED_RETENTION_DAYS;
+  const trimmed = await sql.query<{ id: string }>(
+    `update jobs
+        set raw_json = null, description_html = null, description_text = null
+      where status = 'closed'
+        and closed_at < now() - make_interval(days => $1::int)
+        and (
+          raw_json is not null
+          or description_html is not null
+          or description_text is not null
+        )
+      returning id`,
+    [trimDays],
+  );
+  const deleted = await sql.query<{ id: string }>(
+    `delete from jobs
+      where status = 'closed'
+        and closed_at < now() - make_interval(days => $1::int)
+      returning id`,
+    [deleteDays],
+  );
+  return { trimmed: trimmed.length, deleted: deleted.length };
+}
+
 export async function loadEnabledCompanies(): Promise<CompanyRow[]> {
   const sql = await getSql();
   const rows = await sql.query<Record<string, unknown>>(
@@ -492,7 +542,7 @@ export async function fillJobDescription(jobId: string): Promise<void> {
   }>(
     `select j.id, j.source_id, j.description_html, c.ats, c.board_token, j.company_id
      from jobs j join companies c on c.id = j.company_id
-     where j.id = $1`,
+     where j.id = $1 and j.status = 'open'`,
     [jobId],
   );
   const job = rows[0];
