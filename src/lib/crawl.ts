@@ -2,6 +2,7 @@ import { getAdapter } from "@/lib/ats";
 import type { Ats, CompanyRow } from "@/lib/ats/types";
 import { getSql, type Sql } from "@/lib/db";
 import { isTechRole } from "@/lib/classify";
+import { contentHash } from "@/lib/fingerprint";
 import { missingSourceIds, normalizeJob, type NormalizedJob } from "@/lib/normalize";
 import { SEED_COMPANIES, STARTER_SLUGS } from "@/lib/seed-companies";
 import { iso } from "@/lib/utils";
@@ -157,15 +158,21 @@ async function upsertNormalizedJobs(
         norm.techEligible,
         norm.rawJson,
         norm.searchText,
+        contentHash(norm),
       );
     }
+    // Rewrite only what actually changed. Without the `where`, every run re-TOASTs
+    // the description of every still-open listing (~6,000 rows, four times a day),
+    // which is what filled the database. An unchanged, already-open row is skipped
+    // entirely; a changed payload or a row needing reopening still goes through.
     await sql.query(
       `insert into jobs (
         id, company_id, source_ats, source_id, title, slug, apply_url, location_raw, locations,
         workplace, salary_min_cents, salary_max_cents, salary_currency, salary_source, yoe_min,
         function, seniority, skills, description_html, description_text, summary, posted_at,
-        first_seen_at, last_seen_at, status, us_eligible, tech_eligible, raw_json, search_text
-      ) values ${valuePlaceholders(group.length, 29)}
+        first_seen_at, last_seen_at, status, us_eligible, tech_eligible, raw_json, search_text,
+        content_hash
+      ) values ${valuePlaceholders(group.length, 30)}
       on conflict (source_ats, source_id) do update set
         title = excluded.title,
         slug = excluded.slug,
@@ -191,10 +198,27 @@ async function upsertNormalizedJobs(
         us_eligible = excluded.us_eligible,
         tech_eligible = excluded.tech_eligible,
         raw_json = excluded.raw_json,
-        search_text = excluded.search_text`,
+        search_text = excluded.search_text,
+        content_hash = excluded.content_hash
+      where jobs.content_hash is distinct from excluded.content_hash
+         or jobs.status <> 'open'
+         or jobs.closed_at is not null`,
       params,
     );
   }
+  // Rows skipped above still need their "last seen" advanced, or an untouched but
+  // still-listed role would read as stale. This touches a single column, and
+  // because last_seen_at is no longer indexed (migration 0006) it is a HOT
+  // update: no index churn, and the dead tuple is pruned at page level instead of
+  // waiting on a full vacuum pass.
+  await sql.query(
+    `update jobs set last_seen_at = $1::timestamptz
+      where company_id = $2
+        and status = 'open'
+        and last_seen_at < $1::timestamptz
+        and source_id = any($3::text[])`,
+    [now, company.id, norms.map((norm) => norm.sourceId)],
+  );
   return { upserted: norms.length, opened };
 }
 
