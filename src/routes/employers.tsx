@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { DeskField } from "@/components/desk-field";
@@ -5,12 +6,12 @@ import { AppShell } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/employers")({
-  head: () => ({
-    meta: [
-      { title: "Add a board - Jobrow" },
-      { name: "description", content: "Request a public Greenhouse, Ashby, or Lever board token." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Add a board - Jobrow",
+      description: "Request a public Greenhouse, Ashby, or Lever board token.",
+      path: "/employers",
+    }),
   component: EmployersPage,
 });
 

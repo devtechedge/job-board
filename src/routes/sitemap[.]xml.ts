@@ -28,7 +28,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const origin = sitePublicOrigin();
         const registerLastmod = digest?.lastOkAt ?? null;
         const staticPaths = [
-          "",
+          "/",
           "/jobs",
           "/closed",
           "/companies",

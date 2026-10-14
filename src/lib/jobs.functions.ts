@@ -1,3 +1,4 @@
+import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { parseJobQuery } from "@/lib/query";
 
@@ -37,7 +38,7 @@ export const getJobFn = createServerFn({ method: "GET" })
   .validator((data: unknown) => {
     const id = typeof data === "string" ? data : String((data as { id?: string })?.id ?? "");
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-      throw new Error("Missing job id");
+      throw notFound();
     }
     return { id };
   })
@@ -46,7 +47,7 @@ export const getJobFn = createServerFn({ method: "GET" })
     const { fillJobDescription } = await import("@/lib/crawl");
     await fillJobDescription(data.id).catch(() => undefined);
     const job = await getJobById(data.id);
-    if (!job) throw new Error("Role not found");
+    if (!job) throw notFound();
     const { sanitizeHtml, htmlToText } = await import("@/lib/sanitize");
     const description_html = job.description_html ? sanitizeHtml(job.description_html) : null;
     return {
@@ -90,7 +91,7 @@ export const getCompanyFn = createServerFn({ method: "GET" })
   .validator((data: unknown) => {
     const slug =
       typeof data === "string" ? data : String((data as { slug?: string })?.slug ?? "");
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 80) throw new Error("Missing company");
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 80) throw notFound();
     return { slug };
   })
   .handler(async ({ data }) => {
@@ -98,7 +99,7 @@ export const getCompanyFn = createServerFn({ method: "GET" })
     const { getCompanyBySlug, listCompanyJobs } = await import("@/lib/search");
     await ensureIndex();
     const company = await getCompanyBySlug(data.slug);
-    if (!company) throw new Error("Company not found");
+    if (!company) throw notFound();
     const jobs = await listCompanyJobs(String(company.id));
     return {
       company: {

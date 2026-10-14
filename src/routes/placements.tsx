@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { DeskField } from "@/components/desk-field";
@@ -6,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { MASTHEAD_LINE, RULED_PIN } from "@/lib/rates";
 
 export const Route = createFileRoute("/placements")({
-  head: () => ({
-    meta: [
-      { title: "Promote - Jobrow" },
-      { name: "description", content: "Ruled pin and masthead line. Waitlist. No live checkout." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Promote - Jobrow",
+      description: "Ruled pin and masthead line. Waitlist. No live checkout.",
+      path: "/placements",
+    }),
   component: PlacementsPage,
 });
 

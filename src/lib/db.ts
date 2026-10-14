@@ -85,6 +85,14 @@ function toSql(run: Run): Sql {
   return sql;
 }
 
+/**
+ * pg warns that sslmode=prefer|require|verify-ca are treated as verify-full.
+ * Make that explicit (same behaviour) to silence the per-request stderr noise.
+ */
+function withExplicitSslMode(url: string): string {
+  return url.replace(/([?&]sslmode=)(prefer|require|verify-ca)(?=&|$)/i, "$1verify-full");
+}
+
 function createNeonSql(): Promise<Sql> {
   globalRef.__pgSqlPromise__ ??= (async () => {
     // Regular Postgres driver: node-postgres (`pg`) - works directly with Neon's
@@ -93,7 +101,7 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_INT8, Number);
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
-    const pool = new Pool({ connectionString: databaseUrl });
+    const pool = new Pool({ connectionString: withExplicitSslMode(databaseUrl!) });
     return toSql(async <T>(text: string, params: unknown[]) => {
       const res = await pool.query(text, params);
       return res.rows as T[];

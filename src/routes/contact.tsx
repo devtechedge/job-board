@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { DeskField } from "@/components/desk-field";
@@ -5,12 +6,12 @@ import { AppShell } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact - Jobrow" },
-      { name: "description", content: "Corrections and legal notes. Not applications." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Contact - Jobrow",
+      description: "Corrections and legal notes. Not applications.",
+      path: "/contact",
+    }),
   component: ContactPage,
 });
 

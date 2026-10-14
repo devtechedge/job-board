@@ -6,9 +6,12 @@ export const DEFAULT_DESCRIPTION =
 
 export const OG_IMAGE = `${SITE_ORIGIN}/og.jpg`;
 
+/** Clean absolute URL: no query/hash, no trailing slash (homepage = origin + "/"). */
 export function absoluteUrl(path = "/"): string {
-  if (!path || path === "/") return SITE_ORIGIN;
-  return `${SITE_ORIGIN}${path.startsWith("/") ? path : `/${path}`}`;
+  let p = (path || "/").split(/[?#]/)[0];
+  if (!p.startsWith("/")) p = `/${p}`;
+  p = p.replace(/\/+$/, "");
+  return p ? `${SITE_ORIGIN}${p}` : `${SITE_ORIGIN}/`;
 }
 
 export function pageHead(opts: {

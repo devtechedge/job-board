@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { DeskField } from "@/components/desk-field";
@@ -6,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { BOUND_PASS, SEEKER_ROWS } from "@/lib/rates";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing - Jobrow" },
-      { name: "description", content: "Free Jobs browse. Bound pass waitlist. No live checkout." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Pricing - Jobrow",
+      description: "Free Jobs browse. Bound pass waitlist. No live checkout.",
+      path: "/pricing",
+    }),
   component: PricingPage,
 });
 

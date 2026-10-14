@@ -1,8 +1,9 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/sourcing")({
-  head: () => ({ meta: [{ title: "How we source jobs - Jobrow" }] }),
+  head: () => pageHead({ title: "How we source jobs - Jobrow", path: "/legal/sourcing" }),
   component: SourcingPage,
 });
 

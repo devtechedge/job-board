@@ -1,8 +1,9 @@
+import { pageHead } from "@/lib/seo";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/site-footer";
 
 export const Route = createFileRoute("/legal/privacy")({
-  head: () => ({ meta: [{ title: "Privacy - Jobrow" }] }),
+  head: () => pageHead({ title: "Privacy - Jobrow", path: "/legal/privacy" }),
   component: PrivacyPage,
 });
 
