@@ -43,17 +43,31 @@ export const getJobFn = createServerFn({ method: "GET" })
     return { id };
   })
   .handler(async ({ data }) => {
-    const { getJobById } = await import("@/lib/search");
+    const { getJobById, listRelatedOpenJobs } = await import("@/lib/search");
     const { fillJobDescription } = await import("@/lib/crawl");
     await fillJobDescription(data.id).catch(() => undefined);
     const job = await getJobById(data.id);
     if (!job) throw notFound();
     const { sanitizeHtml, htmlToText } = await import("@/lib/sanitize");
     const description_html = job.description_html ? sanitizeHtml(job.description_html) : null;
+    const related =
+      job.status === "open"
+        ? await listRelatedOpenJobs(job.company_id, job.id, 5)
+        : [];
     return {
       ...job,
       description_html,
       description_text: job.description_text || htmlToText(description_html || job.description_html),
+      related: related.map((r) => ({
+        id: r.id,
+        title: r.title,
+        location_raw: r.location_raw,
+        workplace: r.workplace,
+        salary_min_cents: r.salary_min_cents,
+        salary_max_cents: r.salary_max_cents,
+        salary_currency: r.salary_currency,
+        salary_source: r.salary_source,
+      })),
     };
   });
 

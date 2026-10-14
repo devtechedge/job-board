@@ -21,7 +21,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "@/lib/search"
         );
         const [jobs, companies, digest] = await Promise.all([
-          listOpenJobIds(5000),
+          listOpenJobIds(5000), // open jobs only — closed/expired excluded
           listEnabledCompaniesForSitemap(),
           homeDigest().catch(() => null),
         ]);

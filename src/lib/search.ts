@@ -373,6 +373,7 @@ export async function listEnabledCompaniesForSitemap(): Promise<
 
 export async function listOpenJobIds(limit = 5000): Promise<Array<{ id: string; last_seen_at: unknown }>> {
   const sql = await getSql();
+  // Open-only: closed/expired job URLs must not appear in the sitemap.
   return sql.query(
     `select id, last_seen_at from jobs
      where status = 'open' and us_eligible and tech_eligible
@@ -380,6 +381,29 @@ export async function listOpenJobIds(limit = 5000): Promise<Array<{ id: string; 
      limit $1`,
     [limit],
   );
+}
+
+/** Other still-open roles at the same company (for job detail pages). */
+export async function listRelatedOpenJobs(
+  companyId: string,
+  excludeJobId: string,
+  limit = 5,
+): Promise<JobListItem[]> {
+  const sql = await getSql();
+  const rows = await sql.query<Record<string, unknown>>(
+    `select j.*, c.name as company_name, c.slug as company_slug,
+            c.website as company_website, c.logo_url as company_logo_url
+     from jobs j join companies c on c.id = j.company_id
+     where j.company_id = $1
+       and j.id <> $2
+       and j.status = 'open'
+       and j.us_eligible
+       and j.tech_eligible
+     order by j.last_seen_at desc
+     limit $3`,
+    [companyId, excludeJobId, limit],
+  );
+  return rows.map(mapJob);
 }
 
 export { mapJob };
