@@ -60,7 +60,7 @@ export function SiteHeader({ current }: { current?: string }) {
             </Link>
           ))}
           <span className="text-muted">Saved {watched}</span>
-          <Link to="/closed" className={linkClass("/closed")}>
+          <Link to="/closed" search={{ page: 1 }} className={linkClass("/closed")}>
             Closed
           </Link>
           <ThemeToggle />
@@ -69,7 +69,7 @@ export function SiteHeader({ current }: { current?: string }) {
         {/* Phone: keep Saved/Closed usable; collapse primary nav */}
         <div className="flex min-w-0 items-center gap-3 text-sm md:hidden">
           <span className="shrink-0 text-muted">Saved {watched}</span>
-          <Link to="/closed" className={`shrink-0 ${linkClass("/closed")}`}>
+          <Link to="/closed" search={{ page: 1 }} className={`shrink-0 ${linkClass("/closed")}`}>
             Closed
           </Link>
           <ThemeToggle />
