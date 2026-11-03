@@ -5,14 +5,14 @@ async function handle({ request }: { request: Request }) {
   const limited = guardPublicApi(request);
   if (limited) return limited;
   const query = parseJobsRequest(request);
-  const { ensureIndex } = await import("@/lib/crawl");
+  const { ensureBooted } = await import("@/lib/crawl");
   const {
     searchJobs,
     homeDigest,
     isBareHomeQuery,
     listLatestDiverseJobs,
   } = await import("@/lib/search");
-  const boot = await ensureIndex();
+  const boot = await ensureBooted();
   const jobsPromise = isBareHomeQuery(query)
     ? listLatestDiverseJobs()
     : searchJobs(query);

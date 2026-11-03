@@ -437,11 +437,14 @@ export async function crawlOne(slugOrId: string): Promise<CrawlCompanyResult> {
   return crawlCompany(sql, asCompany(rows[0]));
 }
 
+export type BootState = { companies: number; jobs: number; indexing: boolean };
+
 const bootRef = globalThis as typeof globalThis & {
   __jobrowBoot__?: Promise<void>;
+  __jobrowBootOnce__?: Promise<BootState>;
 };
 
-export async function ensureIndex(): Promise<{ companies: number; jobs: number; indexing: boolean }> {
+export async function ensureIndex(): Promise<BootState> {
   const sql = await getSql();
   await seedCompanies(sql);
   await reclassifyOpenJobs(sql).catch(() => 0);
@@ -471,6 +474,36 @@ export async function ensureIndex(): Promise<{ companies: number; jobs: number; 
     `select count(*)::int as "jobsAfter" from jobs where status = 'open'`,
   );
   return { companies, jobs: jobsAfter, indexing: pending > 0 };
+}
+
+/**
+ * Bootstrap for read paths.
+ *
+ * Read paths used to call {@link ensureIndex} on every render, which scanned
+ * every open job and then crawled up to two boards per page view - real quota
+ * burn (network transfer, CU-hours) for work that belongs to the schedule.
+ *
+ * A read path only needs the database to exist and be seeded, so this reports
+ * counts from two cheap COUNT queries and does the expensive bootstrap only when
+ * the index is genuinely empty (a fresh deploy, or the in-memory preview), once
+ * per server process. Scheduled refresh stays in {@link ensureIndex}, which the
+ * cron route and `?boot=1` call.
+ */
+export async function ensureBooted(): Promise<BootState> {
+  const sql = await getSql();
+  const [{ companies }] = await sql.query<{ companies: number }>(
+    `select count(*)::int as companies from companies`,
+  );
+  const [{ jobs }] = await sql.query<{ jobs: number }>(
+    `select count(*)::int as jobs from jobs`,
+  );
+  if (jobs > 0) return { companies, jobs, indexing: false };
+
+  bootRef.__jobrowBootOnce__ ??= ensureIndex().catch((error: unknown) => {
+    bootRef.__jobrowBootOnce__ = undefined; // don't memoize a failure
+    throw error;
+  });
+  return bootRef.__jobrowBootOnce__;
 }
 
 async function crawlPendingSlice(budgetMs: number): Promise<number> {

@@ -7,9 +7,9 @@ export const listJobsFn = createServerFn({ method: "GET" })
     parseJobQuery((data ?? {}) as Record<string, unknown>),
   )
   .handler(async ({ data }) => {
-    const { ensureIndex } = await import("@/lib/crawl");
+    const { ensureBooted } = await import("@/lib/crawl");
     const { searchJobs } = await import("@/lib/search");
-    const boot = await ensureIndex();
+    const boot = await ensureBooted();
     const result = await searchJobs(data);
     return { ...result, indexing: boot.indexing };
   });
@@ -19,14 +19,14 @@ export const homePageFn = createServerFn({ method: "GET" })
     parseJobQuery((data ?? {}) as Record<string, unknown>),
   )
   .handler(async ({ data }) => {
-    const { ensureIndex } = await import("@/lib/crawl");
+    const { ensureBooted } = await import("@/lib/crawl");
     const {
       searchJobs,
       homeDigest,
       isBareHomeQuery,
       listLatestDiverseJobs,
     } = await import("@/lib/search");
-    const boot = await ensureIndex();
+    const boot = await ensureBooted();
     const jobsPromise = isBareHomeQuery(data)
       ? listLatestDiverseJobs()
       : searchJobs(data);
@@ -72,9 +72,9 @@ export const getJobFn = createServerFn({ method: "GET" })
   });
 
 export const listCompaniesFn = createServerFn({ method: "GET" }).handler(async () => {
-  const { ensureIndex, CLASSIFIER_REV } = await import("@/lib/crawl");
+  const { ensureBooted, CLASSIFIER_REV } = await import("@/lib/crawl");
   const { listCompanies } = await import("@/lib/search");
-  const boot = await ensureIndex();
+  const boot = await ensureBooted();
   const rows = await listCompanies();
   return {
     indexing: boot.indexing,
@@ -109,9 +109,9 @@ export const getCompanyFn = createServerFn({ method: "GET" })
     return { slug };
   })
   .handler(async ({ data }) => {
-    const { ensureIndex } = await import("@/lib/crawl");
+    const { ensureBooted } = await import("@/lib/crawl");
     const { getCompanyBySlug, listCompanyJobs } = await import("@/lib/search");
-    await ensureIndex();
+    await ensureBooted();
     const company = await getCompanyBySlug(data.slug);
     if (!company) throw notFound();
     const jobs = await listCompanyJobs(String(company.id));
@@ -152,9 +152,9 @@ export const listClosedJobsFn = createServerFn({ method: "GET" })
     return { page: Number.isFinite(page) && page > 0 ? Math.floor(page) : 1 };
   })
   .handler(async ({ data }) => {
-    const { ensureIndex } = await import("@/lib/crawl");
+    const { ensureBooted } = await import("@/lib/crawl");
     const { listClosedJobs } = await import("@/lib/search");
-    const boot = await ensureIndex();
+    const boot = await ensureBooted();
     const result = await listClosedJobs(data.page);
     return { ...result, indexing: boot.indexing };
   });

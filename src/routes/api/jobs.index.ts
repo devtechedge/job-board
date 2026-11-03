@@ -5,9 +5,9 @@ async function handle({ request }: { request: Request }) {
   const limited = guardPublicApi(request);
   if (limited) return limited;
   const query = parseJobsRequest(request);
-  const { ensureIndex } = await import("@/lib/crawl");
+  const { ensureBooted } = await import("@/lib/crawl");
   const { searchJobs } = await import("@/lib/search");
-  const boot = await ensureIndex();
+  const boot = await ensureBooted();
   const result = await searchJobs(query);
   return jsonOk({
     jobs: result.jobs.map((job) => publicJob(job, "list")),

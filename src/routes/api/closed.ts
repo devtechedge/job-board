@@ -7,9 +7,9 @@ async function handle({ request }: { request: Request }) {
   const url = new URL(request.url);
   const pageRaw = url.searchParams.get("page");
   const page = pageRaw ? Number(pageRaw) : 1;
-  const { ensureIndex } = await import("@/lib/crawl");
+  const { ensureBooted } = await import("@/lib/crawl");
   const { listClosedJobs } = await import("@/lib/search");
-  const boot = await ensureIndex();
+  const boot = await ensureBooted();
   const result = await listClosedJobs(
     Number.isFinite(page) && page > 0 ? Math.floor(page) : 1,
   );

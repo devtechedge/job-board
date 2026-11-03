@@ -14,9 +14,9 @@ async function handle({ request, params }: { request: Request; params: { slug: s
   if (limited) return limited;
   const slug = parseCompanySlug(params.slug);
   if (!slug) return jsonError("Invalid company slug", 400);
-  const { ensureIndex } = await import("@/lib/crawl");
+  const { ensureBooted } = await import("@/lib/crawl");
   const { getCompanyBySlug, listCompanyJobs } = await import("@/lib/search");
-  await ensureIndex();
+  await ensureBooted();
   const company = await getCompanyBySlug(slug);
   if (!company) return jsonError("Company not found", 404);
   const jobs = await listCompanyJobs(String(company.id));
